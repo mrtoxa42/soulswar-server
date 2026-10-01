@@ -13,8 +13,55 @@ const TARGET_ENTITIES = 25;
 const MIN_BOTS = 5;
 const STALE_TIMEOUT = 30000;
 const TICK_RATE = 100; // 10Hz
+const MAX_USERNAME_LENGTH = 18;
+const MAX_CHAT_LENGTH = 64;
+const CHAT_WINDOW_MS = 10000;
+const MAX_CHAT_MESSAGES_PER_WINDOW = 4;
+const INTERNAL_MESSAGE_PREFIX = '__SYS__:';
+const BLOCKED_TERMS = [
+    'amk', 'aq', 'sik', 'siker', 'siktir', 'sikik', 'orospu', 'orospucocu',
+    'ibne', 'pic', 'piç', 'yarrak', 'gavat', 'kahpe', 'pezevenk',
+    'fuck', 'fucker', 'shit', 'bitch', 'asshole', 'cunt', 'dick', 'pussy',
+    'nigger', 'faggot', 'retard', 'kys'
+];
 
 const rooms = new Map();
+
+function cleanText(value, maxLength) {
+    if (typeof value !== 'string') return '';
+    return value
+        .replace(/[\x00-\x1F\x7F]/g, '')
+        .replace(/[\[\]]/g, '')
+        .trim()
+        .slice(0, maxLength);
+}
+
+function normalizeForModeration(value) {
+    return value
+        .toLocaleLowerCase('tr-TR')
+        .replace(/[@4]/g, 'a')
+        .replace(/0/g, 'o')
+        .replace(/[1!]/g, 'i')
+        .replace(/\$/g, 's')
+        .replace(/[^a-zçğıöşü]/g, '')
+        .replace(/(.)\1+/g, '$1');
+}
+
+function containsBlockedTerm(value) {
+    const normalized = normalizeForModeration(value);
+    return BLOCKED_TERMS.some((term) => normalized.includes(term));
+}
+
+function safeUsername(value) {
+    const cleaned = cleanText(value, MAX_USERNAME_LENGTH);
+    return cleaned && !containsBlockedTerm(cleaned) ? cleaned : 'ShadowTyper';
+}
+
+function sendChatError(ws, reason) {
+    if (ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ type: 'chat_error', reason }));
+    }
+}
 
 function getOrCreateRoom() {
     for (const [roomId, room] of rooms.entries()) {
@@ -137,7 +184,7 @@ wss.on('connection', (ws, req) => {
                 const newPlayer = {
                     ws: ws,
                     id: playerId,
-                    name: data.name,
+                    name: safeUsername(data.name),
                     class: data.class,
                     level: data.level,
                     country: country,
@@ -154,11 +201,12 @@ wss.on('connection', (ws, req) => {
                     vy: 0,
                     anim: 'idle',
                     flip: false,
-                    lastUpdate: now
+                    lastUpdate: now,
+                    chatTimestamps: []
                 };
 
                 playerRoom.players.set(playerId, newPlayer);
-                console.log(`Player ${data.name} joined room ${playerRoom.id}`);
+                console.log(`Player ${playerId} joined room ${playerRoom.id}`);
 
                 // Send welcome to the new player
                 const otherPlayers = [];
@@ -195,7 +243,7 @@ wss.on('connection', (ws, req) => {
                 broadcast(playerRoom, {
                     type: 'player_joined',
                     id: playerId,
-                    name: data.name,
+                    name: newPlayer.name,
                     class: data.class,
                     level: data.level,
                     country: country,
@@ -222,12 +270,37 @@ wss.on('connection', (ws, req) => {
                     p.anim = data.anim;
                     p.flip = data.flip;
                 } else if (data.type === 'chat') {
+					// Internal state messages are not displayed as chat by clients.
+					// All human-written messages are validated and rate limited here,
+					// not just in the client, so modified clients cannot bypass it.
+					if (typeof data.msg !== 'string') {
+						sendChatError(ws, 'invalid_message');
+						return;
+					}
+					if (data.msg.startsWith(INTERNAL_MESSAGE_PREFIX)) {
+						broadcast(playerRoom, {
+							type: 'chat', id: playerId, name: p.name,
+							class: p.class, msg: data.msg, country: p.country
+						});
+						return;
+					}
+					const messageText = cleanText(data.msg, MAX_CHAT_LENGTH);
+					if (!messageText || containsBlockedTerm(messageText)) {
+						sendChatError(ws, 'blocked_content');
+						return;
+					}
+					p.chatTimestamps = p.chatTimestamps.filter((timestamp) => now - timestamp < CHAT_WINDOW_MS);
+					if (p.chatTimestamps.length >= MAX_CHAT_MESSAGES_PER_WINDOW) {
+						sendChatError(ws, 'rate_limited');
+						return;
+					}
+					p.chatTimestamps.push(now);
                     broadcast(playerRoom, {
                         type: 'chat',
                         id: playerId,
                         name: p.name,
                         class: p.class,
-                        msg: data.msg,
+                        msg: messageText,
                         country: p.country
                     });
                 } else if (data.type === 'update_info') {
