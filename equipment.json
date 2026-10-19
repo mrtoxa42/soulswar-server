@@ -1,0 +1,3549 @@
+{
+  "version": 1,
+  "caps": {
+    "attack": 0.25,
+    "siphon": 0.35,
+    "max_soul": 40,
+    "defense": 0.15,
+    "walk_speed": 0.2,
+    "bargain": 0.15
+  },
+  "classes": {
+    "Banker": {
+      "hats": [
+        "none",
+        "top_hat",
+        "bowler_hat",
+        "fedora_gold",
+        "banker_1_crown",
+        "banker_2_crown",
+        "banker_3_crown"
+      ],
+      "faces": [
+        "none",
+        "monocle",
+        "gold_glasses",
+        "cigar",
+        "banker_1_visor",
+        "banker_2_visor",
+        "banker_3_visor"
+      ],
+      "outfits": [
+        "none",
+        "suit",
+        "banker_office_cardigan",
+        "banker_ledger_knit",
+        "banker_thrift_blazer",
+        "pinstripe_suit",
+        "tuxedo",
+        "parking_banker_jacket",
+        "banker_2_coat",
+        "banker_3_coat"
+      ],
+      "shoes": [
+        "none",
+        "oxfords",
+        "loafers_gold",
+        "banker_1_boots",
+        "banker_2_boots",
+        "banker_3_boots"
+      ],
+      "accessories": [
+        "none",
+        "banker_vault_pendant",
+        "banker_interest_pin",
+        "banker_cashmere_scarf"
+      ],
+      "vehicles": [
+        "none",
+        "skateboard",
+        "rollerblades",
+        "scooter",
+        "limo",
+        "black_vip",
+        "vault_chariot",
+        "neon_trike",
+        "soul_roadster"
+      ],
+      "weapons": [
+        "none",
+        "collection_cane",
+        "dividend_staff",
+        "gold_cane",
+        "salvage_cane",
+        "gold_soul_pistol",
+        "vault_lance",
+        "central_bank_hammer",
+        "briefcase",
+        "money_bag",
+        "banker_1_sigil",
+        "banker_2_sigil",
+        "banker_3_sigil"
+      ]
+    },
+    "Vampire": {
+      "hats": [
+        "none",
+        "vamp_hood",
+        "aristocrat_crown",
+        "bat_mask",
+        "vampire_1_crown",
+        "vampire_2_crown",
+        "vampire_3_crown"
+      ],
+      "faces": [
+        "none",
+        "fangs",
+        "crimson_mask",
+        "red_eyes",
+        "vampire_1_visor",
+        "vampire_2_visor",
+        "vampire_3_visor"
+      ],
+      "outfits": [
+        "none",
+        "gothic_coat",
+        "vampire_night_shirt",
+        "vampire_bat_knit",
+        "vampire_dusk_waistcoat",
+        "vamp_velvet",
+        "victorian_vest",
+        "parking_vampire_jacket",
+        "vampire_2_coat",
+        "vampire_3_coat"
+      ],
+      "shoes": [
+        "none",
+        "boots",
+        "pointed_shoes",
+        "vampire_1_boots",
+        "vampire_2_boots",
+        "vampire_3_boots"
+      ],
+      "accessories": [
+        "none",
+        "cape",
+        "bat_perch",
+        "vampire_2_sigil"
+      ],
+      "vehicles": [
+        "none",
+        "skateboard",
+        "rollerblades",
+        "scooter",
+        "bat_form",
+        "shadow_carriage",
+        "nether_glide",
+        "shadow_motorcycle"
+      ],
+      "weapons": [
+        "none",
+        "blood_dagger",
+        "night_sword",
+        "scrap_soul_blade",
+        "bat_staff",
+        "soul_scythe",
+        "crimson_rapier",
+        "blood_chalice",
+        "vampire_1_sigil",
+        "vampire_3_sigil"
+      ]
+    },
+    "Speedster": {
+      "hats": [
+        "none",
+        "cap",
+        "beanie",
+        "skate_helmet",
+        "sport_visor",
+        "speedster_1_crown",
+        "speedster_2_crown",
+        "speedster_3_crown"
+      ],
+      "faces": [
+        "none",
+        "shades",
+        "goggles",
+        "bubblegum",
+        "speedster_1_visor",
+        "speedster_2_visor",
+        "speedster_3_visor"
+      ],
+      "outfits": [
+        "none",
+        "hoodie",
+        "speedster_runner_tee",
+        "speedster_zip_vest",
+        "speedster_campus_jacket",
+        "tracksuit",
+        "skater_tee",
+        "parking_speedster_jacket",
+        "speedster_2_coat",
+        "speedster_3_coat"
+      ],
+      "shoes": [
+        "none",
+        "sneakers",
+        "turbo_kicks",
+        "speedster_1_boots",
+        "speedster_2_boots",
+        "speedster_3_boots"
+      ],
+      "accessories": [
+        "none",
+        "speedster_race_whistle",
+        "speedster_neon_bandana",
+        "speedster_sprint_medal",
+        "backpack",
+        "speedster_1_sigil"
+      ],
+      "vehicles": [
+        "none",
+        "skateboard",
+        "rollerblades",
+        "scooter",
+        "jetpack",
+        "hoverboard",
+        "rocket_skis",
+        "courier_bike",
+        "neon_rail_board",
+        "reactor_sports_car"
+      ],
+      "weapons": [
+        "none",
+        "volt_baton",
+        "pulse_pistol",
+        "salvage_shock_baton",
+        "shock_gauntlet",
+        "rail_spear",
+        "plasma_twin_blades",
+        "boombox",
+        "speedster_2_sigil",
+        "speedster_3_sigil"
+      ]
+    },
+    "Politician": {
+      "hats": [
+        "none",
+        "politician_hair",
+        "campaign_cap",
+        "fedora_pres",
+        "politician_1_crown",
+        "politician_2_crown",
+        "politician_3_crown"
+      ],
+      "faces": [
+        "none",
+        "lapel_mic",
+        "clean_glasses",
+        "politician_smile",
+        "politician_1_visor",
+        "politician_2_visor",
+        "politician_3_visor"
+      ],
+      "outfits": [
+        "none",
+        "politician_suit",
+        "politician_canvass_polo",
+        "politician_rolled_shirt",
+        "politician_campaign_cardigan",
+        "press_blazer",
+        "president_tux",
+        "parking_politician_jacket",
+        "politician_2_coat",
+        "politician_3_coat"
+      ],
+      "shoes": [
+        "none",
+        "oxfords",
+        "wingtips",
+        "politician_1_boots",
+        "politician_2_boots",
+        "politician_3_boots"
+      ],
+      "accessories": [
+        "none",
+        "politician_campaign_button",
+        "politician_campaign_scarf",
+        "politician_honor_medal",
+        "rosette",
+        "politician_1_sigil",
+        "politician_2_sigil",
+        "politician_3_sigil"
+      ],
+      "vehicles": [
+        "none",
+        "skateboard",
+        "rollerblades",
+        "scooter",
+        "campaign_bus",
+        "golden_podium",
+        "red_carpet",
+        "modified_scooter"
+      ],
+      "weapons": [
+        "none",
+        "seal_cane",
+        "podium_gavel",
+        "megafone",
+        "warden_seal_hammer",
+        "protocol_staff",
+        "diplomacy_rapier",
+        "sovereignty_hammer"
+      ]
+    }
+  },
+  "items": {
+    "top_hat": {
+      "name": "Banker Top Hat",
+      "category": "hats",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "stats": {
+        "max_soul": 3,
+        "defense": 0.01,
+        "bargain": 0.015
+      }
+    },
+    "bowler_hat": {
+      "name": "Wall St. Bowler",
+      "category": "hats",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "stats": {
+        "max_soul": 6,
+        "defense": 0.02,
+        "bargain": 0.03
+      }
+    },
+    "fedora_gold": {
+      "name": "Gold Ribbon Fedora",
+      "category": "hats",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 15,
+      "rarity": "epic",
+      "stats": {
+        "max_soul": 9,
+        "defense": 0.03,
+        "bargain": 0.045
+      }
+    },
+    "vamp_hood": {
+      "name": "Gothic Hood",
+      "category": "hats",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "stats": {
+        "max_soul": 3,
+        "defense": 0.01
+      }
+    },
+    "aristocrat_crown": {
+      "name": "Blood Monarch Crown",
+      "category": "hats",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "stats": {
+        "max_soul": 6,
+        "defense": 0.02
+      }
+    },
+    "bat_mask": {
+      "name": "Nocturnal Bat Mask",
+      "category": "hats",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 15,
+      "rarity": "epic",
+      "stats": {
+        "max_soul": 9,
+        "defense": 0.03
+      }
+    },
+    "cap": {
+      "name": "Street Snapback",
+      "category": "hats",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "stats": {
+        "max_soul": 3,
+        "defense": 0.01
+      }
+    },
+    "beanie": {
+      "name": "Warm Beanie",
+      "category": "hats",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "stats": {
+        "max_soul": 6,
+        "defense": 0.02
+      }
+    },
+    "skate_helmet": {
+      "name": "Pro Skate Helmet",
+      "category": "hats",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 15,
+      "rarity": "epic",
+      "stats": {
+        "max_soul": 9,
+        "defense": 0.03
+      }
+    },
+    "sport_visor": {
+      "name": "Speed Aerovisor",
+      "category": "hats",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 15,
+      "rarity": "epic",
+      "stats": {
+        "max_soul": 9,
+        "defense": 0.03
+      }
+    },
+    "politician_hair": {
+      "name": "Executive Side-Part",
+      "category": "hats",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "stats": {
+        "max_soul": 3,
+        "defense": 0.01
+      }
+    },
+    "campaign_cap": {
+      "name": "Election Campaign Cap",
+      "category": "hats",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "stats": {
+        "max_soul": 6,
+        "defense": 0.02
+      }
+    },
+    "fedora_pres": {
+      "name": "Diplomat Fedora",
+      "category": "hats",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 15,
+      "rarity": "epic",
+      "stats": {
+        "max_soul": 9,
+        "defense": 0.03
+      }
+    },
+    "monocle": {
+      "name": "Golden Monocle",
+      "category": "faces",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "stats": {
+        "siphon": 0.025,
+        "bargain": 0.015
+      }
+    },
+    "gold_glasses": {
+      "name": "Gold Wire Specs",
+      "category": "faces",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "stats": {
+        "siphon": 0.05,
+        "bargain": 0.03
+      }
+    },
+    "cigar": {
+      "name": "Havanna Cigar",
+      "category": "faces",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 15,
+      "rarity": "epic",
+      "stats": {
+        "siphon": 0.07500000000000001,
+        "bargain": 0.045
+      }
+    },
+    "fangs": {
+      "name": "Vampire Fangs",
+      "category": "faces",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "stats": {
+        "siphon": 0.025
+      }
+    },
+    "crimson_mask": {
+      "name": "Crimson Veil",
+      "category": "faces",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "stats": {
+        "siphon": 0.05
+      }
+    },
+    "red_eyes": {
+      "name": "Blood-Red Glare",
+      "category": "faces",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 15,
+      "rarity": "epic",
+      "stats": {
+        "siphon": 0.07500000000000001
+      }
+    },
+    "shades": {
+      "name": "Neon Cyber Shades",
+      "category": "faces",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "stats": {
+        "siphon": 0.025
+      }
+    },
+    "goggles": {
+      "name": "Speedster Goggles",
+      "category": "faces",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "stats": {
+        "siphon": 0.05
+      }
+    },
+    "bubblegum": {
+      "name": "Bubblegum Pop",
+      "category": "faces",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 15,
+      "rarity": "epic",
+      "stats": {
+        "siphon": 0.07500000000000001
+      }
+    },
+    "lapel_mic": {
+      "name": "Press Lapel Mic",
+      "category": "faces",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "stats": {
+        "siphon": 0.025,
+        "bargain": 0.025
+      }
+    },
+    "clean_glasses": {
+      "name": "Pundit Spectacles",
+      "category": "faces",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "stats": {
+        "siphon": 0.05,
+        "bargain": 0.05
+      }
+    },
+    "politician_smile": {
+      "name": "Winning Campaign Smile",
+      "category": "faces",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 15,
+      "rarity": "epic",
+      "stats": {
+        "siphon": 0.07500000000000001,
+        "bargain": 0.07500000000000001
+      }
+    },
+    "suit": {
+      "name": "Wall St. Classic Suit",
+      "category": "outfits",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "stats": {
+        "max_soul": 5,
+        "defense": 0.02
+      }
+    },
+    "pinstripe_suit": {
+      "name": "Tailored Pinstripe Suit",
+      "category": "outfits",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "stats": {
+        "max_soul": 10,
+        "defense": 0.04
+      }
+    },
+    "tuxedo": {
+      "name": "Billionaire Tuxedo",
+      "category": "outfits",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 15,
+      "rarity": "epic",
+      "stats": {
+        "max_soul": 15,
+        "defense": 0.06
+      }
+    },
+    "gothic_coat": {
+      "name": "Gothic Longcoat",
+      "category": "outfits",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "stats": {
+        "max_soul": 5,
+        "defense": 0.02,
+        "siphon": 0.035
+      }
+    },
+    "vamp_velvet": {
+      "name": "Crimson Velvet Vest",
+      "category": "outfits",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "stats": {
+        "max_soul": 10,
+        "defense": 0.04,
+        "siphon": 0.07
+      }
+    },
+    "victorian_vest": {
+      "name": "Victorian Tailcoat",
+      "category": "outfits",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 15,
+      "rarity": "epic",
+      "stats": {
+        "max_soul": 15,
+        "defense": 0.06,
+        "siphon": 0.10500000000000001
+      }
+    },
+    "hoodie": {
+      "name": "Late for Everything Blazer",
+      "category": "outfits",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "stats": {
+        "max_soul": 5,
+        "defense": 0.02
+      }
+    },
+    "tracksuit": {
+      "name": "Retro Neon Tracksuit",
+      "category": "outfits",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "stats": {
+        "max_soul": 10,
+        "defense": 0.04
+      }
+    },
+    "skater_tee": {
+      "name": "Graphic Skater Tee",
+      "category": "outfits",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 15,
+      "rarity": "epic",
+      "stats": {
+        "max_soul": 15,
+        "defense": 0.06
+      }
+    },
+    "politician_suit": {
+      "name": "Election Suit & Red Tie",
+      "category": "outfits",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "stats": {
+        "max_soul": 5,
+        "defense": 0.02
+      }
+    },
+    "press_blazer": {
+      "name": "Diplomat Blue Blazer",
+      "category": "outfits",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "stats": {
+        "max_soul": 10,
+        "defense": 0.04
+      }
+    },
+    "president_tux": {
+      "name": "State Banquet Tuxedo",
+      "category": "outfits",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 15,
+      "rarity": "epic",
+      "stats": {
+        "max_soul": 15,
+        "defense": 0.06
+      }
+    },
+    "oxfords": {
+      "name": "Polished Oxfords",
+      "category": "shoes",
+      "classes": [
+        "Banker",
+        "Politician"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "stats": {
+        "walk_speed": 0.035
+      }
+    },
+    "loafers_gold": {
+      "name": "Gold Buckle Loafers",
+      "category": "shoes",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "stats": {
+        "walk_speed": 0.07
+      }
+    },
+    "boots": {
+      "name": "Victorian Buckle Boots",
+      "category": "shoes",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "stats": {
+        "walk_speed": 0.035
+      }
+    },
+    "pointed_shoes": {
+      "name": "Gothic Pointed Shoes",
+      "category": "shoes",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "stats": {
+        "walk_speed": 0.07
+      }
+    },
+    "sneakers": {
+      "name": "High-Top Skate Kicks",
+      "category": "shoes",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "stats": {
+        "walk_speed": 0.035
+      }
+    },
+    "turbo_kicks": {
+      "name": "Neon Lightning Sneaks",
+      "category": "shoes",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "stats": {
+        "walk_speed": 0.07
+      }
+    },
+    "wingtips": {
+      "name": "Presidential Wingtips",
+      "category": "shoes",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "stats": {
+        "walk_speed": 0.07
+      }
+    },
+    "briefcase": {
+      "name": "Executive Briefcase",
+      "category": "weapons",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "stats": {
+        "attack": 0.02,
+        "bargain": 0.02
+      },
+      "hand_texture": true,
+      "hand_region": [
+        94,
+        94,
+        29,
+        31
+      ],
+      "price": 50
+    },
+    "money_bag": {
+      "name": "Bag of Soul Coins",
+      "category": "weapons",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "stats": {
+        "attack": 0.04,
+        "bargain": 0.04
+      },
+      "hand_texture": true,
+      "hand_region": [
+        96,
+        96,
+        25,
+        31
+      ],
+      "price": 65
+    },
+    "gold_cane": {
+      "name": "Retirement Fund Walking Cane",
+      "category": "weapons",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 225,
+      "shape": "cane",
+      "stats": {
+        "attack": 0.08,
+        "bargain": 0.04
+      },
+      "flavor": "A walking stick with a very ambitious interest rate.",
+      "art_direction": "notebook_comedy"
+    },
+    "cape": {
+      "name": "Crimson Vampire Cape",
+      "category": "accessories",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "stats": {
+        "attack": 0.02,
+        "bargain": 0.02,
+        "siphon": 0.035
+      }
+    },
+    "blood_chalice": {
+      "name": "Ancient Blood Chalice",
+      "category": "weapons",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "stats": {
+        "attack": 0.04,
+        "bargain": 0.04,
+        "siphon": 0.07
+      },
+      "hand_texture": true,
+      "hand_region": [
+        101,
+        92,
+        15,
+        23
+      ],
+      "price": 70
+    },
+    "bat_perch": {
+      "name": "Pet Shoulder Bat",
+      "category": "accessories",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 15,
+      "rarity": "epic",
+      "stats": {
+        "attack": 0.06,
+        "bargain": 0.06,
+        "siphon": 0.10500000000000001
+      }
+    },
+    "backpack": {
+      "name": "Skater Street Backpack",
+      "category": "accessories",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "stats": {
+        "attack": 0.02,
+        "bargain": 0.02
+      }
+    },
+    "boombox": {
+      "name": "Old-School Boombox",
+      "category": "weapons",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "stats": {
+        "attack": 0.04,
+        "bargain": 0.04
+      },
+      "hand_texture": true,
+      "hand_region": [
+        34,
+        76,
+        37,
+        31
+      ],
+      "price": 75
+    },
+    "megafone": {
+      "name": "Campaign Megaphone",
+      "category": "weapons",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "price": 150,
+      "shape": "megaphone",
+      "stats": {
+        "attack": 0.06,
+        "bargain": 0.04
+      },
+      "flavor": "Same promise. Much louder.",
+      "art_direction": "notebook_comedy"
+    },
+    "rosette": {
+      "name": "Election Winner Rosette",
+      "category": "accessories",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "stats": {
+        "attack": 0.04,
+        "bargain": 0.04
+      }
+    },
+    "skateboard": {
+      "name": "Street Skateboard",
+      "category": "vehicles",
+      "classes": [
+        "Banker",
+        "Vampire",
+        "Speedster",
+        "Politician"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "stats": {}
+    },
+    "rollerblades": {
+      "name": "Inline Rollerblades",
+      "category": "vehicles",
+      "classes": [
+        "Banker",
+        "Vampire",
+        "Speedster",
+        "Politician"
+      ],
+      "min_level": 3,
+      "rarity": "rare",
+      "stats": {}
+    },
+    "scooter": {
+      "name": "Electric Kick Scooter",
+      "category": "vehicles",
+      "classes": [
+        "Banker",
+        "Vampire",
+        "Speedster",
+        "Politician"
+      ],
+      "min_level": 6,
+      "rarity": "epic",
+      "stats": {}
+    },
+    "limo": {
+      "name": "Executive Gold Limousine",
+      "category": "vehicles",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "stats": {}
+    },
+    "black_vip": {
+      "name": "Armored VIP Town Car",
+      "category": "vehicles",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "stats": {}
+    },
+    "vault_chariot": {
+      "name": "Iron Vault Bullion Chariot",
+      "category": "vehicles",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 15,
+      "rarity": "epic",
+      "stats": {}
+    },
+    "bat_form": {
+      "name": "Shadow Bat Swarm Flight",
+      "category": "vehicles",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 15,
+      "rarity": "epic",
+      "stats": {}
+    },
+    "shadow_carriage": {
+      "name": "Crimson Velvet Hearse",
+      "category": "vehicles",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 15,
+      "rarity": "epic",
+      "stats": {}
+    },
+    "nether_glide": {
+      "name": "Obsidian Coffin Hoverboard",
+      "category": "vehicles",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "stats": {}
+    },
+    "jetpack": {
+      "name": "Twin-Turbo Jetpack",
+      "category": "vehicles",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "stats": {}
+    },
+    "hoverboard": {
+      "name": "Cyber Neon Hoverboard",
+      "category": "vehicles",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 12,
+      "rarity": "epic",
+      "stats": {}
+    },
+    "rocket_skis": {
+      "name": "Plasma Rocket Skates",
+      "category": "vehicles",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 20,
+      "rarity": "epic",
+      "stats": {}
+    },
+    "campaign_bus": {
+      "name": "Presidential VIP Motorcade",
+      "category": "vehicles",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "stats": {}
+    },
+    "golden_podium": {
+      "name": "Diplomatic Campaign Podium",
+      "category": "vehicles",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 15,
+      "rarity": "epic",
+      "stats": {}
+    },
+    "red_carpet": {
+      "name": "Rolling Red Carpet Glide",
+      "category": "vehicles",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 12,
+      "rarity": "epic",
+      "stats": {}
+    },
+    "collection_cane": {
+      "name": "Debt Collector Umbrella",
+      "category": "weapons",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "price": 135,
+      "shape": "umbrella",
+      "stats": {
+        "attack": 0.06,
+        "bargain": 0.02
+      },
+      "flavor": "For rainy days and overdue payments.",
+      "art_direction": "notebook_comedy"
+    },
+    "dividend_staff": {
+      "name": "Compound Interest Calculator",
+      "category": "weapons",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 420,
+      "shape": "calculator",
+      "stats": {
+        "attack": 0.1,
+        "siphon": 0.12,
+        "max_soul": 5
+      },
+      "flavor": "Every button somehow adds another fee.",
+      "art_direction": "notebook_comedy"
+    },
+    "blood_dagger": {
+      "name": "Emergency Tomato Juice Box",
+      "category": "weapons",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "price": 135,
+      "shape": "juice_box",
+      "stats": {
+        "attack": 0.08,
+        "siphon": 0.04
+      },
+      "flavor": "Definitely tomato juice. Please stop asking.",
+      "art_direction": "notebook_comedy"
+    },
+    "night_sword": {
+      "name": "Family-size Drinking Straw",
+      "category": "weapons",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 420,
+      "shape": "straw",
+      "stats": {
+        "attack": 0.12,
+        "defense": 0.025,
+        "siphon": 0.06
+      },
+      "flavor": "For the vampire who refuses to share a drink.",
+      "art_direction": "notebook_comedy"
+    },
+    "volt_baton": {
+      "name": "Late Again Alarm Clock",
+      "category": "weapons",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "price": 135,
+      "shape": "alarm_clock",
+      "stats": {
+        "attack": 0.06,
+        "walk_speed": 0.025
+      },
+      "flavor": "Fastest person in town. Somehow always late.",
+      "art_direction": "notebook_comedy"
+    },
+    "pulse_pistol": {
+      "name": "Express Delivery Hairdryer",
+      "category": "weapons",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 420,
+      "shape": "hairdryer",
+      "stats": {
+        "attack": 0.1,
+        "walk_speed": 0.04
+      },
+      "flavor": "Runs faster when the hairstyle is aerodynamic.",
+      "art_direction": "notebook_comedy"
+    },
+    "seal_cane": {
+      "name": "Rubber Promise Stamp",
+      "category": "weapons",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "price": 135,
+      "shape": "stamp",
+      "stats": {
+        "attack": 0.06,
+        "bargain": 0.03
+      },
+      "flavor": "Approved today. Delivered sometime after the election.",
+      "art_direction": "notebook_comedy"
+    },
+    "podium_gavel": {
+      "name": "Emergency Campaign Microphone",
+      "category": "weapons",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 420,
+      "shape": "microphone",
+      "stats": {
+        "attack": 0.08,
+        "defense": 0.04,
+        "max_soul": 5
+      },
+      "flavor": "Never let a perfectly good silence go to waste.",
+      "art_direction": "notebook_comedy"
+    },
+    "salvage_cane": {
+      "name": "Parking Fine Stapler",
+      "category": "weapons",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 0,
+      "source": "parking",
+      "shape": "stapler",
+      "stats": {
+        "attack": 0.1,
+        "max_soul": 8,
+        "bargain": 0.025
+      },
+      "flavor": "Found in the parking office. Still charging late fees.",
+      "art_direction": "notebook_comedy"
+    },
+    "scrap_soul_blade": {
+      "name": "Lost-and-found Night Thermos",
+      "category": "weapons",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 0,
+      "source": "parking",
+      "shape": "thermos",
+      "stats": {
+        "attack": 0.11,
+        "siphon": 0.08
+      },
+      "flavor": "Keeps your suspicious drink suspiciously warm.",
+      "art_direction": "notebook_comedy"
+    },
+    "salvage_shock_baton": {
+      "name": "Borrowed Parking Cone",
+      "category": "weapons",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 0,
+      "source": "parking",
+      "shape": "traffic_cone",
+      "stats": {
+        "attack": 0.1,
+        "walk_speed": 0.05
+      },
+      "flavor": "Traffic laws cannot catch what they cannot see.",
+      "art_direction": "notebook_comedy"
+    },
+    "warden_seal_hammer": {
+      "name": "Expired Parking Clipboard",
+      "category": "weapons",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 0,
+      "source": "parking",
+      "shape": "clipboard",
+      "stats": {
+        "attack": 0.1,
+        "defense": 0.05
+      },
+      "flavor": "The committee will consider your appeal in 87 years.",
+      "art_direction": "notebook_comedy"
+    },
+    "parking_banker_jacket": {
+      "name": "Overtime Approval Blazer",
+      "category": "outfits",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 0,
+      "source": "parking",
+      "stats": {
+        "max_soul": 12,
+        "defense": 0.045,
+        "bargain": 0.03
+      },
+      "set_family": "banker_set_1",
+      "art_direction": "notebook_comedy",
+      "flavor": "Office expenses include your soul."
+    },
+    "parking_vampire_jacket": {
+      "name": "Night Shift Count's Jacket",
+      "category": "outfits",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 0,
+      "source": "parking",
+      "stats": {
+        "max_soul": 12,
+        "defense": 0.045,
+        "siphon": 0.05
+      },
+      "set_family": "vampire_set_1",
+      "art_direction": "notebook_comedy",
+      "flavor": "Night shift benefits: unlimited suspicious drinks."
+    },
+    "parking_speedster_jacket": {
+      "name": "Too Late Delivery Blazer",
+      "category": "outfits",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 0,
+      "source": "parking",
+      "stats": {
+        "max_soul": 12,
+        "defense": 0.045,
+        "walk_speed": 0.02
+      },
+      "set_family": "speedster_set_1",
+      "art_direction": "notebook_comedy",
+      "flavor": "Being fast is no excuse for arriving on time."
+    },
+    "parking_politician_jacket": {
+      "name": "Doorstep Promise Suit",
+      "category": "outfits",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 0,
+      "source": "parking",
+      "stats": {
+        "max_soul": 12,
+        "defense": 0.045,
+        "bargain": 0.04
+      },
+      "set_family": "politician_set_1",
+      "art_direction": "notebook_comedy",
+      "flavor": "Delivery of promises sold separately."
+    },
+    "modified_scooter": {
+      "name": "Modified Salvage Scooter",
+      "category": "vehicles",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 0,
+      "source": "parking_craft",
+      "speed_bonus": 330,
+      "stats": {}
+    },
+    "gold_soul_pistol": {
+      "name": "Contactless Soul Card Reader",
+      "category": "weapons",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 12,
+      "rarity": "rare",
+      "price": 320,
+      "price_final": true,
+      "source": "shop",
+      "shape": "card_reader",
+      "stats": {
+        "attack": 0.13,
+        "siphon": 0.1,
+        "bargain": 0.03
+      },
+      "stage": 4,
+      "variant": 1,
+      "flavor": "Tap your soul. Service charge not included.",
+      "art_direction": "notebook_comedy"
+    },
+    "vault_lance": {
+      "name": "Never-ending Bank Receipt",
+      "category": "weapons",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 20,
+      "rarity": "rare",
+      "price": 620,
+      "price_final": true,
+      "source": "shop",
+      "shape": "receipt",
+      "stats": {
+        "attack": 0.16,
+        "defense": 0.045,
+        "bargain": 0.04
+      },
+      "stage": 4,
+      "variant": 2,
+      "flavor": "The receipt is longer than your remaining lifespan.",
+      "art_direction": "notebook_comedy"
+    },
+    "central_bank_hammer": {
+      "name": "Inflation Piggy Bank",
+      "category": "weapons",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "price": 1050,
+      "price_final": true,
+      "source": "shop",
+      "shape": "piggy_bank",
+      "stats": {
+        "attack": 0.21,
+        "siphon": 0.06,
+        "bargain": 0.025
+      },
+      "stage": 4,
+      "variant": 3,
+      "flavor": "Your savings went in. A much smaller squeak came out.",
+      "art_direction": "notebook_comedy"
+    },
+    "banker_1_crown": {
+      "name": "Goldband Fedora",
+      "category": "hats",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 90,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "max_soul": 5,
+        "attack": 0.01
+      },
+      "stage": 4,
+      "set_family": "banker_set_1",
+      "art_direction": "notebook_comedy",
+      "flavor": "Office expenses include your soul."
+    },
+    "banker_1_visor": {
+      "name": "Ledger Gold Frames",
+      "category": "faces",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 85,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "defense": 0.015,
+        "bargain": 0.025
+      },
+      "stage": 4,
+      "set_family": "banker_set_1",
+      "art_direction": "notebook_comedy",
+      "flavor": "Office expenses include your soul."
+    },
+    "banker_1_boots": {
+      "name": "Office Emergency Slippers",
+      "category": "shoes",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 110,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "walk_speed": 0.025,
+        "defense": 0.01
+      },
+      "stage": 4,
+      "set_family": "banker_set_1",
+      "art_direction": "notebook_comedy",
+      "flavor": "Office expenses include your soul."
+    },
+    "banker_1_sigil": {
+      "name": "Unpaid Invoice Satchel",
+      "category": "weapons",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 95,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "siphon": 0.035,
+        "bargain": 0.025
+      },
+      "stage": 4,
+      "set_family": "banker_set_1",
+      "art_direction": "notebook_comedy",
+      "flavor": "Office expenses include your soul.",
+      "hand_texture": true,
+      "hand_region": [
+        32,
+        60,
+        42,
+        50
+      ]
+    },
+    "banker_2_coat": {
+      "name": "Overdraft Pinstripe Blazer",
+      "category": "outfits",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 12,
+      "rarity": "rare",
+      "price": 380,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "max_soul": 14,
+        "defense": 0.035
+      },
+      "stage": 4,
+      "set_family": "banker_set_2",
+      "art_direction": "notebook_comedy",
+      "flavor": "Office expenses include your soul."
+    },
+    "banker_2_crown": {
+      "name": "Vaultmaster Bowler",
+      "category": "hats",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 12,
+      "rarity": "rare",
+      "price": 220,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "max_soul": 8,
+        "attack": 0.025
+      },
+      "stage": 4,
+      "set_family": "banker_set_2",
+      "art_direction": "notebook_comedy",
+      "flavor": "Office expenses include your soul."
+    },
+    "banker_2_visor": {
+      "name": "Vault Chain Monocle",
+      "category": "faces",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 12,
+      "rarity": "rare",
+      "price": 190,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "defense": 0.025,
+        "bargain": 0.04
+      },
+      "stage": 4,
+      "set_family": "banker_set_2",
+      "art_direction": "notebook_comedy",
+      "flavor": "Office expenses include your soul."
+    },
+    "banker_2_boots": {
+      "name": "Debt Collection Loafers",
+      "category": "shoes",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 12,
+      "rarity": "rare",
+      "price": 240,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "walk_speed": 0.045,
+        "defense": 0.015
+      },
+      "stage": 4,
+      "set_family": "banker_set_2",
+      "art_direction": "notebook_comedy",
+      "flavor": "Office expenses include your soul."
+    },
+    "banker_2_sigil": {
+      "name": "Final Notice Bundle",
+      "category": "weapons",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 12,
+      "rarity": "rare",
+      "price": 250,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "siphon": 0.065,
+        "bargain": 0.04
+      },
+      "stage": 4,
+      "set_family": "banker_set_2",
+      "art_direction": "notebook_comedy",
+      "flavor": "Office expenses include your soul.",
+      "hand_texture": true,
+      "hand_region": [
+        32,
+        60,
+        42,
+        50
+      ]
+    },
+    "banker_3_coat": {
+      "name": "Executive Weekend Power Suit",
+      "category": "outfits",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "price": 780,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "max_soul": 20,
+        "defense": 0.055
+      },
+      "stage": 4,
+      "set_family": "banker_set_3",
+      "art_direction": "notebook_comedy",
+      "flavor": "Office expenses include your soul."
+    },
+    "banker_3_crown": {
+      "name": "Gold Reserve Top Hat",
+      "category": "hats",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "price": 440,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "max_soul": 12,
+        "attack": 0.04
+      },
+      "stage": 4,
+      "set_family": "banker_set_3",
+      "art_direction": "notebook_comedy",
+      "flavor": "Office expenses include your soul."
+    },
+    "banker_3_visor": {
+      "name": "Executive Gold Spectacles",
+      "category": "faces",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "price": 400,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "defense": 0.04,
+        "bargain": 0.055
+      },
+      "stage": 4,
+      "set_family": "banker_set_3",
+      "art_direction": "notebook_comedy",
+      "flavor": "Office expenses include your soul."
+    },
+    "banker_3_boots": {
+      "name": "Tax-deductible Golf Shoes",
+      "category": "shoes",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "price": 480,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "walk_speed": 0.07,
+        "defense": 0.025
+      },
+      "stage": 4,
+      "set_family": "banker_set_3",
+      "art_direction": "notebook_comedy",
+      "flavor": "Office expenses include your soul."
+    },
+    "banker_3_sigil": {
+      "name": "Emergency Piggy Bank",
+      "category": "weapons",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "price": 520,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "siphon": 0.1,
+        "bargain": 0.055
+      },
+      "stage": 4,
+      "set_family": "banker_set_3",
+      "art_direction": "notebook_comedy",
+      "flavor": "Office expenses include your soul.",
+      "hand_texture": true,
+      "hand_region": [
+        32,
+        60,
+        42,
+        50
+      ]
+    },
+    "bat_staff": {
+      "name": "Night Shift Coffee Mug",
+      "category": "weapons",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 12,
+      "rarity": "rare",
+      "price": 320,
+      "price_final": true,
+      "source": "shop",
+      "shape": "mug",
+      "stats": {
+        "attack": 0.13,
+        "siphon": 0.16
+      },
+      "stage": 4,
+      "variant": 1,
+      "flavor": "Immortal, but still needs a coffee break.",
+      "art_direction": "notebook_comedy"
+    },
+    "soul_scythe": {
+      "name": "Bottomless Ketchup Bottle",
+      "category": "weapons",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 20,
+      "rarity": "rare",
+      "price": 620,
+      "price_final": true,
+      "source": "shop",
+      "shape": "ketchup",
+      "stats": {
+        "attack": 0.16,
+        "defense": 0.045,
+        "siphon": 0.2
+      },
+      "stage": 4,
+      "variant": 2,
+      "flavor": "An extremely elaborate excuse for carrying red liquid.",
+      "art_direction": "notebook_comedy"
+    },
+    "crimson_rapier": {
+      "name": "VIP Donation Juice Bag",
+      "category": "weapons",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "price": 1050,
+      "price_final": true,
+      "source": "shop",
+      "shape": "iv_bag",
+      "stats": {
+        "attack": 0.21,
+        "siphon": 0.12
+      },
+      "stage": 4,
+      "variant": 3,
+      "flavor": "A premium takeaway order. The straw is included.",
+      "art_direction": "notebook_comedy"
+    },
+    "vampire_1_crown": {
+      "name": "Crimson Court Hood",
+      "category": "hats",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 90,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "max_soul": 5,
+        "attack": 0.01
+      },
+      "stage": 4,
+      "set_family": "vampire_set_1",
+      "art_direction": "notebook_comedy",
+      "flavor": "Night shift benefits: unlimited suspicious drinks."
+    },
+    "vampire_1_visor": {
+      "name": "Ivory Court Fangs",
+      "category": "faces",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 85,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "defense": 0.015,
+        "siphon": 0.025
+      },
+      "stage": 4,
+      "set_family": "vampire_set_1",
+      "art_direction": "notebook_comedy",
+      "flavor": "Night shift benefits: unlimited suspicious drinks."
+    },
+    "vampire_1_boots": {
+      "name": "Night Shift House Slippers",
+      "category": "shoes",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 110,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "walk_speed": 0.025,
+        "defense": 0.01
+      },
+      "stage": 4,
+      "set_family": "vampire_set_1",
+      "art_direction": "notebook_comedy",
+      "flavor": "Night shift benefits: unlimited suspicious drinks."
+    },
+    "vampire_1_sigil": {
+      "name": "Reusable Juice Pouch",
+      "category": "weapons",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 95,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "siphon": 0.060000000000000005
+      },
+      "stage": 4,
+      "set_family": "vampire_set_1",
+      "art_direction": "notebook_comedy",
+      "flavor": "Night shift benefits: unlimited suspicious drinks.",
+      "hand_texture": true,
+      "hand_region": [
+        32,
+        60,
+        42,
+        50
+      ]
+    },
+    "vampire_2_coat": {
+      "name": "Discount Lounge Coat",
+      "category": "outfits",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 12,
+      "rarity": "rare",
+      "price": 380,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "max_soul": 14,
+        "defense": 0.035
+      },
+      "stage": 4,
+      "set_family": "vampire_set_2",
+      "art_direction": "notebook_comedy",
+      "flavor": "Night shift benefits: unlimited suspicious drinks."
+    },
+    "vampire_2_crown": {
+      "name": "Dusk Velvet Beret",
+      "category": "hats",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 12,
+      "rarity": "rare",
+      "price": 220,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "max_soul": 8,
+        "attack": 0.025
+      },
+      "stage": 4,
+      "set_family": "vampire_set_2",
+      "art_direction": "notebook_comedy",
+      "flavor": "Night shift benefits: unlimited suspicious drinks."
+    },
+    "vampire_2_visor": {
+      "name": "Dusk Ruby Shades",
+      "category": "faces",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 12,
+      "rarity": "rare",
+      "price": 190,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "defense": 0.025,
+        "siphon": 0.04
+      },
+      "stage": 4,
+      "set_family": "vampire_set_2",
+      "art_direction": "notebook_comedy",
+      "flavor": "Night shift benefits: unlimited suspicious drinks."
+    },
+    "vampire_2_boots": {
+      "name": "Bat-faced Bunny Slippers",
+      "category": "shoes",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 12,
+      "rarity": "rare",
+      "price": 240,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "walk_speed": 0.045,
+        "defense": 0.015
+      },
+      "stage": 4,
+      "set_family": "vampire_set_2",
+      "art_direction": "notebook_comedy",
+      "flavor": "Night shift benefits: unlimited suspicious drinks."
+    },
+    "vampire_2_sigil": {
+      "name": "Coffee Break Shoulder Bag",
+      "category": "accessories",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 12,
+      "rarity": "rare",
+      "price": 250,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "siphon": 0.10500000000000001
+      },
+      "stage": 4,
+      "set_family": "vampire_set_2",
+      "art_direction": "notebook_comedy",
+      "flavor": "Night shift benefits: unlimited suspicious drinks."
+    },
+    "vampire_3_coat": {
+      "name": "Blood Bank Boardroom Coat",
+      "category": "outfits",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "price": 780,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "max_soul": 20,
+        "defense": 0.055
+      },
+      "stage": 4,
+      "set_family": "vampire_set_3",
+      "art_direction": "notebook_comedy",
+      "flavor": "Night shift benefits: unlimited suspicious drinks."
+    },
+    "vampire_3_crown": {
+      "name": "Obsidian Ruby Diadem",
+      "category": "hats",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "price": 440,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "max_soul": 12,
+        "attack": 0.04
+      },
+      "stage": 4,
+      "set_family": "vampire_set_3",
+      "art_direction": "notebook_comedy",
+      "flavor": "Night shift benefits: unlimited suspicious drinks."
+    },
+    "vampire_3_visor": {
+      "name": "Ruby Masquerade Mask",
+      "category": "faces",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "price": 400,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "defense": 0.04,
+        "siphon": 0.055
+      },
+      "stage": 4,
+      "set_family": "vampire_set_3",
+      "art_direction": "notebook_comedy",
+      "flavor": "Night shift benefits: unlimited suspicious drinks."
+    },
+    "vampire_3_boots": {
+      "name": "Suspicious Beach Flip-flops",
+      "category": "shoes",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "price": 480,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "walk_speed": 0.07,
+        "defense": 0.025
+      },
+      "stage": 4,
+      "set_family": "vampire_set_3",
+      "art_direction": "notebook_comedy",
+      "flavor": "Night shift benefits: unlimited suspicious drinks."
+    },
+    "vampire_3_sigil": {
+      "name": "Tomato Juice Picnic Cooler",
+      "category": "weapons",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "price": 520,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "siphon": 0.155
+      },
+      "stage": 4,
+      "set_family": "vampire_set_3",
+      "art_direction": "notebook_comedy",
+      "flavor": "Night shift benefits: unlimited suspicious drinks.",
+      "hand_texture": true,
+      "hand_region": [
+        32,
+        60,
+        42,
+        50
+      ]
+    },
+    "shock_gauntlet": {
+      "name": "Triple-shot Emergency Espresso",
+      "category": "weapons",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 12,
+      "rarity": "rare",
+      "price": 320,
+      "price_final": true,
+      "source": "shop",
+      "shape": "espresso",
+      "stats": {
+        "attack": 0.13,
+        "siphon": 0.1,
+        "walk_speed": 0.04
+      },
+      "stage": 4,
+      "variant": 1,
+      "flavor": "Three shots. Zero patience.",
+      "art_direction": "notebook_comedy"
+    },
+    "rail_spear": {
+      "name": "Definitely Legal Energy Drink",
+      "category": "weapons",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 20,
+      "rarity": "rare",
+      "price": 620,
+      "price_final": true,
+      "source": "shop",
+      "shape": "energy_can",
+      "stats": {
+        "attack": 0.16,
+        "defense": 0.045,
+        "walk_speed": 0.05
+      },
+      "stage": 4,
+      "variant": 2,
+      "flavor": "Ingredients: caffeine, panic, and tiny unreadable text.",
+      "art_direction": "notebook_comedy"
+    },
+    "plasma_twin_blades": {
+      "name": "Turbo Pocket Fan",
+      "category": "weapons",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "price": 1050,
+      "price_final": true,
+      "source": "shop",
+      "shape": "fan",
+      "stats": {
+        "attack": 0.21,
+        "siphon": 0.06,
+        "walk_speed": 0.06
+      },
+      "stage": 4,
+      "variant": 3,
+      "flavor": "Personal wind assistance. Batteries probably included.",
+      "art_direction": "notebook_comedy"
+    },
+    "speedster_1_crown": {
+      "name": "Pulse Runner Headband",
+      "category": "hats",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 90,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "max_soul": 5,
+        "attack": 0.01
+      },
+      "stage": 4,
+      "set_family": "speedster_set_1",
+      "art_direction": "notebook_comedy",
+      "flavor": "Being fast is no excuse for arriving on time."
+    },
+    "speedster_1_visor": {
+      "name": "Pulse Sport Lenses",
+      "category": "faces",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 85,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "defense": 0.015,
+        "walk_speed": 0.025
+      },
+      "stage": 4,
+      "set_family": "speedster_set_1",
+      "art_direction": "notebook_comedy",
+      "flavor": "Being fast is no excuse for arriving on time."
+    },
+    "speedster_1_boots": {
+      "name": "Forgot-to-tie Running Shoes",
+      "category": "shoes",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 110,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "walk_speed": 0.025,
+        "defense": 0.01
+      },
+      "stage": 4,
+      "set_family": "speedster_set_1",
+      "art_direction": "notebook_comedy",
+      "flavor": "Being fast is no excuse for arriving on time."
+    },
+    "speedster_1_sigil": {
+      "name": "Express Delivery Messenger Bag",
+      "category": "accessories",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 95,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "siphon": 0.035,
+        "walk_speed": 0.025
+      },
+      "stage": 4,
+      "set_family": "speedster_set_1",
+      "art_direction": "notebook_comedy",
+      "flavor": "Being fast is no excuse for arriving on time."
+    },
+    "speedster_2_coat": {
+      "name": "Caffeine Marathon Tracksuit",
+      "category": "outfits",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 12,
+      "rarity": "rare",
+      "price": 380,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "max_soul": 14,
+        "defense": 0.035
+      },
+      "stage": 4,
+      "set_family": "speedster_set_2",
+      "art_direction": "notebook_comedy",
+      "flavor": "Being fast is no excuse for arriving on time."
+    },
+    "speedster_2_crown": {
+      "name": "Carbon Sprint Helmet",
+      "category": "hats",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 12,
+      "rarity": "rare",
+      "price": 220,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "max_soul": 8,
+        "attack": 0.025
+      },
+      "stage": 4,
+      "set_family": "speedster_set_2",
+      "art_direction": "notebook_comedy",
+      "flavor": "Being fast is no excuse for arriving on time."
+    },
+    "speedster_2_visor": {
+      "name": "Carbon Track Goggles",
+      "category": "faces",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 12,
+      "rarity": "rare",
+      "price": 190,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "defense": 0.025,
+        "walk_speed": 0.04
+      },
+      "stage": 4,
+      "set_family": "speedster_set_2",
+      "art_direction": "notebook_comedy",
+      "flavor": "Being fast is no excuse for arriving on time."
+    },
+    "speedster_2_boots": {
+      "name": "Secondhand Sprint Trainers",
+      "category": "shoes",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 12,
+      "rarity": "rare",
+      "price": 240,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "walk_speed": 0.045,
+        "defense": 0.015
+      },
+      "stage": 4,
+      "set_family": "speedster_set_2",
+      "art_direction": "notebook_comedy",
+      "flavor": "Being fast is no excuse for arriving on time."
+    },
+    "speedster_2_sigil": {
+      "name": "Emergency Snack Pouch",
+      "category": "weapons",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 12,
+      "rarity": "rare",
+      "price": 250,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "siphon": 0.065,
+        "walk_speed": 0.04
+      },
+      "stage": 4,
+      "set_family": "speedster_set_2",
+      "art_direction": "notebook_comedy",
+      "flavor": "Being fast is no excuse for arriving on time.",
+      "hand_texture": true,
+      "hand_region": [
+        32,
+        60,
+        42,
+        50
+      ]
+    },
+    "speedster_3_coat": {
+      "name": "Very Important Delivery Suit",
+      "category": "outfits",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "price": 780,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "max_soul": 20,
+        "defense": 0.055
+      },
+      "stage": 4,
+      "set_family": "speedster_set_3",
+      "art_direction": "notebook_comedy",
+      "flavor": "Being fast is no excuse for arriving on time."
+    },
+    "speedster_3_crown": {
+      "name": "Apex Aero Helmet",
+      "category": "hats",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "price": 440,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "max_soul": 12,
+        "attack": 0.04
+      },
+      "stage": 4,
+      "set_family": "speedster_set_3",
+      "art_direction": "notebook_comedy",
+      "flavor": "Being fast is no excuse for arriving on time."
+    },
+    "speedster_3_visor": {
+      "name": "Apex Racing Visor",
+      "category": "faces",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "price": 400,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "defense": 0.04,
+        "walk_speed": 0.055
+      },
+      "stage": 4,
+      "set_family": "speedster_set_3",
+      "art_direction": "notebook_comedy",
+      "flavor": "Being fast is no excuse for arriving on time."
+    },
+    "speedster_3_boots": {
+      "name": "Mismatched Turbo Trainers",
+      "category": "shoes",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "price": 480,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "walk_speed": 0.07,
+        "defense": 0.025
+      },
+      "stage": 4,
+      "set_family": "speedster_set_3",
+      "art_direction": "notebook_comedy",
+      "flavor": "Being fast is no excuse for arriving on time."
+    },
+    "speedster_3_sigil": {
+      "name": "Portable Coffee Supply",
+      "category": "weapons",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "price": 520,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "siphon": 0.1,
+        "walk_speed": 0.055
+      },
+      "stage": 4,
+      "set_family": "speedster_set_3",
+      "art_direction": "notebook_comedy",
+      "flavor": "Being fast is no excuse for arriving on time.",
+      "hand_texture": true,
+      "hand_region": [
+        32,
+        60,
+        42,
+        50
+      ]
+    },
+    "protocol_staff": {
+      "name": "Industrial Red Tape Dispenser",
+      "category": "weapons",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 12,
+      "rarity": "rare",
+      "price": 320,
+      "price_final": true,
+      "source": "shop",
+      "shape": "red_tape",
+      "stats": {
+        "attack": 0.13,
+        "siphon": 0.1,
+        "defense": 0.035
+      },
+      "stage": 4,
+      "variant": 1,
+      "flavor": "One more form and your soul is officially pending.",
+      "art_direction": "notebook_comedy"
+    },
+    "diplomacy_rapier": {
+      "name": "Budget Cutting Scissors",
+      "category": "weapons",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 20,
+      "rarity": "rare",
+      "price": 620,
+      "price_final": true,
+      "source": "shop",
+      "shape": "scissors",
+      "stats": {
+        "attack": 0.16,
+        "defense": 0.065
+      },
+      "stage": 4,
+      "variant": 2,
+      "flavor": "Cuts everything except the campaign budget.",
+      "art_direction": "notebook_comedy"
+    },
+    "sovereignty_hammer": {
+      "name": "Bottomless Election Promise Folder",
+      "category": "weapons",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "price": 1050,
+      "price_final": true,
+      "source": "shop",
+      "shape": "promise_folder",
+      "stats": {
+        "attack": 0.21,
+        "siphon": 0.06,
+        "defense": 0.05
+      },
+      "stage": 4,
+      "variant": 3,
+      "flavor": "A thousand promises. Not a single checked box.",
+      "art_direction": "notebook_comedy"
+    },
+    "politician_1_crown": {
+      "name": "Civic Navy Beret",
+      "category": "hats",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 90,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "max_soul": 5,
+        "attack": 0.01
+      },
+      "stage": 4,
+      "set_family": "politician_set_1",
+      "art_direction": "notebook_comedy",
+      "flavor": "Delivery of promises sold separately."
+    },
+    "politician_1_visor": {
+      "name": "Civic Clear Frames",
+      "category": "faces",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 85,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "defense": 0.015,
+        "bargain": 0.025
+      },
+      "stage": 4,
+      "set_family": "politician_set_1",
+      "art_direction": "notebook_comedy",
+      "flavor": "Delivery of promises sold separately."
+    },
+    "politician_1_boots": {
+      "name": "Doorstep Canvassing Shoes",
+      "category": "shoes",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 110,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "walk_speed": 0.025,
+        "defense": 0.01
+      },
+      "stage": 4,
+      "set_family": "politician_set_1",
+      "art_direction": "notebook_comedy",
+      "flavor": "Delivery of promises sold separately."
+    },
+    "politician_1_sigil": {
+      "name": "Please Vote Badge",
+      "category": "accessories",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 95,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "siphon": 0.035,
+        "bargain": 0.025
+      },
+      "stage": 4,
+      "set_family": "politician_set_1",
+      "art_direction": "notebook_comedy",
+      "flavor": "Delivery of promises sold separately."
+    },
+    "politician_2_coat": {
+      "name": "Televised Debate Blazer",
+      "category": "outfits",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 12,
+      "rarity": "rare",
+      "price": 380,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "max_soul": 14,
+        "defense": 0.035
+      },
+      "stage": 4,
+      "set_family": "politician_set_2",
+      "art_direction": "notebook_comedy",
+      "flavor": "Delivery of promises sold separately."
+    },
+    "politician_2_crown": {
+      "name": "Diplomat Swept Quiff",
+      "category": "hats",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 12,
+      "rarity": "rare",
+      "price": 220,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "max_soul": 8,
+        "attack": 0.025
+      },
+      "stage": 4,
+      "set_family": "politician_set_2",
+      "art_direction": "notebook_comedy",
+      "flavor": "Delivery of promises sold separately."
+    },
+    "politician_2_visor": {
+      "name": "Diplomat Browline Glasses",
+      "category": "faces",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 12,
+      "rarity": "rare",
+      "price": 190,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "defense": 0.025,
+        "bargain": 0.04
+      },
+      "stage": 4,
+      "set_family": "politician_set_2",
+      "art_direction": "notebook_comedy",
+      "flavor": "Delivery of promises sold separately."
+    },
+    "politician_2_boots": {
+      "name": "Debate Room Loafers",
+      "category": "shoes",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 12,
+      "rarity": "rare",
+      "price": 240,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "walk_speed": 0.045,
+        "defense": 0.015
+      },
+      "stage": 4,
+      "set_family": "politician_set_2",
+      "art_direction": "notebook_comedy",
+      "flavor": "Delivery of promises sold separately."
+    },
+    "politician_2_sigil": {
+      "name": "Very Important Visitor Badge",
+      "category": "accessories",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 12,
+      "rarity": "rare",
+      "price": 250,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "siphon": 0.065,
+        "bargain": 0.04
+      },
+      "stage": 4,
+      "set_family": "politician_set_2",
+      "art_direction": "notebook_comedy",
+      "flavor": "Delivery of promises sold separately."
+    },
+    "politician_3_coat": {
+      "name": "Promises-on-Paper Campaign Suit",
+      "category": "outfits",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "price": 780,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "max_soul": 20,
+        "defense": 0.055
+      },
+      "stage": 4,
+      "set_family": "politician_set_3",
+      "art_direction": "notebook_comedy",
+      "flavor": "Delivery of promises sold separately."
+    },
+    "politician_3_crown": {
+      "name": "Statesman Gold Fedora",
+      "category": "hats",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "price": 440,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "max_soul": 12,
+        "attack": 0.04
+      },
+      "stage": 4,
+      "set_family": "politician_set_3",
+      "art_direction": "notebook_comedy",
+      "flavor": "Delivery of promises sold separately."
+    },
+    "politician_3_visor": {
+      "name": "Statesman Gold Shades",
+      "category": "faces",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "price": 400,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "defense": 0.04,
+        "bargain": 0.055
+      },
+      "stage": 4,
+      "set_family": "politician_set_3",
+      "art_direction": "notebook_comedy",
+      "flavor": "Delivery of promises sold separately."
+    },
+    "politician_3_boots": {
+      "name": "Budget Committee Slippers",
+      "category": "shoes",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "price": 480,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "walk_speed": 0.07,
+        "defense": 0.025
+      },
+      "stage": 4,
+      "set_family": "politician_set_3",
+      "art_direction": "notebook_comedy",
+      "flavor": "Delivery of promises sold separately."
+    },
+    "politician_3_sigil": {
+      "name": "Coming Soon Campaign Sash",
+      "category": "accessories",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 25,
+      "rarity": "epic",
+      "price": 520,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "siphon": 0.1,
+        "bargain": 0.055
+      },
+      "stage": 4,
+      "set_family": "politician_set_3",
+      "art_direction": "notebook_comedy",
+      "flavor": "Delivery of promises sold separately."
+    },
+    "courier_bike": {
+      "name": "Salvage Courier Bike",
+      "category": "vehicles",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 6,
+      "price": 0,
+      "price_final": true,
+      "speed_bonus": 285,
+      "source": "street_craft",
+      "rarity": "rare",
+      "stats": {},
+      "stage": 4,
+      "desc": "Move bonus +285; street craft"
+    },
+    "neon_trike": {
+      "name": "Neon Courier Trike",
+      "category": "vehicles",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 12,
+      "price": 550,
+      "price_final": true,
+      "speed_bonus": 345,
+      "source": "shop",
+      "rarity": "rare",
+      "stats": {},
+      "stage": 4,
+      "desc": "Move bonus +345; shop"
+    },
+    "soul_roadster": {
+      "name": "Soul Motor Roadster",
+      "category": "vehicles",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 25,
+      "price": 1600,
+      "price_final": true,
+      "speed_bonus": 430,
+      "source": "shop",
+      "rarity": "epic",
+      "stats": {},
+      "stage": 4,
+      "desc": "Move bonus +430; shop"
+    },
+    "neon_rail_board": {
+      "name": "Neon Rail Board",
+      "category": "vehicles",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 12,
+      "price": 0,
+      "price_final": true,
+      "speed_bonus": 360,
+      "source": "metro",
+      "rarity": "rare",
+      "stats": {},
+      "stage": 4,
+      "desc": "Move bonus +360; metro"
+    },
+    "shadow_motorcycle": {
+      "name": "Shadow Motorcycle",
+      "category": "vehicles",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 20,
+      "price": 0,
+      "price_final": true,
+      "speed_bonus": 395,
+      "source": "tunnel",
+      "rarity": "epic",
+      "stats": {},
+      "stage": 4,
+      "desc": "Move bonus +395; tunnel"
+    },
+    "reactor_sports_car": {
+      "name": "Reactor Sports Car",
+      "category": "vehicles",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 25,
+      "price": 0,
+      "price_final": true,
+      "speed_bonus": 440,
+      "source": "reactor",
+      "rarity": "epic",
+      "stats": {},
+      "stage": 4,
+      "desc": "Move bonus +440; reactor"
+    },
+    "banker_office_cardigan": {
+      "name": "Small Fortune Blazer",
+      "category": "outfits",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "source": "shop",
+      "price": 45,
+      "price_final": true,
+      "stats": {
+        "max_soul": 5,
+        "defense": 0.02
+      }
+    },
+    "banker_ledger_knit": {
+      "name": "Pocket Dividend Suit",
+      "category": "outfits",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "source": "shop",
+      "price": 60,
+      "price_final": true,
+      "stats": {
+        "max_soul": 5,
+        "defense": 0.02
+      }
+    },
+    "banker_thrift_blazer": {
+      "name": "Big Deal Little Blazer",
+      "category": "outfits",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "source": "shop",
+      "price": 75,
+      "price_final": true,
+      "stats": {
+        "max_soul": 5,
+        "defense": 0.02
+      }
+    },
+    "vampire_night_shirt": {
+      "name": "Midnight Appointment Coat",
+      "category": "outfits",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "source": "shop",
+      "price": 45,
+      "price_final": true,
+      "stats": {
+        "max_soul": 5,
+        "defense": 0.02,
+        "siphon": 0.035
+      }
+    },
+    "vampire_bat_knit": {
+      "name": "Bat Business Jacket",
+      "category": "outfits",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "source": "shop",
+      "price": 60,
+      "price_final": true,
+      "stats": {
+        "max_soul": 5,
+        "defense": 0.02,
+        "siphon": 0.035
+      }
+    },
+    "vampire_dusk_waistcoat": {
+      "name": "After Hours Aristocrat",
+      "category": "outfits",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "source": "shop",
+      "price": 75,
+      "price_final": true,
+      "stats": {
+        "max_soul": 5,
+        "defense": 0.02,
+        "siphon": 0.035
+      }
+    },
+    "speedster_runner_tee": {
+      "name": "Express Interview Jacket",
+      "category": "outfits",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "source": "shop",
+      "price": 45,
+      "price_final": true,
+      "stats": {
+        "max_soul": 5,
+        "defense": 0.02
+      }
+    },
+    "speedster_zip_vest": {
+      "name": "Rush Hour Courier Suit",
+      "category": "outfits",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "source": "shop",
+      "price": 60,
+      "price_final": true,
+      "stats": {
+        "max_soul": 5,
+        "defense": 0.02
+      }
+    },
+    "speedster_campus_jacket": {
+      "name": "Employee of the Lap",
+      "category": "outfits",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "source": "shop",
+      "price": 75,
+      "price_final": true,
+      "stats": {
+        "max_soul": 5,
+        "defense": 0.02
+      }
+    },
+    "politician_canvass_polo": {
+      "name": "Doorstep Promise Blazer",
+      "category": "outfits",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "source": "shop",
+      "price": 45,
+      "price_final": true,
+      "stats": {
+        "max_soul": 5,
+        "defense": 0.02
+      }
+    },
+    "politician_rolled_shirt": {
+      "name": "One More Speech Suit",
+      "category": "outfits",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "source": "shop",
+      "price": 60,
+      "price_final": true,
+      "stats": {
+        "max_soul": 5,
+        "defense": 0.02
+      }
+    },
+    "politician_campaign_cardigan": {
+      "name": "Pocket Manifesto Jacket",
+      "category": "outfits",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "source": "shop",
+      "price": 75,
+      "price_final": true,
+      "stats": {
+        "max_soul": 5,
+        "defense": 0.02
+      }
+    },
+    "banker_vault_pendant": {
+      "name": "Emergency Vault Key",
+      "category": "accessories",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "price": 45,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "defense": 0.015
+      },
+      "art_direction": "notebook_comedy",
+      "flavor": "For emergencies. Lunch money counts.",
+      "torso_accessory": true
+    },
+    "banker_interest_pin": {
+      "name": "Compound Interest Pin",
+      "category": "accessories",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "price": 55,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "bargain": 0.015
+      },
+      "art_direction": "notebook_comedy",
+      "flavor": "Tiny pin. Serious interest.",
+      "torso_accessory": true
+    },
+    "banker_cashmere_scarf": {
+      "name": "Bonus Day Neck Scarf",
+      "category": "accessories",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 105,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "defense": 0.025,
+        "bargain": 0.01
+      },
+      "art_direction": "notebook_comedy",
+      "flavor": "Warm neck. Cold calculations.",
+      "torso_accessory": true
+    },
+    "speedster_race_whistle": {
+      "name": "School Bell Whistle",
+      "category": "accessories",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "price": 45,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "walk_speed": 0.01
+      },
+      "art_direction": "notebook_comedy",
+      "flavor": "Officially late. Unofficially first.",
+      "torso_accessory": true
+    },
+    "speedster_neon_bandana": {
+      "name": "After School Bandana",
+      "category": "accessories",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "price": 60,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "defense": 0.015
+      },
+      "art_direction": "notebook_comedy",
+      "flavor": "Dress code: maximum volume.",
+      "torso_accessory": true
+    },
+    "speedster_sprint_medal": {
+      "name": "Recess Champion Medal",
+      "category": "accessories",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 105,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "walk_speed": 0.02
+      },
+      "art_direction": "notebook_comedy",
+      "flavor": "Won the race to the canteen.",
+      "torso_accessory": true
+    },
+    "politician_campaign_button": {
+      "name": "Promise of the Day Badge",
+      "category": "accessories",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "price": 45,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "bargain": 0.015
+      },
+      "art_direction": "notebook_comedy",
+      "flavor": "Tomorrow starts tomorrow.",
+      "torso_accessory": true
+    },
+    "politician_campaign_scarf": {
+      "name": "Election Day Neck Scarf",
+      "category": "accessories",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 1,
+      "rarity": "normal",
+      "price": 60,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "defense": 0.015
+      },
+      "art_direction": "notebook_comedy",
+      "flavor": "A warm welcome for every voter.",
+      "torso_accessory": true
+    },
+    "politician_honor_medal": {
+      "name": "Self Appointed Honor Medal",
+      "category": "accessories",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 6,
+      "rarity": "rare",
+      "price": 105,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "bargain": 0.025,
+        "defense": 0.01
+      },
+      "art_direction": "notebook_comedy",
+      "flavor": "Unanimously approved by the wearer.",
+      "torso_accessory": true
+    }
+  },
+  "sets": {
+    "banker_set_1": {
+      "name": "Overtime Intern",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 6,
+      "slots": {
+        "outfits": "parking_banker_jacket",
+        "hats": "banker_1_crown",
+        "faces": "banker_1_visor",
+        "shoes": "banker_1_boots",
+        "weapons": "banker_1_sigil"
+      }
+    },
+    "banker_set_2": {
+      "name": "Overdraft Collector",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 12,
+      "slots": {
+        "outfits": "banker_2_coat",
+        "hats": "banker_2_crown",
+        "faces": "banker_2_visor",
+        "shoes": "banker_2_boots",
+        "weapons": "banker_2_sigil"
+      }
+    },
+    "banker_set_3": {
+      "name": "Inflation Executive",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 25,
+      "slots": {
+        "outfits": "banker_3_coat",
+        "hats": "banker_3_crown",
+        "faces": "banker_3_visor",
+        "shoes": "banker_3_boots",
+        "weapons": "banker_3_sigil"
+      }
+    },
+    "vampire_set_1": {
+      "name": "Night Shift Regular",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 6,
+      "slots": {
+        "outfits": "parking_vampire_jacket",
+        "hats": "vampire_1_crown",
+        "faces": "vampire_1_visor",
+        "shoes": "vampire_1_boots",
+        "weapons": "vampire_1_sigil"
+      }
+    },
+    "vampire_set_2": {
+      "name": "Midnight Lounge Guest",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 12,
+      "slots": {
+        "outfits": "vampire_2_coat",
+        "hats": "vampire_2_crown",
+        "faces": "vampire_2_visor",
+        "shoes": "vampire_2_boots",
+        "accessories": "vampire_2_sigil"
+      }
+    },
+    "vampire_set_3": {
+      "name": "Blood Bank Holiday",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 25,
+      "slots": {
+        "outfits": "vampire_3_coat",
+        "hats": "vampire_3_crown",
+        "faces": "vampire_3_visor",
+        "shoes": "vampire_3_boots",
+        "weapons": "vampire_3_sigil"
+      }
+    },
+    "speedster_set_1": {
+      "name": "Late Delivery Rookie",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 6,
+      "slots": {
+        "outfits": "parking_speedster_jacket",
+        "hats": "speedster_1_crown",
+        "faces": "speedster_1_visor",
+        "shoes": "speedster_1_boots",
+        "accessories": "speedster_1_sigil"
+      }
+    },
+    "speedster_set_2": {
+      "name": "Caffeine Marathoner",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 12,
+      "slots": {
+        "outfits": "speedster_2_coat",
+        "hats": "speedster_2_crown",
+        "faces": "speedster_2_visor",
+        "shoes": "speedster_2_boots",
+        "weapons": "speedster_2_sigil"
+      }
+    },
+    "speedster_set_3": {
+      "name": "Walking Sponsor Board",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 25,
+      "slots": {
+        "outfits": "speedster_3_coat",
+        "hats": "speedster_3_crown",
+        "faces": "speedster_3_visor",
+        "shoes": "speedster_3_boots",
+        "weapons": "speedster_3_sigil"
+      }
+    },
+    "politician_set_1": {
+      "name": "Door-to-door Candidate",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 6,
+      "slots": {
+        "outfits": "parking_politician_jacket",
+        "hats": "politician_1_crown",
+        "faces": "politician_1_visor",
+        "shoes": "politician_1_boots",
+        "accessories": "politician_1_sigil"
+      }
+    },
+    "politician_set_2": {
+      "name": "Debate Club Celebrity",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 12,
+      "slots": {
+        "outfits": "politician_2_coat",
+        "hats": "politician_2_crown",
+        "faces": "politician_2_visor",
+        "shoes": "politician_2_boots",
+        "accessories": "politician_2_sigil"
+      }
+    },
+    "politician_set_3": {
+      "name": "Eternal Election Campaign",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 25,
+      "slots": {
+        "outfits": "politician_3_coat",
+        "hats": "politician_3_crown",
+        "faces": "politician_3_visor",
+        "shoes": "politician_3_boots",
+        "accessories": "politician_3_sigil"
+      }
+    }
+  }
+}

@@ -4,6 +4,7 @@
   "description": "WebSocket server for SoulsWarAI",
   "main": "server.js",
   "scripts": {
+    "prestart": "node sync_street_rules.js",
     "start": "node server.js"
   },
   "dependencies": {

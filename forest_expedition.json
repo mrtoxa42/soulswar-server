@@ -1,0 +1,180 @@
+{
+  "version": 1,
+  "camp": [
+    3000,
+    4080
+  ],
+  "raid_gate": [
+    4770,
+    1500
+  ],
+  "source": [
+    4240,
+    2850
+  ],
+  "pvp_radius": 1050,
+  "world_enemies": [
+    {
+      "id": "cap_a",
+      "kind": 0,
+      "name": "Permit Mushroom",
+      "at": [
+        1600,
+        2800
+      ],
+      "hp": 140,
+      "loot": 6
+    },
+    {
+      "id": "cap_b",
+      "kind": 0,
+      "name": "Overtime Mushroom",
+      "at": [
+        2180,
+        2640
+      ],
+      "hp": 140,
+      "loot": 6
+    },
+    {
+      "id": "guard_a",
+      "kind": 1,
+      "name": "Branch Manager",
+      "at": [
+        1800,
+        2110
+      ],
+      "hp": 260,
+      "loot": 12
+    },
+    {
+      "id": "guard_b",
+      "kind": 1,
+      "name": "Root Inspector",
+      "at": [
+        3700,
+        2050
+      ],
+      "hp": 260,
+      "loot": 12
+    },
+    {
+      "id": "cap_c",
+      "kind": 0,
+      "name": "Unlicensed Forager",
+      "at": [
+        4900,
+        3450
+      ],
+      "hp": 140,
+      "loot": 6
+    },
+    {
+      "id": "elder",
+      "kind": 1,
+      "name": "The Sleepy Warden \u00e2\u20ac\u00a2 WORLD BOSS",
+      "at": [
+        1760,
+        1300
+      ],
+      "hp": 1500,
+      "loot": 45,
+      "boss": true
+    }
+  ],
+  "raid_enemies": [
+    {
+      "id": "raid_cap",
+      "kind": 0,
+      "name": "Gatekeeper Candle",
+      "at": [
+        1000,
+        950
+      ],
+      "hp": 300,
+      "loot": 0,
+      "room": 0
+    },
+    {
+      "id": "raid_guard",
+      "kind": 1,
+      "name": "Entrance Coffin",
+      "at": [
+        1450,
+        1450
+      ],
+      "hp": 420,
+      "loot": 0,
+      "room": 0
+    },
+    {
+      "id": "king",
+      "kind": 2,
+      "name": "His Sporeness \u00e2\u20ac\u00a2 RAID BOSS",
+      "at": [
+        4900,
+        1050
+      ],
+      "hp": 1200,
+      "loot": 0,
+      "boss": true,
+      "room": 2
+    },
+    {
+      "id": "seal_guard_a",
+      "kind": 1,
+      "name": "Crypt Sentinel",
+      "at": [
+        2480,
+        1450
+      ],
+      "hp": 380,
+      "loot": 0,
+      "room": 1
+    },
+    {
+      "id": "seal_guard_b",
+      "kind": 0,
+      "name": "Crypt Forager",
+      "at": [
+        3380,
+        1450
+      ],
+      "hp": 280,
+      "loot": 0,
+      "room": 1
+    }
+  ],
+  "runes": [
+    [
+      2670,
+      1050
+    ],
+    [
+      3260,
+      1050
+    ]
+  ],
+  "chest": [
+    5050,
+    1720
+  ],
+  "words": [
+    "FOREST",
+    "MUSHROOM",
+    "ROOTS",
+    "BRANCH",
+    "PERMIT",
+    "WARDEN",
+    "GROVE",
+    "SPORES"
+  ],
+  "attack_damage": 35,
+  "hit_damage": 10,
+  "boss_hit_damage": 18,
+  "word_heal": 5,
+  "mob_respawn": 75,
+  "boss_respawn": 300,
+  "source_channel": 5,
+  "source_cooldown": 45
+}
