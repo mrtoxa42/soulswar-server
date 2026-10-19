@@ -1,0 +1,106 @@
+'use strict';
+const crypto = require('node:crypto');
+
+class AdminService {
+    constructor({rooms, wss, keys = [], version = '0.6.6'}) {
+        this.rooms = rooms; this.wss = wss; this.version = version;
+        this.keys = keys.map(k => crypto.createPublicKey({key:Buffer.from(k,'base64'),format:'der',type:'spki'}));
+        this.sessions = new WeakMap(); this.pairs = new Map(); this.attempts = new Map();
+        this.lag = 0; this.cpu = 0;
+        let previousTime = process.hrtime.bigint(), previousCpu = process.cpuUsage();
+        this.timer = setInterval(() => {
+            const now = process.hrtime.bigint(), elapsed = Number(now-previousTime)/1e6;
+            const usage = process.cpuUsage(previousCpu);
+            this.lag = Math.max(0,elapsed-1000); this.cpu = (usage.user+usage.system)/(elapsed*10);
+            previousTime = now; previousCpu = process.cpuUsage();
+            for (const [code,pair] of this.pairs) if(pair.expires<Date.now()) this.pairs.delete(code);
+            for (const [ip,attempt] of this.attempts) if(attempt.until<Date.now()) this.attempts.delete(ip);
+        },1000);
+        this.timer.unref();
+    }
+    send(ws,data) { if(ws.readyState===1) ws.send(JSON.stringify(data)); }
+    player(id) {
+        for(const room of this.rooms.values()) if(room.players.has(id)) return {room,player:room.players.get(id)};
+        return null;
+    }
+    setRole(id,role) {
+        const found = this.player(id);
+        if(!found) return false;
+        found.player.role = role;
+        found.player.ws.developerRole = role === 'Developer';
+        const message = {type:'role_update',zone:found.room.zone,id,role};
+        for(const player of found.room.players.values()) this.send(player.ws,message);
+        return true;
+    }
+    limited(ip) {
+        let entry = this.attempts.get(ip);
+        if(!entry || entry.until<Date.now()) {
+            if(this.attempts.size>=1000 && !entry) return true;
+            entry = {count:0,until:Date.now()+60000}; this.attempts.set(ip,entry);
+        }
+        return ++entry.count > 10;
+    }
+    handle(ws,data,id,ip) {
+        if(!data || typeof data.type!=='string') return false;
+        if(data.type==='developer_pair') {
+            const found=this.player(id);
+            if(!found) return true;
+            if(!this.keys.length) {this.send(ws,{type:'developer_pair',error:'Developer access is not configured.'});return true;}
+            if(ws.lastPair && Date.now()-ws.lastPair<10000) return true;
+            ws.lastPair=Date.now();
+            for(const [code,pair] of this.pairs) if(pair.id===id) this.pairs.delete(code);
+            if(this.pairs.size>=1000) return true;
+            const code=crypto.randomBytes(6).toString('hex').toUpperCase();
+            this.pairs.set(code,{id,expires:Date.now()+120000});
+            this.send(ws,{type:'developer_pair',code,expires_in:120});
+            return true;
+        }
+        if(data.type==='developer_logout') {this.setRole(id,''); return true;}
+        if(!data.type.startsWith('admin_')) return false;
+        let session=this.sessions.get(ws);
+        if(!session) {session={authenticated:false,challenge:'',expires:0,lastHello:0,lastSnapshot:0,lastPing:0,lastPair:0};this.sessions.set(ws,session);}
+        if(data.type==='admin_hello') {
+            if(Date.now()-session.lastHello<1000) return true;
+            session.lastHello=Date.now();
+            if(this.player(id) || !this.keys.length || this.limited(ip)) {this.send(ws,{type:'admin_error',reason:'Access unavailable or rate limited.'});return true;}
+            session.challenge='soulswar-admin-v1:'+crypto.randomBytes(32).toString('hex');
+            session.expires=Date.now()+30000; session.authenticated=false;
+            this.send(ws,{type:'admin_challenge',challenge:session.challenge}); return true;
+        }
+        if(data.type==='admin_auth') {
+            const challenge=session.challenge; session.challenge='';
+            const signature=typeof data.signature==='string' && data.signature.length<200 ? Buffer.from(data.signature,'base64') : Buffer.alloc(0);
+            session.authenticated=Boolean(challenge && session.expires>Date.now() && signature.length===64 && this.keys.some(key=>crypto.verify(null,Buffer.from(challenge),key,signature)));
+            session.expires=Date.now()+8*60*60*1000;
+            this.send(ws,{type:session.authenticated?'admin_ready':'admin_error',reason:session.authenticated?undefined:'Authentication failed.'});
+            return true;
+        }
+        if(!session.authenticated || session.expires<Date.now()) {this.send(ws,{type:'admin_error',reason:'Authentication required.'});return true;}
+        if(data.type==='admin_ping' && Date.now()-session.lastPing>=1000) {
+            session.lastPing=Date.now();this.send(ws,{type:'admin_pong',nonce:String(data.nonce).slice(0,40)});
+        }
+        if(data.type==='admin_snapshot' && Date.now()-session.lastSnapshot>=3000) {
+            session.lastSnapshot=Date.now();this.send(ws,{type:'admin_snapshot',...this.snapshot()});
+        }
+        if(data.type==='admin_pair' && Date.now()-session.lastPair>=1000) {
+            session.lastPair=Date.now();
+            const code=String(data.code||'').replace(/[\s-]/g,'').toUpperCase();
+            const pair=this.pairs.get(code);
+            const ok=Boolean(pair && pair.expires>Date.now() && this.setRole(pair.id,'Developer'));
+            if(pair) this.pairs.delete(code);
+            this.send(ws,{type:'admin_pair_result',ok,message:ok?'Developer session enabled. F6 is ready in the game.':'Code expired or not found. Request a new code in the game.'});
+        }
+        return true;
+    }
+    isAdminSocket(ws) { return this.sessions.has(ws); }
+    close(id) {for(const [code,pair] of this.pairs) if(pair.id===id) this.pairs.delete(code);}
+    snapshot() {
+        const now=Date.now(), players=[], rooms=[];
+        for(const room of this.rooms.values()) {
+            rooms.push({id:room.id,zone:room.zone,players:room.players.size,capacity:room.zone==='forest_raid'?4:30,bots:room.botCount,private:room.zone==='forest_raid'});
+            for(const p of room.players.values()) players.push({id:p.id,name:p.name,class:p.class,level:p.level,role:p.role||'',zone:p.zone,room:room.id,x:Math.round(p.x||0),y:Math.round(p.y||0),dead:p.dead,country:p.country,connected_seconds:Math.round((now-(p.connectedAt||now))/1000),last_seen_seconds:Math.max(0,Math.round((now-p.lastUpdate)/1000))});
+        }
+        return {at:now,version:this.version,uptime_seconds:Math.floor(process.uptime()),memory_mb:Math.round(process.memoryUsage().rss/1048576),cpu_percent:Math.round(this.cpu*10)/10,event_loop_lag_ms:Math.round(this.lag),connections:this.wss.clients.size,players,rooms};
+    }
+}
+module.exports={AdminService};

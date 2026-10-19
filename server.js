@@ -1,6 +1,9 @@
 const WebSocket = require('ws');
 const geoip = require('geoip-lite');
 const crypto = require('crypto');
+const fs = require('node:fs');
+const path = require('node:path');
+const {AdminService} = require('./admin_service');
 const { canDuel, pairKey } = require('./duel_rules');
 const Equipment = require('./equipment_rules');
 const Regions = require('./region_rules');
@@ -10,7 +13,7 @@ const expeditionTimer = setInterval(()=>expeditions.tick(),100);
 expeditionTimer.unref();
 
 const PORT = process.env.PORT || 8080;
-const wss = new WebSocket.Server({ port: PORT });
+const wss = new WebSocket.Server({ port: PORT, maxPayload: 16384 });
 
 console.log(`WebSocket server starting on port ${PORT}`);
 
@@ -33,6 +36,8 @@ const BLOCKED_TERMS = [
 ];
 
 const rooms = new Map();
+const keyFile = process.env.ADMIN_PUBLIC_KEYS_FILE || path.join(__dirname,'admin_public_keys.json');
+const admin = new AdminService({rooms,wss,keys:fs.existsSync(keyFile)?JSON.parse(fs.readFileSync(keyFile,'utf8')).keys:[]});
 
 function rejectDuel(player, reason) {
     if (player && player.ws.readyState === WebSocket.OPEN) {
@@ -69,6 +74,7 @@ function updatePlayerInfo(room, player, data) {
 
 function validateSystemEvent(room, player, payload) {
     if (!payload || typeof payload !== 'object' || Array.isArray(payload)) return false;
+    payload.role = player.role || '';
     if (payload.ev === 'update_info') updatePlayerInfo(room, player, payload);
     if (payload.ev === 'player_dead') {
         player.dead = true;
@@ -285,6 +291,7 @@ wss.on('connection', (ws, req) => {
     const ip = getClientIp(req);
     const country = getCountry(ip);
     const playerId = crypto.randomUUID();
+    const connectedAt = Date.now();
     let playerRoom = null;
 
     console.log(`New connection from ${ip} (${country}), assigned ID: ${playerId}`);
@@ -293,17 +300,21 @@ wss.on('connection', (ws, req) => {
         try {
             const data = JSON.parse(message);
             const now = Date.now();
+            if(admin.handle(ws,data,playerId,ip)) return;
+            if(admin.isAdminSocket(ws)) return;
 
             if (data.type === 'join') {
                 const zone = data.zone === undefined ? 'city' : data.zone;
                 if (!WORLD_ZONES.has(zone)) { ws.send(JSON.stringify({type:'join_error',reason:'unknown_zone'})); return; }
-                if (!Regions.allowed(zone,data.class)) { ws.send(JSON.stringify({type:'join_error',reason:'class_restricted'})); return; }
+                if (!Regions.allowed(zone,data.class) && !ws.developerRole) { ws.send(JSON.stringify({type:'join_error',reason:'class_restricted'})); return; }
                 if(zone===EXPEDITION_RAID&&!expeditions.authorize(playerId,data.expedition_ticket)){ws.send(JSON.stringify({type:'expedition',event:'error',reason:'raid_ticket_required'}));return;}
                 if (playerRoom) handleDisconnect(playerRoom, playerId);
                 playerRoom = getOrCreateRoom(zone,zone===EXPEDITION_RAID?data.expedition_ticket:'');
                 const newPlayer = {
                     ws: ws,
                     id: playerId,
+                    role: ws.developerRole ? 'Developer' : '',
+                    connectedAt,
                     zone,
                     name: safeUsername(data.name),
                     class: data.class,
@@ -341,6 +352,7 @@ wss.on('connection', (ws, req) => {
                             id: id,
                             zone: p.zone,
                             name: p.name,
+                            role: p.role || '',
                             class: p.class,
                             level: p.level,
                             country: p.country,
@@ -362,7 +374,8 @@ wss.on('connection', (ws, req) => {
                 ws.send(JSON.stringify({
                     type: 'welcome',
                     protocol: 2,
-                    server_version: '0.6.5',
+                    server_version: '0.6.6',
+                    role: newPlayer.role,
                     join_revision: data.join_revision,
                     zone,
                     id: playerId,
@@ -378,6 +391,7 @@ wss.on('connection', (ws, req) => {
                     id: playerId,
                     zone,
                     name: newPlayer.name,
+                    role: newPlayer.role,
                     class: newPlayer.class,
                     level: newPlayer.level,
                     country: country,
@@ -475,6 +489,7 @@ wss.on('connection', (ws, req) => {
     });
 
     ws.on('close', () => {
+        admin.close(playerId);
         if (playerRoom) {
             handleDisconnect(playerRoom, playerId, true);
         }

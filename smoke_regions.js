@@ -28,7 +28,7 @@ async function join(peer, zone, revision) {
     peer.messages.length = 0;
     peer.ws.send(JSON.stringify({type:'join',zone,join_revision:revision,name:peer.name,class:peer.cls,level:peer.level,x:3000,y:3500}));
     const welcome = await wait(() => peer.messages.find(m => m.type === 'welcome' && m.join_revision === revision));
-    check(welcome.zone === zone && welcome.protocol === 2 && welcome.server_version === '0.6.5', `${zone}: current protocol acknowledged`);
+    check(welcome.zone === zone && welcome.protocol === 2 && welcome.server_version === '0.6.6', `${zone}: current protocol acknowledged`);
     return welcome;
 }
 (async () => {

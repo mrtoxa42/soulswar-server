@@ -2,18 +2,31 @@
 
 WebSocket server for SoulsWarAI.
 
+## Admin monitor and Developer sessions (0.6.6)
+
+`admin_service.js` authenticates local dashboard connections using Ed25519 signed
+single-use challenges. `admin_public_keys.json` contains only public verification
+keys; never put a private signing key in this repository or image. Empty/missing
+public keys disable access. `ADMIN_PUBLIC_KEYS_FILE` can select a separate key file.
+The matching `admin-panel.html` runs on the owner's computer, polls every 5 seconds,
+and authorizes a short-lived game pairing code. Developer roles are server-owned,
+survive region joins on the same socket and end on disconnect. Admin sockets do
+not occupy game rooms. Snapshots are throttled to one per 3 seconds per panel;
+they are generated only on authenticated requests. No database or extra service
+is required. Restarting the server invalidates panel/game Developer sessions.
+
 ## Region multiplayer (0.6.5)
 
 This repository is the standalone deployment source. Keep all root JavaScript and
 JSON files together: region routing, equipment validation and expeditions require
 their companion rule modules and data. `npm ci` installs dependencies and
 `npm start` starts the service using Render's `PORT`. The welcome packet includes
-`protocol: 2`, `server_version: "0.6.5"`, the accepted zone and the join revision.
+`protocol: 2`, `server_version: "0.6.6"`, the accepted zone and the join revision.
 Class districts/interiors support shared player visibility and regional chat;
 class districts disable PvP. Raid instances remain private to their party.
 
 Render should deploy this repository's `main` branch with the Dockerfile at its
-root. Deploy this server with the matching 0.6.5 Poki client, then reload clients.
+root. Deploy this server with the matching 0.6.6 Poki client, then reload clients.
 Verify the running service with `node smoke_regions.js wss://soulswar-server.onrender.com`.
 This opens temporary peers in all four class districts and interiors and checks
 the protocol, visibility, movement and regional chat without combat or rewards.
