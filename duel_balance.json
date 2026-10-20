@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "words": {
+    "1": [
+      "FORCE",
+      "STRIKE",
+      "SIPHON",
+      "POWER",
+      "DRAIN",
+      "CRUSH",
+      "SURGE",
+      "SPARK",
+      "BLAST",
+      "PULSE"
+    ],
+    "2": [
+      "OVERLOAD",
+      "PHANTOM",
+      "DOMINATE",
+      "CITADEL",
+      "VOLTAGE",
+      "VAMPIRE",
+      "RUPTURE",
+      "ECLIPSE",
+      "MOMENTUM",
+      "FORTRESS"
+    ],
+    "3": [
+      "HYPERSONIC",
+      "RESURRECTION",
+      "INVINCIBLE",
+      "MONOPOLIST",
+      "SANCTUARY",
+      "ACCELERATE",
+      "OBLITERATE",
+      "NIGHTSTALKER",
+      "CATASTROPHE"
+    ],
+    "4": [
+      "TRANSCENDENCE",
+      "BLOODPATRIARCH",
+      "THUNDERSTORM",
+      "ARISTOCRATIC",
+      "UNSTOPPABLE",
+      "OMNIPOTENCE",
+      "CHRONOSPHERE",
+      "SOVEREIGNTY"
+    ],
+    "5": [
+      "TOTALDOMINATION",
+      "TRANSCENDENTAL",
+      "SUPERNOVABURST",
+      "IMMORTALDYNASTY",
+      "APOCALYPTICFIRE",
+      "SOULANNIHILATOR",
+      "HYPERDIMENSIONAL"
+    ]
+  },
+  "letter_soul": 0.012,
+  "word_soul": 0.035,
+  "lead_soul_per_second": 0.018,
+  "victory_refill": 0.6,
+  "defeat_loss": 0.75
+}

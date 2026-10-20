@@ -13,3 +13,6 @@ if (!fs.existsSync(path.join(__dirname, 'equipment.json'))) throw new Error('Mis
 const expeditionSource = path.join(__dirname,'../scripts/data/forest_expedition.json');
 if (fs.existsSync(expeditionSource)) fs.copyFileSync(expeditionSource,path.join(__dirname,'forest_expedition.json'));
 if (!fs.existsSync(path.join(__dirname,'forest_expedition.json'))) throw new Error('Missing forest_expedition.json deployment copy');
+const duelSource=path.join(__dirname,'../scripts/data/duel_balance.json');
+if(fs.existsSync(duelSource))fs.copyFileSync(duelSource,path.join(__dirname,'duel_balance.json'));
+if(!fs.existsSync(path.join(__dirname,'duel_balance.json')))throw new Error('Missing duel_balance.json deployment copy');

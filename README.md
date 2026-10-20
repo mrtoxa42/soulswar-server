@@ -2,6 +2,22 @@
 
 WebSocket server for SoulsWarAI.
 
+## Live Soul duels (0.6.7)
+
+Clients advertising `duel_protocol: 1` use `live_duel.js` for a shared duel ratio
+and Soul reserves. Valid, sequenced letters transfer Soul immediately; completed
+words transfer more. A full attacker still drains the opponent. Live transfer
+stops at 5% remaining Soul; the final result separately refills the winner by
+60% of maximum Soul and removes 75% of the loser's maximum Soul. Both are capped.
+The server validates words, letters, input rate and final victory, and ignores
+position-packet Soul changes while a live duel is active. Account progression
+outside combat remains client-owned. Older clients retain the legacy protocol.
+
+Deploy `live_duel.js` and `duel_balance.json` alongside `server.js`. The JSON is
+shared with the matching game client; reload both players after updating.
+`node smoke_duel.js wss://soulswar-server.onrender.com` opens two temporary test
+players and verifies live transfer, reversal and a single final settlement.
+
 ## Admin monitor and Developer sessions (0.6.6)
 
 `admin_service.js` authenticates local dashboard connections using Ed25519 signed
@@ -21,12 +37,12 @@ This repository is the standalone deployment source. Keep all root JavaScript an
 JSON files together: region routing, equipment validation and expeditions require
 their companion rule modules and data. `npm ci` installs dependencies and
 `npm start` starts the service using Render's `PORT`. The welcome packet includes
-`protocol: 2`, `server_version: "0.6.6"`, the accepted zone and the join revision.
+`protocol: 2`, `server_version: "0.6.7"`, the accepted zone and the join revision.
 Class districts/interiors support shared player visibility and regional chat;
 class districts disable PvP. Raid instances remain private to their party.
 
 Render should deploy this repository's `main` branch with the Dockerfile at its
-root. Deploy this server with the matching 0.6.6 Poki client, then reload clients.
+root. Deploy this server with the matching 0.6.7 Poki client, then reload clients.
 Verify the running service with `node smoke_regions.js wss://soulswar-server.onrender.com`.
 This opens temporary peers in all four class districts and interiors and checks
 the protocol, visibility, movement and regional chat without combat or rewards.
