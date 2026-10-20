@@ -52,7 +52,8 @@
         "none",
         "banker_vault_pendant",
         "banker_interest_pin",
-        "banker_cashmere_scarf"
+        "banker_cashmere_scarf",
+        "inkbound_medal"
       ],
       "vehicles": [
         "none",
@@ -124,7 +125,8 @@
         "none",
         "cape",
         "bat_perch",
-        "vampire_2_sigil"
+        "vampire_2_sigil",
+        "inkbound_medal"
       ],
       "vehicles": [
         "none",
@@ -195,7 +197,8 @@
         "speedster_neon_bandana",
         "speedster_sprint_medal",
         "backpack",
-        "speedster_1_sigil"
+        "speedster_1_sigil",
+        "inkbound_medal"
       ],
       "vehicles": [
         "none",
@@ -269,7 +272,8 @@
         "rosette",
         "politician_1_sigil",
         "politician_2_sigil",
-        "politician_3_sigil"
+        "politician_3_sigil",
+        "inkbound_medal"
       ],
       "vehicles": [
         "none",
@@ -3374,6 +3378,27 @@
       "art_direction": "notebook_comedy",
       "flavor": "Unanimously approved by the wearer.",
       "torso_accessory": true
+    },
+    "inkbound_medal": {
+      "name": "Inkbound Medal",
+      "category": "accessories",
+      "classes": [
+        "Banker",
+        "Vampire",
+        "Speedster",
+        "Politician"
+      ],
+      "min_level": 2,
+      "rarity": "rare",
+      "price": 0,
+      "price_final": true,
+      "source": "typing_event",
+      "stats": {
+        "max_soul": 4,
+        "defense": 0.02
+      },
+      "torso_accessory": true,
+      "flavor": "Six fragments. A story worth wearing."
     }
   },
   "sets": {

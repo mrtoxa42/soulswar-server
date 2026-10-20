@@ -6,6 +6,8 @@ const path = require('node:path');
 const {AdminService} = require('./admin_service');
 const {LiveDuel,syncSoul} = require('./live_duel');
 const liveDuels = new LiveDuel();
+const {TypingEvents} = require('./typing_events');
+const typingEvents = new TypingEvents();
 const { canDuel, pairKey } = require('./duel_rules');
 const Equipment = require('./equipment_rules');
 const Regions = require('./region_rules');
@@ -80,6 +82,7 @@ function validateSystemEvent(room, player, payload) {
     if (payload.ev === 'update_info') updatePlayerInfo(room, player, payload);
     if (payload.ev === 'player_dead') {
         player.dead = true;
+        typingEvents.leave(room,player,'soul_empty');
         cancelPlayerDuels(room, player.id, 'opponent_died');
     }
     if (payload.ev === 'player_respawn' || payload.ev === 'player_revive') player.dead = false;
@@ -108,6 +111,8 @@ function validateSystemEvent(room, player, payload) {
             return false;
         }
         room.duels.set(key, { first: player.id, second: rival.id, phase: 'pending', ratio: 0.5 });
+        typingEvents.leave(room,player,'pvp_challenge');
+        typingEvents.leave(room,rival,'pvp_challenge');
         return true;
     }
     const duel = room.duels.get(key);
@@ -240,6 +245,7 @@ function broadcast(room, message, excludeId = null) {
 
 function tickRoom(room) {
     const now = Date.now();
+    typingEvents.tick(room,now);
     const stateUpdate = [];
     const staleIds = [];
     for(const duel of room.duels.values())if(duel.phase==='active')liveDuels.tick(room,duel);
@@ -290,6 +296,7 @@ function handleDisconnect(room, playerId, disconnect = false) {
     if (room.players.has(playerId)) {
         cancelPlayerDuels(room, playerId, 'opponent_disconnected');
         expeditions.leave(room.players.get(playerId),disconnect);
+        typingEvents.leave(room,room.players.get(playerId),'left_region',disconnect);
         room.players.delete(playerId);
         console.log(`Player ${playerId} left room ${room.id}`);
         broadcast(room, { type: 'player_left', id: playerId });
@@ -386,7 +393,8 @@ wss.on('connection', (ws, req) => {
                 ws.send(JSON.stringify({
                     type: 'welcome',
                     protocol: 2,
-                    server_version: '0.6.7',
+                    server_version: '0.6.8',
+                    typing_events: 1,
                     duel_protocol: 1,
                     role: newPlayer.role,
                     join_revision: data.join_revision,
@@ -426,10 +434,12 @@ wss.on('connection', (ws, req) => {
                 const p = playerRoom.players.get(playerId);
                 p.lastUpdate = now;
 
-                if (data.type === 'expedition') {
+                if (data.type === 'typing_event') {
+                    typingEvents.action(playerRoom,p,data);
+                } else if (data.type === 'expedition') {
                     if([EXPEDITION_WORLD,EXPEDITION_RAID].includes(p.zone)) expeditions.action(p,data);
                 } else if (data.type === 'pos') {
-                    if(now>=(p.soul_lock_until||0)&&![...playerRoom.duels.values()].some(d=>d.live&&[d.first,d.second].includes(playerId)))syncSoul(p,data);
+                    if(now>=(p.soul_lock_until||0)&&!typingEvents.active(playerRoom,p)&&![...playerRoom.duels.values()].some(d=>d.live&&[d.first,d.second].includes(playerId)))syncSoul(p,data);
                     if([EXPEDITION_WORLD,EXPEDITION_RAID].includes(p.zone)) {
                         const width=p.zone===EXPEDITION_RAID?5800:6000,height=p.zone===EXPEDITION_RAID?2200:4800;
                         if(!Number.isFinite(data.x)||!Number.isFinite(data.y)||data.x<150||data.y<200||data.x>width-100||data.y>height-100) return;

@@ -16,3 +16,6 @@ if (!fs.existsSync(path.join(__dirname,'forest_expedition.json'))) throw new Err
 const duelSource=path.join(__dirname,'../scripts/data/duel_balance.json');
 if(fs.existsSync(duelSource))fs.copyFileSync(duelSource,path.join(__dirname,'duel_balance.json'));
 if(!fs.existsSync(path.join(__dirname,'duel_balance.json')))throw new Error('Missing duel_balance.json deployment copy');
+const typingSource=path.join(__dirname,'../scripts/data/typing_events.json');
+if(fs.existsSync(typingSource))fs.copyFileSync(typingSource,path.join(__dirname,'typing_events.json'));
+if(!fs.existsSync(path.join(__dirname,'typing_events.json')))throw new Error('Missing typing_events.json deployment copy');

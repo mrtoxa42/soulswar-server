@@ -2,6 +2,29 @@
 
 WebSocket server for SoulsWarAI.
 
+## Shared street typing bosses (0.6.8)
+
+`typing_events.js` owns both city events, their shared progress, gathering and
+respawn timers, each writer's sentence checkpoint, personal nest creatures and
+reward receipts. Ship `typing_events.json` alongside it. The matching client uses
+`scripts/data/typing_events.json`; edit that canonical copy and sync before deploy.
+Both bosses are soloable online. The initial writer count sets the text budget;
+late joins and rejoining do not inflate it. Paused rounds keep their shared progress.
+
+Story input validates exact case, punctuation, spaces, sequence, cycle, distance
+and rate (25 characters/sec with a bounded burst). Creature words accept either
+case. Position packets cannot overwrite Soul while writing. PvP remains enabled:
+a valid real-player challenge pauses both writers before the duel is forwarded.
+Only meaningful contributors receive personal reward receipts, which are retried
+until acknowledged. Client-owned profile data persists the claim and journal.
+No database or extra hosted service is required. Nearby public progress is
+throttled; the acting writer receives direct input acknowledgements.
+
+`node smoke_typing_events.js wss://soulswar-server.onrender.com --observe-only`
+checks version/capability and both boss snapshots without entering an encounter.
+Omit `--observe-only` to exercise input, shared progress and PvP interruption with
+two temporary test players. Deploy with the matching 0.6.8 Poki client.
+
 ## Live Soul duels (0.6.7)
 
 Clients advertising `duel_protocol: 1` use `live_duel.js` for a shared duel ratio

@@ -2,7 +2,7 @@
 const crypto = require('node:crypto');
 
 class AdminService {
-    constructor({rooms, wss, keys = [], version = '0.6.7'}) {
+    constructor({rooms, wss, keys = [], version = '0.6.8'}) {
         this.rooms = rooms; this.wss = wss; this.version = version;
         this.keys = keys.map(k => crypto.createPublicKey({key:Buffer.from(k,'base64'),format:'der',type:'spki'}));
         this.sessions = new WeakMap(); this.pairs = new Map(); this.attempts = new Map();
