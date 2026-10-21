@@ -1,11 +1,11 @@
 {
-  "version": 1,
+  "version": 2,
   "caps": {
-    "attack": 0.25,
-    "siphon": 0.35,
-    "max_soul": 40,
-    "defense": 0.15,
-    "walk_speed": 0.2,
+    "attack": 0.04,
+    "siphon": 0.06,
+    "max_soul": 12,
+    "defense": 0.04,
+    "walk_speed": 0.1,
     "bargain": 0.15
   },
   "classes": {
@@ -17,7 +17,8 @@
         "fedora_gold",
         "banker_1_crown",
         "banker_2_crown",
-        "banker_3_crown"
+        "banker_3_crown",
+        "legendary_banker_head"
       ],
       "faces": [
         "none",
@@ -26,7 +27,8 @@
         "cigar",
         "banker_1_visor",
         "banker_2_visor",
-        "banker_3_visor"
+        "banker_3_visor",
+        "legendary_banker_face"
       ],
       "outfits": [
         "none",
@@ -38,7 +40,8 @@
         "tuxedo",
         "parking_banker_jacket",
         "banker_2_coat",
-        "banker_3_coat"
+        "banker_3_coat",
+        "legendary_banker_armor"
       ],
       "shoes": [
         "none",
@@ -46,25 +49,28 @@
         "loafers_gold",
         "banker_1_boots",
         "banker_2_boots",
-        "banker_3_boots"
+        "banker_3_boots",
+        "legendary_banker_shoes"
       ],
       "accessories": [
         "none",
         "banker_vault_pendant",
         "banker_interest_pin",
         "banker_cashmere_scarf",
-        "inkbound_medal"
+        "inkbound_medal",
+        "legendary_banker_accessory"
       ],
       "vehicles": [
         "none",
         "skateboard",
         "rollerblades",
         "scooter",
-        "limo",
-        "black_vip",
-        "vault_chariot",
         "neon_trike",
-        "soul_roadster"
+        "vault_chariot",
+        "soul_roadster",
+        "black_vip",
+        "limo",
+        "legendary_banker_vehicle"
       ],
       "weapons": [
         "none",
@@ -79,7 +85,8 @@
         "money_bag",
         "banker_1_sigil",
         "banker_2_sigil",
-        "banker_3_sigil"
+        "banker_3_sigil",
+        "legendary_banker_weapon"
       ]
     },
     "Vampire": {
@@ -90,7 +97,8 @@
         "bat_mask",
         "vampire_1_crown",
         "vampire_2_crown",
-        "vampire_3_crown"
+        "vampire_3_crown",
+        "legendary_vampire_head"
       ],
       "faces": [
         "none",
@@ -99,7 +107,8 @@
         "red_eyes",
         "vampire_1_visor",
         "vampire_2_visor",
-        "vampire_3_visor"
+        "vampire_3_visor",
+        "legendary_vampire_face"
       ],
       "outfits": [
         "none",
@@ -111,7 +120,8 @@
         "victorian_vest",
         "parking_vampire_jacket",
         "vampire_2_coat",
-        "vampire_3_coat"
+        "vampire_3_coat",
+        "legendary_vampire_armor"
       ],
       "shoes": [
         "none",
@@ -119,24 +129,27 @@
         "pointed_shoes",
         "vampire_1_boots",
         "vampire_2_boots",
-        "vampire_3_boots"
+        "vampire_3_boots",
+        "legendary_vampire_shoes"
       ],
       "accessories": [
         "none",
         "cape",
         "bat_perch",
         "vampire_2_sigil",
-        "inkbound_medal"
+        "inkbound_medal",
+        "legendary_vampire_accessory"
       ],
       "vehicles": [
         "none",
         "skateboard",
         "rollerblades",
         "scooter",
-        "bat_form",
         "shadow_carriage",
+        "shadow_motorcycle",
         "nether_glide",
-        "shadow_motorcycle"
+        "bat_form",
+        "legendary_vampire_vehicle"
       ],
       "weapons": [
         "none",
@@ -148,7 +161,8 @@
         "crimson_rapier",
         "blood_chalice",
         "vampire_1_sigil",
-        "vampire_3_sigil"
+        "vampire_3_sigil",
+        "legendary_vampire_weapon"
       ]
     },
     "Speedster": {
@@ -160,7 +174,8 @@
         "sport_visor",
         "speedster_1_crown",
         "speedster_2_crown",
-        "speedster_3_crown"
+        "speedster_3_crown",
+        "legendary_speedster_head"
       ],
       "faces": [
         "none",
@@ -169,7 +184,8 @@
         "bubblegum",
         "speedster_1_visor",
         "speedster_2_visor",
-        "speedster_3_visor"
+        "speedster_3_visor",
+        "legendary_speedster_face"
       ],
       "outfits": [
         "none",
@@ -181,7 +197,8 @@
         "skater_tee",
         "parking_speedster_jacket",
         "speedster_2_coat",
-        "speedster_3_coat"
+        "speedster_3_coat",
+        "legendary_speedster_armor"
       ],
       "shoes": [
         "none",
@@ -189,7 +206,8 @@
         "turbo_kicks",
         "speedster_1_boots",
         "speedster_2_boots",
-        "speedster_3_boots"
+        "speedster_3_boots",
+        "legendary_speedster_shoes"
       ],
       "accessories": [
         "none",
@@ -198,7 +216,8 @@
         "speedster_sprint_medal",
         "backpack",
         "speedster_1_sigil",
-        "inkbound_medal"
+        "inkbound_medal",
+        "legendary_speedster_accessory"
       ],
       "vehicles": [
         "none",
@@ -210,7 +229,8 @@
         "rocket_skis",
         "courier_bike",
         "neon_rail_board",
-        "reactor_sports_car"
+        "reactor_sports_car",
+        "legendary_speedster_vehicle"
       ],
       "weapons": [
         "none",
@@ -222,7 +242,8 @@
         "plasma_twin_blades",
         "boombox",
         "speedster_2_sigil",
-        "speedster_3_sigil"
+        "speedster_3_sigil",
+        "legendary_speedster_weapon"
       ]
     },
     "Politician": {
@@ -233,7 +254,8 @@
         "fedora_pres",
         "politician_1_crown",
         "politician_2_crown",
-        "politician_3_crown"
+        "politician_3_crown",
+        "legendary_politician_head"
       ],
       "faces": [
         "none",
@@ -242,7 +264,8 @@
         "politician_smile",
         "politician_1_visor",
         "politician_2_visor",
-        "politician_3_visor"
+        "politician_3_visor",
+        "legendary_politician_face"
       ],
       "outfits": [
         "none",
@@ -254,7 +277,8 @@
         "president_tux",
         "parking_politician_jacket",
         "politician_2_coat",
-        "politician_3_coat"
+        "politician_3_coat",
+        "legendary_politician_armor"
       ],
       "shoes": [
         "none",
@@ -262,7 +286,8 @@
         "wingtips",
         "politician_1_boots",
         "politician_2_boots",
-        "politician_3_boots"
+        "politician_3_boots",
+        "legendary_politician_shoes"
       ],
       "accessories": [
         "none",
@@ -273,17 +298,19 @@
         "politician_1_sigil",
         "politician_2_sigil",
         "politician_3_sigil",
-        "inkbound_medal"
+        "inkbound_medal",
+        "legendary_politician_accessory"
       ],
       "vehicles": [
         "none",
         "skateboard",
         "rollerblades",
         "scooter",
+        "modified_scooter",
         "campaign_bus",
         "golden_podium",
         "red_carpet",
-        "modified_scooter"
+        "legendary_politician_vehicle"
       ],
       "weapons": [
         "none",
@@ -293,7 +320,8 @@
         "warden_seal_hammer",
         "protocol_staff",
         "diplomacy_rapier",
-        "sovereignty_hammer"
+        "sovereignty_hammer",
+        "legendary_politician_weapon"
       ]
     }
   },
@@ -307,8 +335,8 @@
       "min_level": 1,
       "rarity": "normal",
       "stats": {
-        "max_soul": 3,
-        "defense": 0.01,
+        "max_soul": 0.9,
+        "defense": 0.0027,
         "bargain": 0.015
       }
     },
@@ -321,8 +349,8 @@
       "min_level": 6,
       "rarity": "rare",
       "stats": {
-        "max_soul": 6,
-        "defense": 0.02,
+        "max_soul": 1.8,
+        "defense": 0.0053,
         "bargain": 0.03
       }
     },
@@ -335,8 +363,8 @@
       "min_level": 15,
       "rarity": "epic",
       "stats": {
-        "max_soul": 9,
-        "defense": 0.03,
+        "max_soul": 2.7,
+        "defense": 0.008,
         "bargain": 0.045
       }
     },
@@ -349,8 +377,8 @@
       "min_level": 1,
       "rarity": "normal",
       "stats": {
-        "max_soul": 3,
-        "defense": 0.01
+        "max_soul": 0.9,
+        "defense": 0.0027
       }
     },
     "aristocrat_crown": {
@@ -362,8 +390,8 @@
       "min_level": 6,
       "rarity": "rare",
       "stats": {
-        "max_soul": 6,
-        "defense": 0.02
+        "max_soul": 1.8,
+        "defense": 0.0053
       }
     },
     "bat_mask": {
@@ -375,8 +403,8 @@
       "min_level": 15,
       "rarity": "epic",
       "stats": {
-        "max_soul": 9,
-        "defense": 0.03
+        "max_soul": 2.7,
+        "defense": 0.008
       }
     },
     "cap": {
@@ -388,8 +416,8 @@
       "min_level": 1,
       "rarity": "normal",
       "stats": {
-        "max_soul": 3,
-        "defense": 0.01
+        "max_soul": 0.9,
+        "defense": 0.0027
       }
     },
     "beanie": {
@@ -401,8 +429,8 @@
       "min_level": 6,
       "rarity": "rare",
       "stats": {
-        "max_soul": 6,
-        "defense": 0.02
+        "max_soul": 1.8,
+        "defense": 0.0053
       }
     },
     "skate_helmet": {
@@ -414,8 +442,8 @@
       "min_level": 15,
       "rarity": "epic",
       "stats": {
-        "max_soul": 9,
-        "defense": 0.03
+        "max_soul": 2.7,
+        "defense": 0.008
       }
     },
     "sport_visor": {
@@ -427,8 +455,8 @@
       "min_level": 15,
       "rarity": "epic",
       "stats": {
-        "max_soul": 9,
-        "defense": 0.03
+        "max_soul": 2.7,
+        "defense": 0.008
       }
     },
     "politician_hair": {
@@ -440,8 +468,8 @@
       "min_level": 1,
       "rarity": "normal",
       "stats": {
-        "max_soul": 3,
-        "defense": 0.01
+        "max_soul": 0.9,
+        "defense": 0.0027
       }
     },
     "campaign_cap": {
@@ -453,8 +481,8 @@
       "min_level": 6,
       "rarity": "rare",
       "stats": {
-        "max_soul": 6,
-        "defense": 0.02
+        "max_soul": 1.8,
+        "defense": 0.0053
       }
     },
     "fedora_pres": {
@@ -466,8 +494,8 @@
       "min_level": 15,
       "rarity": "epic",
       "stats": {
-        "max_soul": 9,
-        "defense": 0.03
+        "max_soul": 2.7,
+        "defense": 0.008
       }
     },
     "monocle": {
@@ -479,7 +507,7 @@
       "min_level": 1,
       "rarity": "normal",
       "stats": {
-        "siphon": 0.025,
+        "siphon": 0.0043,
         "bargain": 0.015
       }
     },
@@ -492,7 +520,7 @@
       "min_level": 6,
       "rarity": "rare",
       "stats": {
-        "siphon": 0.05,
+        "siphon": 0.0086,
         "bargain": 0.03
       }
     },
@@ -505,7 +533,7 @@
       "min_level": 15,
       "rarity": "epic",
       "stats": {
-        "siphon": 0.07500000000000001,
+        "siphon": 0.0129,
         "bargain": 0.045
       }
     },
@@ -518,7 +546,7 @@
       "min_level": 1,
       "rarity": "normal",
       "stats": {
-        "siphon": 0.025
+        "siphon": 0.0043
       }
     },
     "crimson_mask": {
@@ -530,7 +558,7 @@
       "min_level": 6,
       "rarity": "rare",
       "stats": {
-        "siphon": 0.05
+        "siphon": 0.0086
       }
     },
     "red_eyes": {
@@ -542,7 +570,7 @@
       "min_level": 15,
       "rarity": "epic",
       "stats": {
-        "siphon": 0.07500000000000001
+        "siphon": 0.0129
       }
     },
     "shades": {
@@ -554,7 +582,7 @@
       "min_level": 1,
       "rarity": "normal",
       "stats": {
-        "siphon": 0.025
+        "siphon": 0.0043
       }
     },
     "goggles": {
@@ -566,7 +594,7 @@
       "min_level": 6,
       "rarity": "rare",
       "stats": {
-        "siphon": 0.05
+        "siphon": 0.0086
       }
     },
     "bubblegum": {
@@ -578,7 +606,7 @@
       "min_level": 15,
       "rarity": "epic",
       "stats": {
-        "siphon": 0.07500000000000001
+        "siphon": 0.0129
       }
     },
     "lapel_mic": {
@@ -590,7 +618,7 @@
       "min_level": 1,
       "rarity": "normal",
       "stats": {
-        "siphon": 0.025,
+        "siphon": 0.0043,
         "bargain": 0.025
       }
     },
@@ -603,7 +631,7 @@
       "min_level": 6,
       "rarity": "rare",
       "stats": {
-        "siphon": 0.05,
+        "siphon": 0.0086,
         "bargain": 0.05
       }
     },
@@ -616,8 +644,8 @@
       "min_level": 15,
       "rarity": "epic",
       "stats": {
-        "siphon": 0.07500000000000001,
-        "bargain": 0.07500000000000001
+        "siphon": 0.0129,
+        "bargain": 0.075
       }
     },
     "suit": {
@@ -629,8 +657,8 @@
       "min_level": 1,
       "rarity": "normal",
       "stats": {
-        "max_soul": 5,
-        "defense": 0.02
+        "max_soul": 1.5,
+        "defense": 0.0053
       }
     },
     "pinstripe_suit": {
@@ -642,8 +670,8 @@
       "min_level": 6,
       "rarity": "rare",
       "stats": {
-        "max_soul": 10,
-        "defense": 0.04
+        "max_soul": 3.0,
+        "defense": 0.0107
       }
     },
     "tuxedo": {
@@ -655,8 +683,8 @@
       "min_level": 15,
       "rarity": "epic",
       "stats": {
-        "max_soul": 15,
-        "defense": 0.06
+        "max_soul": 4.5,
+        "defense": 0.016
       }
     },
     "gothic_coat": {
@@ -668,9 +696,9 @@
       "min_level": 1,
       "rarity": "normal",
       "stats": {
-        "max_soul": 5,
-        "defense": 0.02,
-        "siphon": 0.035
+        "max_soul": 1.5,
+        "defense": 0.0053,
+        "siphon": 0.006
       }
     },
     "vamp_velvet": {
@@ -682,9 +710,9 @@
       "min_level": 6,
       "rarity": "rare",
       "stats": {
-        "max_soul": 10,
-        "defense": 0.04,
-        "siphon": 0.07
+        "max_soul": 3.0,
+        "defense": 0.0107,
+        "siphon": 0.012
       }
     },
     "victorian_vest": {
@@ -696,9 +724,9 @@
       "min_level": 15,
       "rarity": "epic",
       "stats": {
-        "max_soul": 15,
-        "defense": 0.06,
-        "siphon": 0.10500000000000001
+        "max_soul": 4.5,
+        "defense": 0.016,
+        "siphon": 0.018
       }
     },
     "hoodie": {
@@ -710,8 +738,8 @@
       "min_level": 1,
       "rarity": "normal",
       "stats": {
-        "max_soul": 5,
-        "defense": 0.02
+        "max_soul": 1.5,
+        "defense": 0.0053
       }
     },
     "tracksuit": {
@@ -723,8 +751,8 @@
       "min_level": 6,
       "rarity": "rare",
       "stats": {
-        "max_soul": 10,
-        "defense": 0.04
+        "max_soul": 3.0,
+        "defense": 0.0107
       }
     },
     "skater_tee": {
@@ -736,8 +764,8 @@
       "min_level": 15,
       "rarity": "epic",
       "stats": {
-        "max_soul": 15,
-        "defense": 0.06
+        "max_soul": 4.5,
+        "defense": 0.016
       }
     },
     "politician_suit": {
@@ -749,8 +777,8 @@
       "min_level": 1,
       "rarity": "normal",
       "stats": {
-        "max_soul": 5,
-        "defense": 0.02
+        "max_soul": 1.5,
+        "defense": 0.0053
       }
     },
     "press_blazer": {
@@ -762,8 +790,8 @@
       "min_level": 6,
       "rarity": "rare",
       "stats": {
-        "max_soul": 10,
-        "defense": 0.04
+        "max_soul": 3.0,
+        "defense": 0.0107
       }
     },
     "president_tux": {
@@ -775,8 +803,8 @@
       "min_level": 15,
       "rarity": "epic",
       "stats": {
-        "max_soul": 15,
-        "defense": 0.06
+        "max_soul": 4.5,
+        "defense": 0.016
       }
     },
     "oxfords": {
@@ -789,7 +817,7 @@
       "min_level": 1,
       "rarity": "normal",
       "stats": {
-        "walk_speed": 0.035
+        "walk_speed": 0.0175
       }
     },
     "loafers_gold": {
@@ -801,7 +829,7 @@
       "min_level": 6,
       "rarity": "rare",
       "stats": {
-        "walk_speed": 0.07
+        "walk_speed": 0.035
       }
     },
     "boots": {
@@ -813,7 +841,7 @@
       "min_level": 1,
       "rarity": "normal",
       "stats": {
-        "walk_speed": 0.035
+        "walk_speed": 0.0175
       }
     },
     "pointed_shoes": {
@@ -825,7 +853,7 @@
       "min_level": 6,
       "rarity": "rare",
       "stats": {
-        "walk_speed": 0.07
+        "walk_speed": 0.035
       }
     },
     "sneakers": {
@@ -837,7 +865,7 @@
       "min_level": 1,
       "rarity": "normal",
       "stats": {
-        "walk_speed": 0.035
+        "walk_speed": 0.0175
       }
     },
     "turbo_kicks": {
@@ -849,7 +877,7 @@
       "min_level": 6,
       "rarity": "rare",
       "stats": {
-        "walk_speed": 0.07
+        "walk_speed": 0.035
       }
     },
     "wingtips": {
@@ -861,7 +889,7 @@
       "min_level": 6,
       "rarity": "rare",
       "stats": {
-        "walk_speed": 0.07
+        "walk_speed": 0.035
       }
     },
     "briefcase": {
@@ -873,7 +901,7 @@
       "min_level": 1,
       "rarity": "normal",
       "stats": {
-        "attack": 0.02,
+        "attack": 0.0032,
         "bargain": 0.02
       },
       "hand_texture": true,
@@ -894,7 +922,7 @@
       "min_level": 6,
       "rarity": "rare",
       "stats": {
-        "attack": 0.04,
+        "attack": 0.0064,
         "bargain": 0.04
       },
       "hand_texture": true,
@@ -917,7 +945,7 @@
       "price": 225,
       "shape": "cane",
       "stats": {
-        "attack": 0.08,
+        "attack": 0.0128,
         "bargain": 0.04
       },
       "flavor": "A walking stick with a very ambitious interest rate.",
@@ -932,9 +960,9 @@
       "min_level": 1,
       "rarity": "normal",
       "stats": {
-        "attack": 0.02,
+        "attack": 0.0032,
         "bargain": 0.02,
-        "siphon": 0.035
+        "siphon": 0.006
       }
     },
     "blood_chalice": {
@@ -946,9 +974,9 @@
       "min_level": 6,
       "rarity": "rare",
       "stats": {
-        "attack": 0.04,
+        "attack": 0.0064,
         "bargain": 0.04,
-        "siphon": 0.07
+        "siphon": 0.012
       },
       "hand_texture": true,
       "hand_region": [
@@ -968,9 +996,9 @@
       "min_level": 15,
       "rarity": "epic",
       "stats": {
-        "attack": 0.06,
+        "attack": 0.0096,
         "bargain": 0.06,
-        "siphon": 0.10500000000000001
+        "siphon": 0.018
       }
     },
     "backpack": {
@@ -982,7 +1010,7 @@
       "min_level": 1,
       "rarity": "normal",
       "stats": {
-        "attack": 0.02,
+        "attack": 0.0032,
         "bargain": 0.02
       }
     },
@@ -995,7 +1023,7 @@
       "min_level": 6,
       "rarity": "rare",
       "stats": {
-        "attack": 0.04,
+        "attack": 0.0064,
         "bargain": 0.04
       },
       "hand_texture": true,
@@ -1018,7 +1046,7 @@
       "price": 150,
       "shape": "megaphone",
       "stats": {
-        "attack": 0.06,
+        "attack": 0.0096,
         "bargain": 0.04
       },
       "flavor": "Same promise. Much louder.",
@@ -1033,7 +1061,7 @@
       "min_level": 6,
       "rarity": "rare",
       "stats": {
-        "attack": 0.04,
+        "attack": 0.0064,
         "bargain": 0.04
       }
     },
@@ -1048,7 +1076,11 @@
       ],
       "min_level": 1,
       "rarity": "normal",
-      "stats": {}
+      "stats": {},
+      "speed_bonus": 240,
+      "price": 45,
+      "price_final": true,
+      "desc": "Agile sidewalk cruiser."
     },
     "rollerblades": {
       "name": "Inline Rollerblades",
@@ -1061,7 +1093,11 @@
       ],
       "min_level": 3,
       "rarity": "rare",
-      "stats": {}
+      "stats": {},
+      "speed_bonus": 260,
+      "price": 340,
+      "price_final": true,
+      "desc": "Agile sidewalk gliding."
     },
     "scooter": {
       "name": "Electric Kick Scooter",
@@ -1074,7 +1110,11 @@
       ],
       "min_level": 6,
       "rarity": "epic",
-      "stats": {}
+      "stats": {},
+      "speed_bonus": 280,
+      "price": 440,
+      "price_final": true,
+      "desc": "Sleek commuter ride."
     },
     "limo": {
       "name": "Executive Gold Limousine",
@@ -1084,7 +1124,11 @@
       ],
       "min_level": 25,
       "rarity": "epic",
-      "stats": {}
+      "stats": {},
+      "speed_bonus": 440,
+      "price": 1800,
+      "price_final": true,
+      "desc": "Gilded syndicate luxury cruiser."
     },
     "black_vip": {
       "name": "Armored VIP Town Car",
@@ -1094,7 +1138,11 @@
       ],
       "min_level": 25,
       "rarity": "epic",
-      "stats": {}
+      "stats": {},
+      "speed_bonus": 420,
+      "price": 1280,
+      "price_final": true,
+      "desc": "Bulletproof tinted executive escort."
     },
     "vault_chariot": {
       "name": "Iron Vault Bullion Chariot",
@@ -1104,7 +1152,11 @@
       ],
       "min_level": 15,
       "rarity": "epic",
-      "stats": {}
+      "stats": {},
+      "speed_bonus": 380,
+      "price": 960,
+      "price_final": true,
+      "desc": "Heavy steel cart loaded with gold bullion."
     },
     "bat_form": {
       "name": "Shadow Bat Swarm Flight",
@@ -1114,7 +1166,11 @@
       ],
       "min_level": 15,
       "rarity": "epic",
-      "stats": {}
+      "stats": {},
+      "speed_bonus": 440,
+      "price": 1800,
+      "price_final": true,
+      "desc": "Shapeshift into a flying vampire bat."
     },
     "shadow_carriage": {
       "name": "Crimson Velvet Hearse",
@@ -1124,7 +1180,11 @@
       ],
       "min_level": 15,
       "rarity": "epic",
-      "stats": {}
+      "stats": {},
+      "speed_bonus": 360,
+      "price": 1100,
+      "price_final": true,
+      "desc": "Gothic mahogany carriage with dark drapery."
     },
     "nether_glide": {
       "name": "Obsidian Coffin Hoverboard",
@@ -1134,7 +1194,11 @@
       ],
       "min_level": 25,
       "rarity": "epic",
-      "stats": {}
+      "stats": {},
+      "speed_bonus": 420,
+      "price": 1450,
+      "price_final": true,
+      "desc": "Levitating runic coffin gliding on nether plasma."
     },
     "jetpack": {
       "name": "Twin-Turbo Jetpack",
@@ -1144,7 +1208,11 @@
       ],
       "min_level": 25,
       "rarity": "epic",
-      "stats": {}
+      "stats": {},
+      "speed_bonus": 440,
+      "price": 1280,
+      "price_final": true,
+      "desc": "High-tech dual-thruster flight harness."
     },
     "hoverboard": {
       "name": "Cyber Neon Hoverboard",
@@ -1154,7 +1222,11 @@
       ],
       "min_level": 12,
       "rarity": "epic",
-      "stats": {}
+      "stats": {},
+      "speed_bonus": 440,
+      "price": 1160,
+      "price_final": true,
+      "desc": "Anti-gravity magnetic repulsion board."
     },
     "rocket_skis": {
       "name": "Plasma Rocket Skates",
@@ -1164,7 +1236,11 @@
       ],
       "min_level": 20,
       "rarity": "epic",
-      "stats": {}
+      "stats": {},
+      "speed_bonus": 440,
+      "price": 1200,
+      "price_final": true,
+      "desc": "High-velocity plasma jet rollers."
     },
     "campaign_bus": {
       "name": "Presidential VIP Motorcade",
@@ -1174,7 +1250,11 @@
       ],
       "min_level": 25,
       "rarity": "epic",
-      "stats": {}
+      "stats": {},
+      "speed_bonus": 395,
+      "price": 1240,
+      "price_final": true,
+      "desc": "Diplomatic limousine with national flagpoles."
     },
     "golden_podium": {
       "name": "Diplomatic Campaign Podium",
@@ -1184,7 +1264,11 @@
       ],
       "min_level": 15,
       "rarity": "epic",
-      "stats": {}
+      "stats": {},
+      "speed_bonus": 420,
+      "price": 1500,
+      "price_final": true,
+      "desc": "Hovering executive speech stage with golden seal."
     },
     "red_carpet": {
       "name": "Rolling Red Carpet Glide",
@@ -1194,7 +1278,11 @@
       ],
       "min_level": 12,
       "rarity": "epic",
-      "stats": {}
+      "stats": {},
+      "speed_bonus": 440,
+      "price": 1800,
+      "price_final": true,
+      "desc": "Moving red carpet of imperial statecraft."
     },
     "collection_cane": {
       "name": "Debt Collector Umbrella",
@@ -1207,7 +1295,7 @@
       "price": 135,
       "shape": "umbrella",
       "stats": {
-        "attack": 0.06,
+        "attack": 0.0096,
         "bargain": 0.02
       },
       "flavor": "For rainy days and overdue payments.",
@@ -1224,9 +1312,9 @@
       "price": 420,
       "shape": "calculator",
       "stats": {
-        "attack": 0.1,
-        "siphon": 0.12,
-        "max_soul": 5
+        "attack": 0.016,
+        "siphon": 0.0206,
+        "max_soul": 1.5
       },
       "flavor": "Every button somehow adds another fee.",
       "art_direction": "notebook_comedy"
@@ -1242,8 +1330,8 @@
       "price": 135,
       "shape": "juice_box",
       "stats": {
-        "attack": 0.08,
-        "siphon": 0.04
+        "attack": 0.0128,
+        "siphon": 0.0069
       },
       "flavor": "Definitely tomato juice. Please stop asking.",
       "art_direction": "notebook_comedy"
@@ -1259,9 +1347,9 @@
       "price": 420,
       "shape": "straw",
       "stats": {
-        "attack": 0.12,
-        "defense": 0.025,
-        "siphon": 0.06
+        "attack": 0.0192,
+        "defense": 0.0067,
+        "siphon": 0.0103
       },
       "flavor": "For the vampire who refuses to share a drink.",
       "art_direction": "notebook_comedy"
@@ -1277,8 +1365,8 @@
       "price": 135,
       "shape": "alarm_clock",
       "stats": {
-        "attack": 0.06,
-        "walk_speed": 0.025
+        "attack": 0.0096,
+        "walk_speed": 0.0125
       },
       "flavor": "Fastest person in town. Somehow always late.",
       "art_direction": "notebook_comedy"
@@ -1294,8 +1382,8 @@
       "price": 420,
       "shape": "hairdryer",
       "stats": {
-        "attack": 0.1,
-        "walk_speed": 0.04
+        "attack": 0.016,
+        "walk_speed": 0.02
       },
       "flavor": "Runs faster when the hairstyle is aerodynamic.",
       "art_direction": "notebook_comedy"
@@ -1311,7 +1399,7 @@
       "price": 135,
       "shape": "stamp",
       "stats": {
-        "attack": 0.06,
+        "attack": 0.0096,
         "bargain": 0.03
       },
       "flavor": "Approved today. Delivered sometime after the election.",
@@ -1328,9 +1416,9 @@
       "price": 420,
       "shape": "microphone",
       "stats": {
-        "attack": 0.08,
-        "defense": 0.04,
-        "max_soul": 5
+        "attack": 0.0128,
+        "defense": 0.0107,
+        "max_soul": 1.5
       },
       "flavor": "Never let a perfectly good silence go to waste.",
       "art_direction": "notebook_comedy"
@@ -1347,8 +1435,8 @@
       "source": "parking",
       "shape": "stapler",
       "stats": {
-        "attack": 0.1,
-        "max_soul": 8,
+        "attack": 0.016,
+        "max_soul": 2.4,
         "bargain": 0.025
       },
       "flavor": "Found in the parking office. Still charging late fees.",
@@ -1366,8 +1454,8 @@
       "source": "parking",
       "shape": "thermos",
       "stats": {
-        "attack": 0.11,
-        "siphon": 0.08
+        "attack": 0.0176,
+        "siphon": 0.0137
       },
       "flavor": "Keeps your suspicious drink suspiciously warm.",
       "art_direction": "notebook_comedy"
@@ -1384,8 +1472,8 @@
       "source": "parking",
       "shape": "traffic_cone",
       "stats": {
-        "attack": 0.1,
-        "walk_speed": 0.05
+        "attack": 0.016,
+        "walk_speed": 0.025
       },
       "flavor": "Traffic laws cannot catch what they cannot see.",
       "art_direction": "notebook_comedy"
@@ -1402,8 +1490,8 @@
       "source": "parking",
       "shape": "clipboard",
       "stats": {
-        "attack": 0.1,
-        "defense": 0.05
+        "attack": 0.016,
+        "defense": 0.0133
       },
       "flavor": "The committee will consider your appeal in 87 years.",
       "art_direction": "notebook_comedy"
@@ -1419,8 +1507,8 @@
       "price": 0,
       "source": "parking",
       "stats": {
-        "max_soul": 12,
-        "defense": 0.045,
+        "max_soul": 3.6,
+        "defense": 0.012,
         "bargain": 0.03
       },
       "set_family": "banker_set_1",
@@ -1438,9 +1526,9 @@
       "price": 0,
       "source": "parking",
       "stats": {
-        "max_soul": 12,
-        "defense": 0.045,
-        "siphon": 0.05
+        "max_soul": 3.6,
+        "defense": 0.012,
+        "siphon": 0.0086
       },
       "set_family": "vampire_set_1",
       "art_direction": "notebook_comedy",
@@ -1457,9 +1545,9 @@
       "price": 0,
       "source": "parking",
       "stats": {
-        "max_soul": 12,
-        "defense": 0.045,
-        "walk_speed": 0.02
+        "max_soul": 3.6,
+        "defense": 0.012,
+        "walk_speed": 0.01
       },
       "set_family": "speedster_set_1",
       "art_direction": "notebook_comedy",
@@ -1476,8 +1564,8 @@
       "price": 0,
       "source": "parking",
       "stats": {
-        "max_soul": 12,
-        "defense": 0.045,
+        "max_soul": 3.6,
+        "defense": 0.012,
         "bargain": 0.04
       },
       "set_family": "politician_set_1",
@@ -1510,8 +1598,8 @@
       "source": "shop",
       "shape": "card_reader",
       "stats": {
-        "attack": 0.13,
-        "siphon": 0.1,
+        "attack": 0.0208,
+        "siphon": 0.0171,
         "bargain": 0.03
       },
       "stage": 4,
@@ -1532,8 +1620,8 @@
       "source": "shop",
       "shape": "receipt",
       "stats": {
-        "attack": 0.16,
-        "defense": 0.045,
+        "attack": 0.0256,
+        "defense": 0.012,
         "bargain": 0.04
       },
       "stage": 4,
@@ -1554,8 +1642,8 @@
       "source": "shop",
       "shape": "piggy_bank",
       "stats": {
-        "attack": 0.21,
-        "siphon": 0.06,
+        "attack": 0.0336,
+        "siphon": 0.0103,
         "bargain": 0.025
       },
       "stage": 4,
@@ -1575,8 +1663,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "max_soul": 5,
-        "attack": 0.01
+        "max_soul": 1.5,
+        "attack": 0.0016
       },
       "stage": 4,
       "set_family": "banker_set_1",
@@ -1595,7 +1683,7 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "defense": 0.015,
+        "defense": 0.004,
         "bargain": 0.025
       },
       "stage": 4,
@@ -1615,8 +1703,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "walk_speed": 0.025,
-        "defense": 0.01
+        "walk_speed": 0.0125,
+        "defense": 0.0027
       },
       "stage": 4,
       "set_family": "banker_set_1",
@@ -1635,7 +1723,7 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "siphon": 0.035,
+        "siphon": 0.006,
         "bargain": 0.025
       },
       "stage": 4,
@@ -1662,8 +1750,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "max_soul": 14,
-        "defense": 0.035
+        "max_soul": 4.2,
+        "defense": 0.0093
       },
       "stage": 4,
       "set_family": "banker_set_2",
@@ -1682,8 +1770,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "max_soul": 8,
-        "attack": 0.025
+        "max_soul": 2.4,
+        "attack": 0.004
       },
       "stage": 4,
       "set_family": "banker_set_2",
@@ -1702,7 +1790,7 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "defense": 0.025,
+        "defense": 0.0067,
         "bargain": 0.04
       },
       "stage": 4,
@@ -1722,8 +1810,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "walk_speed": 0.045,
-        "defense": 0.015
+        "walk_speed": 0.0225,
+        "defense": 0.004
       },
       "stage": 4,
       "set_family": "banker_set_2",
@@ -1742,7 +1830,7 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "siphon": 0.065,
+        "siphon": 0.0111,
         "bargain": 0.04
       },
       "stage": 4,
@@ -1769,8 +1857,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "max_soul": 20,
-        "defense": 0.055
+        "max_soul": 6.0,
+        "defense": 0.0147
       },
       "stage": 4,
       "set_family": "banker_set_3",
@@ -1789,8 +1877,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "max_soul": 12,
-        "attack": 0.04
+        "max_soul": 3.6,
+        "attack": 0.0064
       },
       "stage": 4,
       "set_family": "banker_set_3",
@@ -1809,7 +1897,7 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "defense": 0.04,
+        "defense": 0.0107,
         "bargain": 0.055
       },
       "stage": 4,
@@ -1829,8 +1917,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "walk_speed": 0.07,
-        "defense": 0.025
+        "walk_speed": 0.035,
+        "defense": 0.0067
       },
       "stage": 4,
       "set_family": "banker_set_3",
@@ -1849,7 +1937,7 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "siphon": 0.1,
+        "siphon": 0.0171,
         "bargain": 0.055
       },
       "stage": 4,
@@ -1877,8 +1965,8 @@
       "source": "shop",
       "shape": "mug",
       "stats": {
-        "attack": 0.13,
-        "siphon": 0.16
+        "attack": 0.0208,
+        "siphon": 0.0274
       },
       "stage": 4,
       "variant": 1,
@@ -1898,9 +1986,9 @@
       "source": "shop",
       "shape": "ketchup",
       "stats": {
-        "attack": 0.16,
-        "defense": 0.045,
-        "siphon": 0.2
+        "attack": 0.0256,
+        "defense": 0.012,
+        "siphon": 0.0343
       },
       "stage": 4,
       "variant": 2,
@@ -1920,8 +2008,8 @@
       "source": "shop",
       "shape": "iv_bag",
       "stats": {
-        "attack": 0.21,
-        "siphon": 0.12
+        "attack": 0.0336,
+        "siphon": 0.0206
       },
       "stage": 4,
       "variant": 3,
@@ -1940,8 +2028,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "max_soul": 5,
-        "attack": 0.01
+        "max_soul": 1.5,
+        "attack": 0.0016
       },
       "stage": 4,
       "set_family": "vampire_set_1",
@@ -1960,8 +2048,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "defense": 0.015,
-        "siphon": 0.025
+        "defense": 0.004,
+        "siphon": 0.0043
       },
       "stage": 4,
       "set_family": "vampire_set_1",
@@ -1980,8 +2068,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "walk_speed": 0.025,
-        "defense": 0.01
+        "walk_speed": 0.0125,
+        "defense": 0.0027
       },
       "stage": 4,
       "set_family": "vampire_set_1",
@@ -2000,7 +2088,7 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "siphon": 0.060000000000000005
+        "siphon": 0.0103
       },
       "stage": 4,
       "set_family": "vampire_set_1",
@@ -2026,8 +2114,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "max_soul": 14,
-        "defense": 0.035
+        "max_soul": 4.2,
+        "defense": 0.0093
       },
       "stage": 4,
       "set_family": "vampire_set_2",
@@ -2046,8 +2134,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "max_soul": 8,
-        "attack": 0.025
+        "max_soul": 2.4,
+        "attack": 0.004
       },
       "stage": 4,
       "set_family": "vampire_set_2",
@@ -2066,8 +2154,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "defense": 0.025,
-        "siphon": 0.04
+        "defense": 0.0067,
+        "siphon": 0.0069
       },
       "stage": 4,
       "set_family": "vampire_set_2",
@@ -2086,8 +2174,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "walk_speed": 0.045,
-        "defense": 0.015
+        "walk_speed": 0.0225,
+        "defense": 0.004
       },
       "stage": 4,
       "set_family": "vampire_set_2",
@@ -2106,7 +2194,7 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "siphon": 0.10500000000000001
+        "siphon": 0.018
       },
       "stage": 4,
       "set_family": "vampire_set_2",
@@ -2125,8 +2213,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "max_soul": 20,
-        "defense": 0.055
+        "max_soul": 6.0,
+        "defense": 0.0147
       },
       "stage": 4,
       "set_family": "vampire_set_3",
@@ -2145,8 +2233,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "max_soul": 12,
-        "attack": 0.04
+        "max_soul": 3.6,
+        "attack": 0.0064
       },
       "stage": 4,
       "set_family": "vampire_set_3",
@@ -2165,8 +2253,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "defense": 0.04,
-        "siphon": 0.055
+        "defense": 0.0107,
+        "siphon": 0.0094
       },
       "stage": 4,
       "set_family": "vampire_set_3",
@@ -2185,8 +2273,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "walk_speed": 0.07,
-        "defense": 0.025
+        "walk_speed": 0.035,
+        "defense": 0.0067
       },
       "stage": 4,
       "set_family": "vampire_set_3",
@@ -2205,7 +2293,7 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "siphon": 0.155
+        "siphon": 0.0266
       },
       "stage": 4,
       "set_family": "vampire_set_3",
@@ -2232,9 +2320,9 @@
       "source": "shop",
       "shape": "espresso",
       "stats": {
-        "attack": 0.13,
-        "siphon": 0.1,
-        "walk_speed": 0.04
+        "attack": 0.0208,
+        "siphon": 0.0171,
+        "walk_speed": 0.02
       },
       "stage": 4,
       "variant": 1,
@@ -2254,9 +2342,9 @@
       "source": "shop",
       "shape": "energy_can",
       "stats": {
-        "attack": 0.16,
-        "defense": 0.045,
-        "walk_speed": 0.05
+        "attack": 0.0256,
+        "defense": 0.012,
+        "walk_speed": 0.025
       },
       "stage": 4,
       "variant": 2,
@@ -2276,9 +2364,9 @@
       "source": "shop",
       "shape": "fan",
       "stats": {
-        "attack": 0.21,
-        "siphon": 0.06,
-        "walk_speed": 0.06
+        "attack": 0.0336,
+        "siphon": 0.0103,
+        "walk_speed": 0.03
       },
       "stage": 4,
       "variant": 3,
@@ -2297,8 +2385,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "max_soul": 5,
-        "attack": 0.01
+        "max_soul": 1.5,
+        "attack": 0.0016
       },
       "stage": 4,
       "set_family": "speedster_set_1",
@@ -2317,8 +2405,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "defense": 0.015,
-        "walk_speed": 0.025
+        "defense": 0.004,
+        "walk_speed": 0.0125
       },
       "stage": 4,
       "set_family": "speedster_set_1",
@@ -2337,8 +2425,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "walk_speed": 0.025,
-        "defense": 0.01
+        "walk_speed": 0.0125,
+        "defense": 0.0027
       },
       "stage": 4,
       "set_family": "speedster_set_1",
@@ -2357,8 +2445,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "siphon": 0.035,
-        "walk_speed": 0.025
+        "siphon": 0.006,
+        "walk_speed": 0.0125
       },
       "stage": 4,
       "set_family": "speedster_set_1",
@@ -2377,8 +2465,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "max_soul": 14,
-        "defense": 0.035
+        "max_soul": 4.2,
+        "defense": 0.0093
       },
       "stage": 4,
       "set_family": "speedster_set_2",
@@ -2397,8 +2485,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "max_soul": 8,
-        "attack": 0.025
+        "max_soul": 2.4,
+        "attack": 0.004
       },
       "stage": 4,
       "set_family": "speedster_set_2",
@@ -2417,8 +2505,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "defense": 0.025,
-        "walk_speed": 0.04
+        "defense": 0.0067,
+        "walk_speed": 0.02
       },
       "stage": 4,
       "set_family": "speedster_set_2",
@@ -2437,8 +2525,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "walk_speed": 0.045,
-        "defense": 0.015
+        "walk_speed": 0.0225,
+        "defense": 0.004
       },
       "stage": 4,
       "set_family": "speedster_set_2",
@@ -2457,8 +2545,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "siphon": 0.065,
-        "walk_speed": 0.04
+        "siphon": 0.0111,
+        "walk_speed": 0.02
       },
       "stage": 4,
       "set_family": "speedster_set_2",
@@ -2484,8 +2572,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "max_soul": 20,
-        "defense": 0.055
+        "max_soul": 6.0,
+        "defense": 0.0147
       },
       "stage": 4,
       "set_family": "speedster_set_3",
@@ -2504,8 +2592,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "max_soul": 12,
-        "attack": 0.04
+        "max_soul": 3.6,
+        "attack": 0.0064
       },
       "stage": 4,
       "set_family": "speedster_set_3",
@@ -2524,8 +2612,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "defense": 0.04,
-        "walk_speed": 0.055
+        "defense": 0.0107,
+        "walk_speed": 0.0275
       },
       "stage": 4,
       "set_family": "speedster_set_3",
@@ -2544,8 +2632,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "walk_speed": 0.07,
-        "defense": 0.025
+        "walk_speed": 0.035,
+        "defense": 0.0067
       },
       "stage": 4,
       "set_family": "speedster_set_3",
@@ -2564,8 +2652,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "siphon": 0.1,
-        "walk_speed": 0.055
+        "siphon": 0.0171,
+        "walk_speed": 0.0275
       },
       "stage": 4,
       "set_family": "speedster_set_3",
@@ -2592,9 +2680,9 @@
       "source": "shop",
       "shape": "red_tape",
       "stats": {
-        "attack": 0.13,
-        "siphon": 0.1,
-        "defense": 0.035
+        "attack": 0.0208,
+        "siphon": 0.0171,
+        "defense": 0.0093
       },
       "stage": 4,
       "variant": 1,
@@ -2614,8 +2702,8 @@
       "source": "shop",
       "shape": "scissors",
       "stats": {
-        "attack": 0.16,
-        "defense": 0.065
+        "attack": 0.0256,
+        "defense": 0.0173
       },
       "stage": 4,
       "variant": 2,
@@ -2635,9 +2723,9 @@
       "source": "shop",
       "shape": "promise_folder",
       "stats": {
-        "attack": 0.21,
-        "siphon": 0.06,
-        "defense": 0.05
+        "attack": 0.0336,
+        "siphon": 0.0103,
+        "defense": 0.0133
       },
       "stage": 4,
       "variant": 3,
@@ -2656,8 +2744,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "max_soul": 5,
-        "attack": 0.01
+        "max_soul": 1.5,
+        "attack": 0.0016
       },
       "stage": 4,
       "set_family": "politician_set_1",
@@ -2676,7 +2764,7 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "defense": 0.015,
+        "defense": 0.004,
         "bargain": 0.025
       },
       "stage": 4,
@@ -2696,8 +2784,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "walk_speed": 0.025,
-        "defense": 0.01
+        "walk_speed": 0.0125,
+        "defense": 0.0027
       },
       "stage": 4,
       "set_family": "politician_set_1",
@@ -2716,7 +2804,7 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "siphon": 0.035,
+        "siphon": 0.006,
         "bargain": 0.025
       },
       "stage": 4,
@@ -2736,8 +2824,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "max_soul": 14,
-        "defense": 0.035
+        "max_soul": 4.2,
+        "defense": 0.0093
       },
       "stage": 4,
       "set_family": "politician_set_2",
@@ -2756,8 +2844,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "max_soul": 8,
-        "attack": 0.025
+        "max_soul": 2.4,
+        "attack": 0.004
       },
       "stage": 4,
       "set_family": "politician_set_2",
@@ -2776,7 +2864,7 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "defense": 0.025,
+        "defense": 0.0067,
         "bargain": 0.04
       },
       "stage": 4,
@@ -2796,8 +2884,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "walk_speed": 0.045,
-        "defense": 0.015
+        "walk_speed": 0.0225,
+        "defense": 0.004
       },
       "stage": 4,
       "set_family": "politician_set_2",
@@ -2816,7 +2904,7 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "siphon": 0.065,
+        "siphon": 0.0111,
         "bargain": 0.04
       },
       "stage": 4,
@@ -2836,8 +2924,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "max_soul": 20,
-        "defense": 0.055
+        "max_soul": 6.0,
+        "defense": 0.0147
       },
       "stage": 4,
       "set_family": "politician_set_3",
@@ -2856,8 +2944,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "max_soul": 12,
-        "attack": 0.04
+        "max_soul": 3.6,
+        "attack": 0.0064
       },
       "stage": 4,
       "set_family": "politician_set_3",
@@ -2876,7 +2964,7 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "defense": 0.04,
+        "defense": 0.0107,
         "bargain": 0.055
       },
       "stage": 4,
@@ -2896,8 +2984,8 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "walk_speed": 0.07,
-        "defense": 0.025
+        "walk_speed": 0.035,
+        "defense": 0.0067
       },
       "stage": 4,
       "set_family": "politician_set_3",
@@ -2916,7 +3004,7 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "siphon": 0.1,
+        "siphon": 0.0171,
         "bargain": 0.055
       },
       "stage": 4,
@@ -2963,9 +3051,9 @@
         "Banker"
       ],
       "min_level": 25,
-      "price": 1600,
+      "price": 1100,
       "price_final": true,
-      "speed_bonus": 430,
+      "speed_bonus": 400,
       "source": "shop",
       "rarity": "epic",
       "stats": {},
@@ -3032,8 +3120,8 @@
       "price": 45,
       "price_final": true,
       "stats": {
-        "max_soul": 5,
-        "defense": 0.02
+        "max_soul": 1.5,
+        "defense": 0.0053
       }
     },
     "banker_ledger_knit": {
@@ -3048,8 +3136,8 @@
       "price": 60,
       "price_final": true,
       "stats": {
-        "max_soul": 5,
-        "defense": 0.02
+        "max_soul": 1.5,
+        "defense": 0.0053
       }
     },
     "banker_thrift_blazer": {
@@ -3064,8 +3152,8 @@
       "price": 75,
       "price_final": true,
       "stats": {
-        "max_soul": 5,
-        "defense": 0.02
+        "max_soul": 1.5,
+        "defense": 0.0053
       }
     },
     "vampire_night_shirt": {
@@ -3080,9 +3168,9 @@
       "price": 45,
       "price_final": true,
       "stats": {
-        "max_soul": 5,
-        "defense": 0.02,
-        "siphon": 0.035
+        "max_soul": 1.5,
+        "defense": 0.0053,
+        "siphon": 0.006
       }
     },
     "vampire_bat_knit": {
@@ -3097,9 +3185,9 @@
       "price": 60,
       "price_final": true,
       "stats": {
-        "max_soul": 5,
-        "defense": 0.02,
-        "siphon": 0.035
+        "max_soul": 1.5,
+        "defense": 0.0053,
+        "siphon": 0.006
       }
     },
     "vampire_dusk_waistcoat": {
@@ -3114,9 +3202,9 @@
       "price": 75,
       "price_final": true,
       "stats": {
-        "max_soul": 5,
-        "defense": 0.02,
-        "siphon": 0.035
+        "max_soul": 1.5,
+        "defense": 0.0053,
+        "siphon": 0.006
       }
     },
     "speedster_runner_tee": {
@@ -3131,8 +3219,8 @@
       "price": 45,
       "price_final": true,
       "stats": {
-        "max_soul": 5,
-        "defense": 0.02
+        "max_soul": 1.5,
+        "defense": 0.0053
       }
     },
     "speedster_zip_vest": {
@@ -3147,8 +3235,8 @@
       "price": 60,
       "price_final": true,
       "stats": {
-        "max_soul": 5,
-        "defense": 0.02
+        "max_soul": 1.5,
+        "defense": 0.0053
       }
     },
     "speedster_campus_jacket": {
@@ -3163,8 +3251,8 @@
       "price": 75,
       "price_final": true,
       "stats": {
-        "max_soul": 5,
-        "defense": 0.02
+        "max_soul": 1.5,
+        "defense": 0.0053
       }
     },
     "politician_canvass_polo": {
@@ -3179,8 +3267,8 @@
       "price": 45,
       "price_final": true,
       "stats": {
-        "max_soul": 5,
-        "defense": 0.02
+        "max_soul": 1.5,
+        "defense": 0.0053
       }
     },
     "politician_rolled_shirt": {
@@ -3195,8 +3283,8 @@
       "price": 60,
       "price_final": true,
       "stats": {
-        "max_soul": 5,
-        "defense": 0.02
+        "max_soul": 1.5,
+        "defense": 0.0053
       }
     },
     "politician_campaign_cardigan": {
@@ -3211,8 +3299,8 @@
       "price": 75,
       "price_final": true,
       "stats": {
-        "max_soul": 5,
-        "defense": 0.02
+        "max_soul": 1.5,
+        "defense": 0.0053
       }
     },
     "banker_vault_pendant": {
@@ -3227,7 +3315,7 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "defense": 0.015
+        "defense": 0.004
       },
       "art_direction": "notebook_comedy",
       "flavor": "For emergencies. Lunch money counts.",
@@ -3263,7 +3351,7 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "defense": 0.025,
+        "defense": 0.0067,
         "bargain": 0.01
       },
       "art_direction": "notebook_comedy",
@@ -3282,7 +3370,7 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "walk_speed": 0.01
+        "walk_speed": 0.005
       },
       "art_direction": "notebook_comedy",
       "flavor": "Officially late. Unofficially first.",
@@ -3300,7 +3388,7 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "defense": 0.015
+        "defense": 0.004
       },
       "art_direction": "notebook_comedy",
       "flavor": "Dress code: maximum volume.",
@@ -3318,7 +3406,7 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "walk_speed": 0.02
+        "walk_speed": 0.01
       },
       "art_direction": "notebook_comedy",
       "flavor": "Won the race to the canteen.",
@@ -3354,7 +3442,7 @@
       "price_final": true,
       "source": "shop",
       "stats": {
-        "defense": 0.015
+        "defense": 0.004
       },
       "art_direction": "notebook_comedy",
       "flavor": "A warm welcome for every voter.",
@@ -3373,7 +3461,7 @@
       "source": "shop",
       "stats": {
         "bargain": 0.025,
-        "defense": 0.01
+        "defense": 0.0027
       },
       "art_direction": "notebook_comedy",
       "flavor": "Unanimously approved by the wearer.",
@@ -3394,11 +3482,639 @@
       "price_final": true,
       "source": "typing_event",
       "stats": {
-        "max_soul": 4,
-        "defense": 0.02
+        "max_soul": 1.2,
+        "defense": 0.0053
       },
       "torso_accessory": true,
       "flavor": "Six fragments. A story worth wearing."
+    },
+    "legendary_banker_weapon": {
+      "name": "Legendary Foreclosure Blade",
+      "category": "weapons",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "price": 3000,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "attack": 0.024,
+        "siphon": 0.015,
+        "max_soul": 1
+      },
+      "stage": 5,
+      "set_family": "legendary_banker",
+      "animated_legendary": true,
+      "art_class": "Banker",
+      "art_slot": "weapon",
+      "flavor": "Prestige earned through typing. Small bonuses; your accuracy and speed decide the fight."
+    },
+    "legendary_banker_armor": {
+      "name": "Legendary Vault Guardian Plate",
+      "category": "outfits",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "price": 2800,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "defense": 0.018,
+        "max_soul": 3
+      },
+      "stage": 5,
+      "set_family": "legendary_banker",
+      "animated_legendary": true,
+      "art_class": "Banker",
+      "art_slot": "armor",
+      "flavor": "Prestige earned through typing. Small bonuses; your accuracy and speed decide the fight."
+    },
+    "legendary_banker_head": {
+      "name": "Legendary Vault Knight Helm",
+      "category": "hats",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "price": 1600,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "defense": 0.004,
+        "max_soul": 2
+      },
+      "stage": 5,
+      "set_family": "legendary_banker",
+      "animated_legendary": true,
+      "art_class": "Banker",
+      "art_slot": "head",
+      "flavor": "Prestige earned through typing. Small bonuses; your accuracy and speed decide the fight."
+    },
+    "legendary_banker_face": {
+      "name": "Legendary Amber Vault Visor",
+      "category": "faces",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "price": 1400,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "attack": 0.006,
+        "siphon": 0.015
+      },
+      "stage": 5,
+      "set_family": "legendary_banker",
+      "animated_legendary": true,
+      "art_class": "Banker",
+      "art_slot": "face",
+      "flavor": "Prestige earned through typing. Small bonuses; your accuracy and speed decide the fight.",
+      "face_guard": false
+    },
+    "legendary_banker_shoes": {
+      "name": "Legendary Vault Sabatons",
+      "category": "shoes",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "price": 1400,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "walk_speed": 0.02,
+        "defense": 0.008
+      },
+      "stage": 5,
+      "set_family": "legendary_banker",
+      "animated_legendary": true,
+      "art_class": "Banker",
+      "art_slot": "shoes",
+      "flavor": "Prestige earned through typing. Small bonuses; your accuracy and speed decide the fight."
+    },
+    "legendary_banker_accessory": {
+      "name": "Legendary Guardian Vault Badge",
+      "category": "accessories",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "price": 1800,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "attack": 0.01,
+        "defense": 0.01,
+        "max_soul": 2
+      },
+      "stage": 5,
+      "set_family": "legendary_banker",
+      "animated_legendary": true,
+      "art_class": "Banker",
+      "art_slot": "accessory",
+      "flavor": "Prestige earned through typing. Small bonuses; your accuracy and speed decide the fight.",
+      "torso_accessory": true,
+      "back_accessory": false
+    },
+    "legendary_banker_vehicle": {
+      "name": "Legendary Vault Armored Car",
+      "category": "vehicles",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "price": 9000,
+      "price_final": true,
+      "source": "shop",
+      "stats": {},
+      "stage": 5,
+      "set_family": "legendary_banker",
+      "animated_legendary": true,
+      "art_class": "Banker",
+      "art_slot": "vehicle",
+      "flavor": "Prestige earned through typing. Small bonuses; your accuracy and speed decide the fight.",
+      "speed_bonus": 440
+    },
+    "legendary_vampire_weapon": {
+      "name": "Legendary Crimson Crescent",
+      "category": "weapons",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "price": 3000,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "attack": 0.024,
+        "siphon": 0.015,
+        "max_soul": 1
+      },
+      "stage": 5,
+      "set_family": "legendary_vampire",
+      "animated_legendary": true,
+      "art_class": "Vampire",
+      "art_slot": "weapon",
+      "flavor": "Prestige earned through typing. Small bonuses; your accuracy and speed decide the fight."
+    },
+    "legendary_vampire_armor": {
+      "name": "Legendary Night Sovereign Plate",
+      "category": "outfits",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "price": 2800,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "defense": 0.018,
+        "max_soul": 3
+      },
+      "stage": 5,
+      "set_family": "legendary_vampire",
+      "animated_legendary": true,
+      "art_class": "Vampire",
+      "art_slot": "armor",
+      "flavor": "Prestige earned through typing. Small bonuses; your accuracy and speed decide the fight."
+    },
+    "legendary_vampire_head": {
+      "name": "Legendary Bat Sovereign Crown",
+      "category": "hats",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "price": 1600,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "defense": 0.004,
+        "max_soul": 2
+      },
+      "stage": 5,
+      "set_family": "legendary_vampire",
+      "animated_legendary": true,
+      "art_class": "Vampire",
+      "art_slot": "head",
+      "flavor": "Prestige earned through typing. Small bonuses; your accuracy and speed decide the fight."
+    },
+    "legendary_vampire_face": {
+      "name": "Legendary Crimson Fang Guard",
+      "category": "faces",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "price": 1400,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "attack": 0.006,
+        "siphon": 0.015
+      },
+      "stage": 5,
+      "set_family": "legendary_vampire",
+      "animated_legendary": true,
+      "art_class": "Vampire",
+      "art_slot": "face",
+      "flavor": "Prestige earned through typing. Small bonuses; your accuracy and speed decide the fight.",
+      "face_guard": true
+    },
+    "legendary_vampire_shoes": {
+      "name": "Legendary Nightwing Sabatons",
+      "category": "shoes",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "price": 1400,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "walk_speed": 0.02,
+        "defense": 0.008
+      },
+      "stage": 5,
+      "set_family": "legendary_vampire",
+      "animated_legendary": true,
+      "art_class": "Vampire",
+      "art_slot": "shoes",
+      "flavor": "Prestige earned through typing. Small bonuses; your accuracy and speed decide the fight."
+    },
+    "legendary_vampire_accessory": {
+      "name": "Legendary Crimson Sovereign Cape",
+      "category": "accessories",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "price": 1800,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "attack": 0.01,
+        "defense": 0.01,
+        "max_soul": 2
+      },
+      "stage": 5,
+      "set_family": "legendary_vampire",
+      "animated_legendary": true,
+      "art_class": "Vampire",
+      "art_slot": "accessory",
+      "flavor": "Prestige earned through typing. Small bonuses; your accuracy and speed decide the fight.",
+      "torso_accessory": true,
+      "back_accessory": true
+    },
+    "legendary_vampire_vehicle": {
+      "name": "Legendary Crimson Wing",
+      "category": "vehicles",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "price": 9000,
+      "price_final": true,
+      "source": "shop",
+      "stats": {},
+      "stage": 5,
+      "set_family": "legendary_vampire",
+      "animated_legendary": true,
+      "art_class": "Vampire",
+      "art_slot": "vehicle",
+      "flavor": "Prestige earned through typing. Small bonuses; your accuracy and speed decide the fight.",
+      "speed_bonus": 440
+    },
+    "legendary_politician_weapon": {
+      "name": "Legendary Last Word Hammer",
+      "category": "weapons",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "price": 3000,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "attack": 0.024,
+        "siphon": 0.015,
+        "max_soul": 1
+      },
+      "stage": 5,
+      "set_family": "legendary_politician",
+      "animated_legendary": true,
+      "art_class": "Politician",
+      "art_slot": "weapon",
+      "flavor": "Prestige earned through typing. Small bonuses; your accuracy and speed decide the fight."
+    },
+    "legendary_politician_armor": {
+      "name": "Legendary Iron Will Plate",
+      "category": "outfits",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "price": 2800,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "defense": 0.018,
+        "max_soul": 3
+      },
+      "stage": 5,
+      "set_family": "legendary_politician",
+      "animated_legendary": true,
+      "art_class": "Politician",
+      "art_slot": "armor",
+      "flavor": "Prestige earned through typing. Small bonuses; your accuracy and speed decide the fight."
+    },
+    "legendary_politician_head": {
+      "name": "Legendary Iron Laurel Crown",
+      "category": "hats",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "price": 1600,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "defense": 0.004,
+        "max_soul": 2
+      },
+      "stage": 5,
+      "set_family": "legendary_politician",
+      "animated_legendary": true,
+      "art_class": "Politician",
+      "art_slot": "head",
+      "flavor": "Prestige earned through typing. Small bonuses; your accuracy and speed decide the fight."
+    },
+    "legendary_politician_face": {
+      "name": "Legendary Last Word Guard",
+      "category": "faces",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "price": 1400,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "attack": 0.006,
+        "siphon": 0.015
+      },
+      "stage": 5,
+      "set_family": "legendary_politician",
+      "animated_legendary": true,
+      "art_class": "Politician",
+      "art_slot": "face",
+      "flavor": "Prestige earned through typing. Small bonuses; your accuracy and speed decide the fight.",
+      "face_guard": true
+    },
+    "legendary_politician_shoes": {
+      "name": "Legendary Iron Will Sabatons",
+      "category": "shoes",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "price": 1400,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "walk_speed": 0.02,
+        "defense": 0.008
+      },
+      "stage": 5,
+      "set_family": "legendary_politician",
+      "animated_legendary": true,
+      "art_class": "Politician",
+      "art_slot": "shoes",
+      "flavor": "Prestige earned through typing. Small bonuses; your accuracy and speed decide the fight."
+    },
+    "legendary_politician_accessory": {
+      "name": "Legendary Sovereign Sash",
+      "category": "accessories",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "price": 1800,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "attack": 0.01,
+        "defense": 0.01,
+        "max_soul": 2
+      },
+      "stage": 5,
+      "set_family": "legendary_politician",
+      "animated_legendary": true,
+      "art_class": "Politician",
+      "art_slot": "accessory",
+      "flavor": "Prestige earned through typing. Small bonuses; your accuracy and speed decide the fight.",
+      "torso_accessory": true,
+      "back_accessory": false
+    },
+    "legendary_politician_vehicle": {
+      "name": "Legendary Walking Throne",
+      "category": "vehicles",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "price": 9000,
+      "price_final": true,
+      "source": "shop",
+      "stats": {},
+      "stage": 5,
+      "set_family": "legendary_politician",
+      "animated_legendary": true,
+      "art_class": "Politician",
+      "art_slot": "vehicle",
+      "flavor": "Prestige earned through typing. Small bonuses; your accuracy and speed decide the fight.",
+      "speed_bonus": 440
+    },
+    "legendary_speedster_weapon": {
+      "name": "Legendary Lightning Saber",
+      "category": "weapons",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "price": 3000,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "attack": 0.024,
+        "siphon": 0.015,
+        "max_soul": 1
+      },
+      "stage": 5,
+      "set_family": "legendary_speedster",
+      "animated_legendary": true,
+      "art_class": "Speedster",
+      "art_slot": "weapon",
+      "flavor": "Prestige earned through typing. Small bonuses; your accuracy and speed decide the fight."
+    },
+    "legendary_speedster_armor": {
+      "name": "Legendary Lightning Raider Plate",
+      "category": "outfits",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "price": 2800,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "defense": 0.018,
+        "max_soul": 3
+      },
+      "stage": 5,
+      "set_family": "legendary_speedster",
+      "animated_legendary": true,
+      "art_class": "Speedster",
+      "art_slot": "armor",
+      "flavor": "Prestige earned through typing. Small bonuses; your accuracy and speed decide the fight."
+    },
+    "legendary_speedster_head": {
+      "name": "Legendary Lightning Racer Helm",
+      "category": "hats",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "price": 1600,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "defense": 0.004,
+        "max_soul": 2
+      },
+      "stage": 5,
+      "set_family": "legendary_speedster",
+      "animated_legendary": true,
+      "art_class": "Speedster",
+      "art_slot": "head",
+      "flavor": "Prestige earned through typing. Small bonuses; your accuracy and speed decide the fight."
+    },
+    "legendary_speedster_face": {
+      "name": "Legendary Lightning Goggles",
+      "category": "faces",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "price": 1400,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "attack": 0.006,
+        "siphon": 0.015
+      },
+      "stage": 5,
+      "set_family": "legendary_speedster",
+      "animated_legendary": true,
+      "art_class": "Speedster",
+      "art_slot": "face",
+      "flavor": "Prestige earned through typing. Small bonuses; your accuracy and speed decide the fight.",
+      "face_guard": false
+    },
+    "legendary_speedster_shoes": {
+      "name": "Legendary Lightning Racer Boots",
+      "category": "shoes",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "price": 1400,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "walk_speed": 0.02,
+        "defense": 0.008
+      },
+      "stage": 5,
+      "set_family": "legendary_speedster",
+      "animated_legendary": true,
+      "art_class": "Speedster",
+      "art_slot": "shoes",
+      "flavor": "Prestige earned through typing. Small bonuses; your accuracy and speed decide the fight."
+    },
+    "legendary_speedster_accessory": {
+      "name": "Legendary Lightning Scarf",
+      "category": "accessories",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "price": 1800,
+      "price_final": true,
+      "source": "shop",
+      "stats": {
+        "attack": 0.01,
+        "defense": 0.01,
+        "max_soul": 2
+      },
+      "stage": 5,
+      "set_family": "legendary_speedster",
+      "animated_legendary": true,
+      "art_class": "Speedster",
+      "art_slot": "accessory",
+      "flavor": "Prestige earned through typing. Small bonuses; your accuracy and speed decide the fight.",
+      "torso_accessory": true,
+      "back_accessory": true
+    },
+    "legendary_speedster_vehicle": {
+      "name": "Legendary Lightning Monowheel",
+      "category": "vehicles",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "price": 9000,
+      "price_final": true,
+      "source": "shop",
+      "stats": {},
+      "stage": 5,
+      "set_family": "legendary_speedster",
+      "animated_legendary": true,
+      "art_class": "Speedster",
+      "art_slot": "vehicle",
+      "flavor": "Prestige earned through typing. Small bonuses; your accuracy and speed decide the fight.",
+      "speed_bonus": 440
     }
   },
   "sets": {
@@ -3569,6 +4285,75 @@
         "shoes": "politician_3_boots",
         "accessories": "politician_3_sigil"
       }
+    },
+    "legendary_banker": {
+      "name": "Gilded Guardian",
+      "classes": [
+        "Banker"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "slots": {
+        "weapons": "legendary_banker_weapon",
+        "outfits": "legendary_banker_armor",
+        "hats": "legendary_banker_head",
+        "faces": "legendary_banker_face",
+        "shoes": "legendary_banker_shoes",
+        "accessories": "legendary_banker_accessory",
+        "vehicles": "legendary_banker_vehicle"
+      }
+    },
+    "legendary_vampire": {
+      "name": "Night Sovereign",
+      "classes": [
+        "Vampire"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "slots": {
+        "weapons": "legendary_vampire_weapon",
+        "outfits": "legendary_vampire_armor",
+        "hats": "legendary_vampire_head",
+        "faces": "legendary_vampire_face",
+        "shoes": "legendary_vampire_shoes",
+        "accessories": "legendary_vampire_accessory",
+        "vehicles": "legendary_vampire_vehicle"
+      }
+    },
+    "legendary_politician": {
+      "name": "Iron Will",
+      "classes": [
+        "Politician"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "slots": {
+        "weapons": "legendary_politician_weapon",
+        "outfits": "legendary_politician_armor",
+        "hats": "legendary_politician_head",
+        "faces": "legendary_politician_face",
+        "shoes": "legendary_politician_shoes",
+        "accessories": "legendary_politician_accessory",
+        "vehicles": "legendary_politician_vehicle"
+      }
+    },
+    "legendary_speedster": {
+      "name": "Lightning Raider",
+      "classes": [
+        "Speedster"
+      ],
+      "min_level": 30,
+      "rarity": "legendary",
+      "slots": {
+        "weapons": "legendary_speedster_weapon",
+        "outfits": "legendary_speedster_armor",
+        "hats": "legendary_speedster_head",
+        "faces": "legendary_speedster_face",
+        "shoes": "legendary_speedster_shoes",
+        "accessories": "legendary_speedster_accessory",
+        "vehicles": "legendary_speedster_vehicle"
+      }
     }
-  }
+  },
+  "balance_revision": 1
 }
