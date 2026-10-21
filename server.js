@@ -395,6 +395,7 @@ wss.on('connection', (ws, req) => {
                     protocol: 2,
                     server_version: '0.6.8',
                     typing_events: 1,
+                    typing_event_soul: 1,
                     duel_protocol: 1,
                     role: newPlayer.role,
                     join_revision: data.join_revision,

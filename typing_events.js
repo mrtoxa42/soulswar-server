@@ -67,7 +67,11 @@ class TypingEvents {
     if(threat.index===threat.word.length){r.threats=r.threats.filter(t=>t!==threat);s.progress+=12;r.contribution+=12;}
    }
   }
+  // Every accepted input affects Soul; retries/invalid sequence never charge twice.
+  p.soul=Math.max(0,Math.min(p.max_soul,p.soul+(correct?1:-3)));
+  p.soul_lock_until=now+1000;
   if(correct){r.lastInput=now;r.contribution++;s.progress++;s.dirty=true;}
+  if(p.soul<=0){p.dead=true;this.leave(room,p,'soul_empty');return;}
   if(s.progress>=s.total){this.finish(room,s);return;}
   this.self(s,p,{correct});
  }
