@@ -12,7 +12,7 @@ class LiveDuel {
         const a=room.players.get(duel.first),b=room.players.get(duel.second);
         if(!a||!b||a.duel_protocol!==1||b.duel_protocol!==1)return;
         duel.live=true;duel.id=crypto.randomUUID();duel.revision=0;duel.lastTick=Date.now();duel.pulse=0;
-        duel.inputs=new Map([a,b].map(p=>[p.id,{seq:0,word:'',index:0,tokens:8,lastToken:Date.now(),lastTyped:0}]));
+        duel.inputs=new Map([a,b].map(p=>[p.id,{seq:0,word:'',index:0,tokens:8,lastToken:Date.now(),lastTyped:0,blockedUntil:0,lastMiss:0,misses:0}]));
         this.send(room,duel);
     }
     send(room,duel,extra={}){
@@ -38,7 +38,14 @@ class LiveDuel {
         const pool=Balance.words[tier(Math.max(player.level,rival.level))];
         if(payload.duel_id!==duel.id||payload.seq!==state.seq+1||typeof word!=='string'||!pool.includes(word)||typeof letter!=='string'||letter.length!==1||state.tokens<1) {this.send(room,duel,{input_rejected:player.id});return;}
         if(state.word&&state.word!==word){this.send(room,duel,{input_rejected:player.id});return;}
-        if(letter!==word[state.index]){this.send(room,duel,{input_rejected:player.id});return;}
+        if(now<state.blockedUntil){this.send(room,duel,{input_rejected:player.id});return;}
+        if(letter!==word[state.index]){
+            state.tokens--;state.seq++;state.word=word;
+            state.misses=now-state.lastMiss<1800?Math.min(4,state.misses+1):1;state.lastMiss=now;
+            state.blockedUntil=now+Math.min(600,250+100*(state.misses-1));
+            player.soul=Math.max(Math.min(player.soul,player.max_soul*.05),player.soul-Math.max(2,player.max_soul*.015));
+            this.send(room,duel,{mistake_id:player.id,recovery_ms:state.blockedUntil-now});return;
+        }
         state.tokens--;state.word=word;state.index++;state.seq++;state.lastTyped=now;
         const completed=state.index===word.length;
         const push=Equipment.combatPush(player,rival,word.length,completed,Number.isFinite(payload.beam_boost)?clamp(payload.beam_boost,1,1.85):1);
