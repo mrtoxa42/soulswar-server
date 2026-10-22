@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "respawn_seconds": 90,
   "gather_seconds": 3,
   "idle_seconds": 20,
@@ -10,30 +10,55 @@
       "id": "first_drawn",
       "title": "The First Drawn",
       "kind": "stone",
-      "at": [9950, 7790],
+      "at": [
+        11200,
+        7790
+      ],
       "min_level": 2,
       "xp": 100,
       "coins": 30,
       "fragments": 1,
       "chapters": [
-        {"id": "first_page", "title": "Before the Streets", "text": "Before the streets, there was a blank page. Four small souls woke beneath a crooked sun, and nobody knew who had drawn it. The Banker offered to count the stars, for a modest fee. The Vampire asked whether the sun came with an off switch. The Politician promised a better morning, starting next week. The Speedster had already left tire marks across the horizon. Together, they built a fountain where tired souls could rest. Elder Quill kept the first sketch. Someone had written a warning on the back: Every borrowed soul leaves a mark."},
-        {"id": "first_receipt", "title": "The First Receipt", "text": "The first bank opened before money existed. This was inconvenient, but the Banker had printed the receipts already. A citizen deposited one bright soul and received a paper promise, three forms, and a complimentary pen. By sunset, the promise had been borrowed twice. Across the street, the Vampire opened a night window with much shorter queues. The Politician called both businesses a triumph of public planning. Elder Quill watched the fountain grow dim. He folded the oldest receipt into his notebook, beside a question nobody wanted to answer: Who pays when a promise runs out?"}
+        {
+          "id": "first_page_short_v2",
+          "title": "Before the Streets",
+          "text": "Before the streets, four souls woke on a blank page. The Banker counted stars. \"One fee,\" he said. Elder Quill drew a fountain, so every tired soul could rest."
+        },
+        {
+          "id": "first_receipt_short_v2",
+          "title": "The First Receipt",
+          "text": "Before money, the Banker printed receipts. A soul bought a promise, and a free pen. The Vampire asked, \"Who pays at sunrise?\" Quill kept the Banker's first receipt."
+        }
       ]
     },
     {
       "id": "ink_nest",
       "title": "The Ink Nest",
       "kind": "nest",
-      "at": [10900, 7790],
+      "at": [
+        10900,
+        7790
+      ],
       "min_level": 3,
       "xp": 150,
       "coins": 45,
       "fragments": 2,
       "spawn_seconds": 6,
       "threat_seconds": 14,
-      "threat_words": ["INK", "BLOT", "SMUDGE", "RIP", "DUST", "GLOOP"],
+      "threat_words": [
+        "INK",
+        "BLOT",
+        "SMUDGE",
+        "RIP",
+        "DUST",
+        "GLOOP"
+      ],
       "chapters": [
-        {"id": "escaped_words", "title": "Words with Legs", "text": "One evening, the city's unfinished promises crawled out of the wastebasket. They were small, sticky, and surprisingly rude. A forgotten school note grew wheels. An unpaid receipt developed teeth. The Mayor insisted that the situation was under control, then climbed onto his desk. Elder Quill discovered that writing a creature's name could return it to the page. The Speedster called this homework with consequences. The Banker requested payment per letter. Nobody agreed, but everyone started writing. Somewhere beneath the nest, an older sentence was waking up. It remembered who had spilled the ink, and it wanted its ending back."}
+        {
+          "id": "escaped_words_short_v2",
+          "title": "Words with Legs",
+          "text": "One evening, spilled ink grew legs. A receipt bared its teeth, and the Mayor hid on his desk. \"Write its name,\" said Quill. The Speedster called it homework with teeth."
+        }
       ]
     }
   ]
