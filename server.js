@@ -8,6 +8,8 @@ const {LiveDuel,syncSoul} = require('./live_duel');
 const liveDuels = new LiveDuel();
 const {TypingEvents} = require('./typing_events');
 const typingEvents = new TypingEvents();
+const {Presence}=require('./presence');
+const presence=new Presence();
 const { canDuel, pairKey } = require('./duel_rules');
 const Equipment = require('./equipment_rules');
 const Regions = require('./region_rules');
@@ -25,7 +27,7 @@ console.log(`WebSocket server starting on port ${PORT}`);
 const ROOM_MAX_PLAYERS = 30;
 const TARGET_ENTITIES = 25;
 const MIN_BOTS = 5;
-const STALE_TIMEOUT = 30000;
+// Open background sockets are checked with protocol ping/pong, never position age.
 const TICK_RATE = 100; // 10Hz
 const MAX_USERNAME_LENGTH = 18;
 const MAX_CHAT_LENGTH = 64;
@@ -41,7 +43,11 @@ const BLOCKED_TERMS = [
 
 const rooms = new Map();
 const keyFile = process.env.ADMIN_PUBLIC_KEYS_FILE || path.join(__dirname,'admin_public_keys.json');
-const admin = new AdminService({rooms,wss,keys:fs.existsSync(keyFile)?JSON.parse(fs.readFileSync(keyFile,'utf8')).keys:[]});
+const admin = new AdminService({rooms,wss,keys:fs.existsSync(keyFile)?JSON.parse(fs.readFileSync(keyFile,'utf8')).keys:[],playerDetails:p=>{
+    if(![EXPEDITION_WORLD,EXPEDITION_RAID].includes(p.zone))return {};
+    const a=expeditions.account(p.id),s=expeditions.state(p);
+    return {soul:Math.round(a.hp),max_soul:100,carried_shards:a.carried,combat_target:a.target,raid_stage:p.zone===EXPEDITION_RAID?(s?.stage??0):null,pending_rewards:a.receipts.length};
+}});
 
 function rejectDuel(player, reason) {
     if (player && player.ws.readyState === WebSocket.OPEN) {
@@ -238,6 +244,10 @@ function broadcast(room, message, excludeId = null) {
     const data = JSON.stringify({...message, zone: room.zone});
     for (const [id, player] of room.players.entries()) {
         if (id !== excludeId && player.ws.readyState === WebSocket.OPEN) {
+            if(message.type==='state'&&(player.background||Date.now()-player.lastUpdate>2000)){
+                if(Date.now()-(player.lastBackgroundState||0)<1000)continue;
+                player.lastBackgroundState=Date.now();
+            }
             player.ws.send(data);
         }
     }
@@ -251,7 +261,8 @@ function tickRoom(room) {
     for(const duel of room.duels.values())if(duel.phase==='active')liveDuels.tick(room,duel);
 
     for (const [id, player] of room.players.entries()) {
-        if (now - player.lastUpdate > STALE_TIMEOUT) {
+        presence.tick(player,typingEvents.active(room,player)||[...room.duels.values()].some(d=>d.live&&[d.first,d.second].includes(id)));
+        if (player.ws.readyState !== WebSocket.OPEN) {
             staleIds.push(id);
         } else {
             stateUpdate.push({
@@ -303,7 +314,11 @@ function handleDisconnect(room, playerId, disconnect = false) {
     }
 }
 
+const presenceTimer=setInterval(()=>{for(const ws of wss.clients)presence.probe(ws);},15000);
+presenceTimer.unref();
+
 wss.on('connection', (ws, req) => {
+    presence.attach(ws);
     const ip = getClientIp(req);
     const country = getCountry(ip);
     const playerId = crypto.randomUUID();
@@ -358,6 +373,7 @@ wss.on('connection', (ws, req) => {
 
                 Equipment.normalize(newPlayer);
                 syncSoul(newPlayer,data);
+                presence.init(newPlayer,data);
                 playerRoom.players.set(playerId, newPlayer);
                 expeditions.join(newPlayer,playerRoom);
                 console.log(`Player ${playerId} joined room ${playerRoom.id}`);
@@ -396,6 +412,7 @@ wss.on('connection', (ws, req) => {
                     server_version: '0.6.8',
                     typing_events: 1,
                     typing_event_soul: 1,
+                    presence_protocol: 1,
                     duel_protocol: 1,
                     role: newPlayer.role,
                     join_revision: data.join_revision,
@@ -439,8 +456,13 @@ wss.on('connection', (ws, req) => {
                     typingEvents.action(playerRoom,p,data);
                 } else if (data.type === 'expedition') {
                     if([EXPEDITION_WORLD,EXPEDITION_RAID].includes(p.zone)) expeditions.action(p,data);
+                } else if (data.type === 'presence') {
+                    presence.tick(p,typingEvents.active(playerRoom,p)||[...playerRoom.duels.values()].some(d=>d.live&&[d.first,d.second].includes(playerId)));
+                    presence.policy(p,data);
                 } else if (data.type === 'pos') {
-                    if(now>=(p.soul_lock_until||0)&&!typingEvents.active(playerRoom,p)&&![...playerRoom.duels.values()].some(d=>d.live&&[d.first,d.second].includes(playerId)))syncSoul(p,data);
+                    presence.tick(p,typingEvents.active(playerRoom,p)||[...playerRoom.duels.values()].some(d=>d.live&&[d.first,d.second].includes(playerId)));
+                    const acceptsSoul=presence.position(p,data);
+                    if(acceptsSoul&&now>=(p.soul_lock_until||0)&&!typingEvents.active(playerRoom,p)&&![...playerRoom.duels.values()].some(d=>d.live&&[d.first,d.second].includes(playerId)))syncSoul(p,data);
                     if([EXPEDITION_WORLD,EXPEDITION_RAID].includes(p.zone)) {
                         const width=p.zone===EXPEDITION_RAID?5800:6000,height=p.zone===EXPEDITION_RAID?2200:4800;
                         if(!Number.isFinite(data.x)||!Number.isFinite(data.y)||data.x<150||data.y<200||data.x>width-100||data.y>height-100) return;

@@ -2,8 +2,9 @@
 const crypto = require('node:crypto');
 
 class AdminService {
-    constructor({rooms, wss, keys = [], version = '0.6.8'}) {
+    constructor({rooms, wss, keys = [], version = '0.6.8', playerDetails=()=>({})}) {
         this.rooms = rooms; this.wss = wss; this.version = version;
+        this.playerDetails=playerDetails;
         this.keys = keys.map(k => crypto.createPublicKey({key:Buffer.from(k,'base64'),format:'der',type:'spki'}));
         this.sessions = new WeakMap(); this.pairs = new Map(); this.attempts = new Map();
         this.lag = 0; this.cpu = 0;
@@ -104,7 +105,7 @@ class AdminService {
         const now=Date.now(), players=[], rooms=[];
         for(const room of this.rooms.values()) {
             rooms.push({id:room.id,zone:room.zone,players:room.players.size,capacity:room.zone==='forest_raid'?4:30,bots:room.botCount,private:room.zone==='forest_raid'});
-            for(const p of room.players.values()) players.push({id:p.id,name:p.name,class:p.class,level:p.level,role:p.role||'',zone:p.zone,room:room.id,x:Math.round(p.x||0),y:Math.round(p.y||0),dead:p.dead,country:p.country,connected_seconds:Math.round((now-(p.connectedAt||now))/1000),last_seen_seconds:Math.max(0,Math.round((now-p.lastUpdate)/1000))});
+            for(const p of room.players.values()) players.push({id:p.id,name:p.name,class:p.class,level:p.level,role:p.role||'',zone:p.zone,room:room.id,x:Math.round(p.x||0),y:Math.round(p.y||0),dead:p.dead,country:p.country,connected_seconds:Math.round((now-(p.connectedAt||now))/1000),last_seen_seconds:Math.max(0,Math.round((now-p.lastUpdate)/1000)),presence:p.background?'background':now-p.lastUpdate>2000?'idle':'active',rtt_ms:Number.isFinite(p.ws.transportRtt)?Math.round(p.ws.transportRtt):null,soul:Math.round(p.soul||0),max_soul:Math.round(p.max_soul||100),...this.playerDetails(p)});
         }
         return {at:now,version:this.version,uptime_seconds:Math.floor(process.uptime()),memory_mb:Math.round(process.memoryUsage().rss/1048576),cpu_percent:Math.round(this.cpu*10)/10,event_loop_lag_ms:Math.round(this.lag),connections:this.wss.clients.size,players,rooms};
     }

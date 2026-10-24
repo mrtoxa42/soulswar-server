@@ -98,3 +98,11 @@ Render handles SSL termination automatically, so your WebSocket URL will be avai
 ## Kademe 2 equipment
 
 Deploy `equipment.json` and `equipment_rules.js` together with this server and the matching Kademe 2 client. The canonical catalog is `scripts/data/equipment.json`; `npm` prestart copies it when the source checkout is present, and standalone deployments use the included copy. The server validates slot, class and minimum level, derives gear bonuses from item IDs, and recalculates new-client PvP pushes and beam ratios. Ownership and progression remain local profiles; there is no authenticated account inventory service in this build. Uploading only the client to an old server will not synchronize weapons correctly.
+
+## Background presence and raid idle behavior (2026-10-24)
+
+Ship `presence.js` with `server.js`. Open sockets use protocol ping/pong instead of position inactivity for disconnects (15-second probe, 60-second missing-pong cleanup). A new `presence_protocol: 1` client negotiates bounded background passive Soul reconciliation, with revisions preventing stale position Soul from overwriting away-time changes. Old clients retain their prior Soul protocol; deploy the matching client for background Soul accounting. Browser discard or device sleep can still close a socket.
+
+Expedition camp regeneration uses elapsed seconds, not tick count. Nearby enemies attack players even without a selected target; typing no longer continually postpones their attack timer. Raid areas beyond the entrance drain 0.6 Soul/second. Kill loot requires contribution in the last minute; standing nearby does not grant loot or an XP receipt. Existing claimed-receipt protection and private party instances remain in place.
+
+Admin snapshots add per-player presence, transport RTT, Soul, raid stage and carried shards. These are authenticated snapshots; no extra database, continuous metrics store or public player endpoint is added.

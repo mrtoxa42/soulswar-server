@@ -10,7 +10,7 @@ const inPvp = p => p.zone === WORLD && distance(p,rules.source) < rules.pvp_radi
 class Expeditions {
   constructor(send, now=()=>Date.now()) {
     this.send=send; this.now=now; this.players=new Map(); this.accounts=new Map();
-    this.worlds=new Map(); this.runs=new Map(); this.parties=new Map(); this.queue=[];
+    this.worlds=new Map(); this.runs=new Map(); this.parties=new Map(); this.queue=[]; this.lastTick=this.now();
   }
   account(id) {
     if(!this.accounts.has(id)) this.accounts.set(id,{hp:100,carried:0,target:'',word:0,typed:0,lastLetter:0,protection:0,receipts:[],party:'',ticket:'',harvest:0,nextHarvest:0,raidClaimed:false});
@@ -19,7 +19,7 @@ class Expeditions {
   tell(p,payload) { this.send(p,{type:'expedition',...payload}); }
   error(p,reason) {this.tell(p,{event:'error',reason});return false;}
   makeEnemies(raid,size=1) {
-    return (raid?rules.raid_enemies:rules.world_enemies).map(e=>({...e,home:[...e.at],at:[...e.at],hp:Math.round(e.hp*(raid?1+(size-1)*.55:1)),max:Math.round(e.hp*(raid?1+(size-1)*.55:1)),cycle:0,respawn:0,attack:0,contributors:new Set()}));
+    return (raid?rules.raid_enemies:rules.world_enemies).map(e=>({...e,home:[...e.at],at:[...e.at],hp:Math.round(e.hp*(raid?1+(size-1)*.55:1)),max:Math.round(e.hp*(raid?1+(size-1)*.55:1)),cycle:0,respawn:0,attack:0,contributors:new Set(),lastContribution:new Map()}));
   }
   authorize(id,ticket) {
     const a=this.account(id), run=this.runs.get(ticket);
@@ -57,6 +57,7 @@ class Expeditions {
   }
   snapshot(p) {
     if(![WORLD,RAID].includes(p.zone)) return;
+    if(p.background||this.now()-(p.lastUpdate||this.now())>2000){if(this.now()-(p.lastExpeditionSnapshot||0)<1000)return;p.lastExpeditionSnapshot=this.now();}
     const a=this.account(p.id),s=this.state(p); if(!s)return;
     this.tell(p,{event:'state',zone:p.zone,hp:a.hp,carried:a.carried,target:a.target,word:rules.words[a.word%rules.words.length],typed:a.typed,
       party:this.partyView(a),queued:this.queue.includes(p.id),receipts:a.receipts,stage:s.stage||0,runes:s.runes||[],
@@ -138,11 +139,11 @@ class Expeditions {
       a.typed++;if(a.typed<rules.words[a.word%rules.words.length].length)return true;
       a.typed=0;a.word=(a.word+1)%rules.words.length;a.hp=Math.min(100,a.hp+rules.word_heal);
       if(rival){this.damage(rival,17);if(this.account(rival.id).target==='')a.target='';return true;}
-      e.hp=Math.max(0,e.hp-rules.attack_damage);e.contributors.add(p.id);if(p.zone===RAID)s.contributors.add(p.id);
-      if(!e.boss)e.attack=now+4000;
+      e.hp=Math.max(0,e.hp-rules.attack_damage);e.contributors.add(p.id);e.lastContribution.set(p.id,now);if(p.zone===RAID)s.contributors.add(p.id);
+      if(!e.attack)e.attack=now+4000;
       if(!e.hp){
         e.attack=0;e.respawn=now+(e.boss?rules.boss_respawn:rules.mob_respawn)*1000;
-        for(const id of e.contributors){const member=this.players.get(id);if(member&&member.expeditionRoom===p.expeditionRoom&&distance(member,e.at)<1200){const receiver=this.account(id);receiver.carried+=e.loot;if(receiver.target===e.id)receiver.target='';}}
+        for(const id of e.contributors){const member=this.players.get(id);if(member&&member.expeditionRoom===p.expeditionRoom&&distance(member,e.at)<1200&&now-(e.lastContribution.get(id)||0)<=60000){const receiver=this.account(id);receiver.carried+=e.loot;if(receiver.target===e.id)receiver.target='';}}
         if(p.zone===RAID){if(e.id==='king')s.stage=3;else if(s.stage===0&&s.enemies.filter(e=>(e.room??0)===0).every(e=>e.hp===0))s.stage=1;}
       }
       return true;
@@ -154,20 +155,23 @@ class Expeditions {
     while(this.queue.length>=3){const ids=this.queue.slice(0,4);const code=crypto.randomBytes(3).toString('hex').toUpperCase();this.parties.set(code,{leader:ids[0],members:ids});for(const id of ids)this.account(id).party=code;this.startRun(ids,false);}
   }
   tick() {
-    const now=this.now();this.match();
+    const now=this.now(),dt=Math.max(0,Math.min(1,(now-this.lastTick)/1000));this.lastTick=now;this.match();
     for(const [key,s] of [...this.worlds,...this.runs]){
       const members=[...this.players.values()].filter(p=>this.state(p)===s);
       if(!members.length){if(s.created&&now-s.created>45*60*1000)this.runs.delete(key);else if(!s.created)this.worlds.delete(key);continue;}
       if(s.stage===1&&s.runes?.length&&now>s.runeUntil){s.runes=[];s.runeUsers=[];}
       for(const e of s.enemies){
         if(e.hp>0&&!e.boss&&!members.some(p=>this.account(p.id).target===e.id))e.at=[e.home[0]+Math.sin(now/1700+e.home[1]) *65,e.home[1]+Math.cos(now/2000+e.home[0])*22];
-        if(!e.hp&&e.respawn&&now>e.respawn&&!s.created){e.hp=e.max;e.cycle++;e.respawn=0;e.contributors.clear();}
-        if(e.attack&&now>=e.attack&&e.hp>0){for(const p of members){if(this.account(p.id).target===e.id&&distance(p,e.at)<(e.boss?420:240))this.damage(p,e.boss?rules.boss_hit_damage:rules.hit_damage);}e.attack=members.some(p=>this.account(p.id).target===e.id)?now+4000:0;}
+        if(!e.hp&&e.respawn&&now>e.respawn&&!s.created){e.hp=e.max;e.cycle++;e.respawn=0;e.contributors.clear();e.lastContribution.clear();}
+        const threatened=members.filter(p=>!p.dead&&(!s.created||(e.room??0)===s.stage)&&distance(p,e.at)<(e.boss?420:240));
+        if(e.hp>0&&threatened.length&&!e.attack)e.attack=now+4000;
+        if(e.attack&&now>=e.attack&&e.hp>0){for(const p of threatened)this.damage(p,e.boss?rules.boss_hit_damage:rules.hit_damage);e.attack=threatened.length?now+4000:0;}
       }
     }
     for(const p of this.players.values()){
       const a=this.account(p.id);if(![WORLD,RAID].includes(p.zone))continue;
-      if(p.zone===WORLD&&distance(p,rules.camp)<300)a.hp=Math.min(100,a.hp+1.2);
+      if(p.zone===WORLD&&distance(p,rules.camp)<300)a.hp=Math.min(100,a.hp+12*dt);
+      else if(p.zone===RAID&&distance(p,[500,1650])>260)this.damage(p,.6*dt);
       if(a.target.startsWith('pvp:')){const rival=this.players.get(a.target.slice(4));if(!inPvp(p)||!rival||!inPvp(rival)||rival.expeditionRoom!==p.expeditionRoom||distance(p,[rival.x,rival.y])>600)a.target='';}
       if(a.harvest){
         if(distance(p,rules.source)>180||a.target||[...this.players.values()].some(other=>other.id!==p.id&&other.expeditionRoom===p.expeditionRoom&&inPvp(other)&&(!a.party||a.party!==this.account(other.id).party))){a.harvest=0;this.tell(p,{event:'error',reason:'source_contested_or_left'});}
