@@ -13,7 +13,6 @@ class AdminService {
             const usage = process.cpuUsage(previousCpu);
             this.lag = Math.max(0,elapsed-1000); this.cpu = (usage.user+usage.system)/(elapsed*10);
             previousTime = now; previousCpu = process.cpuUsage();
-            for (const [code,pair] of this.pairs) if(pair.expires<Date.now()) this.pairs.delete(code);
             for (const [ip,attempt] of this.attempts) if(attempt.until<Date.now()) this.attempts.delete(ip);
         },1000);
         this.timer.unref();
@@ -46,13 +45,16 @@ class AdminService {
             const found=this.player(id);
             if(!found) return true;
             if(!this.keys.length) {this.send(ws,{type:'developer_pair',error:'Developer access is not configured.'});return true;}
+            for(const [code,pair] of this.pairs) if(pair.id===id) {
+                this.send(ws,{type:'developer_pair',code,expires_in:0}); return true;
+            }
             if(ws.lastPair && Date.now()-ws.lastPair<10000) return true;
             ws.lastPair=Date.now();
             for(const [code,pair] of this.pairs) if(pair.id===id) this.pairs.delete(code);
             if(this.pairs.size>=1000) return true;
             const code=crypto.randomBytes(6).toString('hex').toUpperCase();
-            this.pairs.set(code,{id,expires:Date.now()+120000});
-            this.send(ws,{type:'developer_pair',code,expires_in:120});
+            this.pairs.set(code,{id});
+            this.send(ws,{type:'developer_pair',code,expires_in:0});
             return true;
         }
         if(data.type==='developer_logout') {this.setRole(id,''); return true;}
@@ -86,9 +88,13 @@ class AdminService {
             session.lastPair=Date.now();
             const code=String(data.code||'').replace(/[\s-]/g,'').toUpperCase();
             const pair=this.pairs.get(code);
-            const ok=Boolean(pair && pair.expires>Date.now() && this.setRole(pair.id,'Developer'));
-            if(pair) this.pairs.delete(code);
-            this.send(ws,{type:'admin_pair_result',ok,message:ok?'Developer session enabled. F6 is ready in the game.':'Code expired or not found. Request a new code in the game.'});
+            const ok=Boolean(pair && this.setRole(pair.id,'Developer'));
+            this.send(ws,{type:'admin_pair_result',ok,message:ok?'Developer session enabled. F6 is ready in the game.':'Code not found. The game may have disconnected.'});
+        }
+        if(data.type==='admin_set_developer' && Date.now()-session.lastPair>=1000) {
+            session.lastPair=Date.now();
+            const ok=typeof data.id==='string' && typeof data.enabled==='boolean' && this.setRole(data.id,data.enabled?'Developer':'');
+            this.send(ws,{type:'admin_role_result',ok:Boolean(ok),enabled:data.enabled===true,id:data.id});
         }
         return true;
     }

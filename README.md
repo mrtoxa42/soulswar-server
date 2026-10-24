@@ -48,7 +48,7 @@ single-use challenges. `admin_public_keys.json` contains only public verificatio
 keys; never put a private signing key in this repository or image. Empty/missing
 public keys disable access. `ADMIN_PUBLIC_KEYS_FILE` can select a separate key file.
 The matching `admin-panel.html` runs on the owner's computer, polls every 5 seconds,
-and authorizes a short-lived game pairing code. Developer roles are server-owned,
+and authorizes a game pairing code that remains reusable for the lifetime of its game connection (no countdown). Authenticated player-row controls can grant or revoke Developer access at any time. Developer roles are server-owned,
 survive region joins on the same socket and end on disconnect. Admin sockets do
 not occupy game rooms. Snapshots are throttled to one per 3 seconds per panel;
 they are generated only on authenticated requests. No database or extra service
