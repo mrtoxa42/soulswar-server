@@ -6,6 +6,9 @@ const source = path.join(__dirname, '../scripts/data/street_groups.json');
 const target = path.join(__dirname, 'street_groups.json');
 if (fs.existsSync(source)) fs.copyFileSync(source, target);
 if (!fs.existsSync(target)) throw new Error('Missing street_groups.json deployment copy');
+const pvpSource = path.join(__dirname,'../scripts/data/pvp_rules.json');
+if (fs.existsSync(pvpSource)) fs.copyFileSync(pvpSource,path.join(__dirname,'pvp_rules.json'));
+if (!fs.existsSync(path.join(__dirname,'pvp_rules.json'))) throw new Error('Missing pvp_rules.json deployment copy');
 
 const equipmentSource = require('path').join(__dirname, '../scripts/data/equipment.json');
 if (require('fs').existsSync(equipmentSource)) require('fs').copyFileSync(equipmentSource, require('path').join(__dirname, 'equipment.json'));

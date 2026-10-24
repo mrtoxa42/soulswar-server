@@ -1,6 +1,7 @@
 'use strict';
 const crypto = require('crypto');
 const rules = require('./forest_expedition.json');
+const {allied} = require('./duel_rules');
 const WORLD = 'unsealed_forest', RAID = 'forest_raid';
 const distance = (a,b) => Math.hypot(a.x-b[0],a.y-b[1]);
 const inPvp = p => p.zone === WORLD && distance(p,rules.source) < rules.pvp_radius;
@@ -124,6 +125,7 @@ class Expeditions {
     }
     if(m.action==='pvp') {
       const rival=this.players.get(m.target);
+      if(rival && allied(p,rival))return this.error(p,'same_class');
       if(!rival||rival.id===p.id||rival.expeditionRoom!==p.expeditionRoom||!inPvp(p)||!inPvp(rival)||distance(p,[rival.x,rival.y])>230||a.protection>now||this.account(rival.id).protection>now||(a.party&&a.party===this.account(rival.id).party))return this.error(p,'pvp_only_in_red_area');
       const other=this.account(rival.id);if(a.target||other.target)return this.error(p,'opponent_busy');
       a.target='pvp:'+rival.id;other.target='pvp:'+p.id;a.typed=other.typed=0;a.harvest=other.harvest=0;return true;
@@ -132,7 +134,7 @@ class Expeditions {
       if(typeof m.letter!=='string'||m.letter.length!==1||now-a.lastLetter<35||!a.target)return false;
       a.lastLetter=now;
       let e=s.enemies.find(e=>e.id===a.target), rival=a.target.startsWith('pvp:')?this.players.get(a.target.slice(4)):null;
-      if(rival){if(!inPvp(p)||!inPvp(rival)||rival.expeditionRoom!==p.expeditionRoom||distance(p,[rival.x,rival.y])>600){a.target='';return false;}}
+      if(rival){if(allied(p,rival)||!inPvp(p)||!inPvp(rival)||rival.expeditionRoom!==p.expeditionRoom||distance(p,[rival.x,rival.y])>600){a.target='';return false;}}
       else if(!e||e.hp<=0||distance(p,e.at)>850){a.target='';return false;}
       if(e&&distance(p,e.at)>(e.boss?420:240))return false;
       if(m.letter.toUpperCase()!==rules.words[a.word%rules.words.length][a.typed]){this.damage(p,2);return false;}
@@ -172,7 +174,7 @@ class Expeditions {
       const a=this.account(p.id);if(![WORLD,RAID].includes(p.zone))continue;
       if(p.zone===WORLD&&distance(p,rules.camp)<300)a.hp=Math.min(100,a.hp+12*dt);
       else if(p.zone===RAID&&distance(p,[500,1650])>260)this.damage(p,.6*dt);
-      if(a.target.startsWith('pvp:')){const rival=this.players.get(a.target.slice(4));if(!inPvp(p)||!rival||!inPvp(rival)||rival.expeditionRoom!==p.expeditionRoom||distance(p,[rival.x,rival.y])>600)a.target='';}
+      if(a.target.startsWith('pvp:')){const rival=this.players.get(a.target.slice(4));if(!inPvp(p)||!rival||allied(p,rival)||!inPvp(rival)||rival.expeditionRoom!==p.expeditionRoom||distance(p,[rival.x,rival.y])>600)a.target='';}
       if(a.harvest){
         if(distance(p,rules.source)>180||a.target||[...this.players.values()].some(other=>other.id!==p.id&&other.expeditionRoom===p.expeditionRoom&&inPvp(other)&&(!a.party||a.party!==this.account(other.id).party))){a.harvest=0;this.tell(p,{event:'error',reason:'source_contested_or_left'});}
         else if(now-a.harvest>=rules.source_channel*1000){a.harvest=0;a.nextHarvest=now+rules.source_cooldown*1000;a.carried+=15;}

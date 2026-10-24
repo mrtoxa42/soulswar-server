@@ -106,3 +106,7 @@ Ship `presence.js` with `server.js`. Open sockets use protocol ping/pong instead
 Expedition camp regeneration uses elapsed seconds, not tick count. Nearby enemies attack players even without a selected target; typing no longer continually postpones their attack timer. Raid areas beyond the entrance drain 0.6 Soul/second. Kill loot requires contribution in the last minute; standing nearby does not grant loot or an XP receipt. Existing claimed-receipt protection and private party instances remain in place.
 
 Admin snapshots add per-player presence, transport RTT, Soul, raid stage and carried shards. These are authenticated snapshots; no extra database, continuous metrics store or public player endpoint is added.
+
+## PvP protection
+
+Same-class players cannot fight each other, including in the forest's contested area. City duels check both participants against `pvp_rules.json`: the central plaza and dungeon entrances are safe. Challenges, acceptance, typing and results are validated server-side; moving into safety cancels an existing duel for both participants without a victory reward. The game owns the canonical manifest at `scripts/data/pvp_rules.json`; standalone deployments must include its server copy alongside `duel_rules.js`.

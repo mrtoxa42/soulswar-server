@@ -10,7 +10,7 @@ const {TypingEvents} = require('./typing_events');
 const typingEvents = new TypingEvents();
 const {Presence}=require('./presence');
 const presence=new Presence();
-const { canDuel, pairKey } = require('./duel_rules');
+const { canDuel, pairKey, protectionReason, citySafe } = require('./duel_rules');
 const Equipment = require('./equipment_rules');
 const Regions = require('./region_rules');
 const {Expeditions, WORLD:EXPEDITION_WORLD, RAID:EXPEDITION_RAID} = require('./expedition_rules');
@@ -104,6 +104,12 @@ function validateSystemEvent(room, player, payload) {
     if (!canDuel(player.level, rival.level)) {
         cancelPlayerDuels(room, player.id, 'different_street_group', true);
         rejectDuel(player, 'different_street_group');
+        return false;
+    }
+    const protection = protectionReason(player,rival);
+    if (protection) {
+        cancelPlayerDuels(room,player.id,protection);
+        rejectDuel(player,protection);
         return false;
     }
     if (player.dead || rival.dead) {
@@ -475,6 +481,7 @@ wss.on('connection', (ws, req) => {
                     p.vy = data.vy;
                     p.anim = data.anim;
                     p.flip = data.flip;
+                    if (citySafe(p)) cancelPlayerDuels(playerRoom,p.id,'safe_zone');
                 } else if (data.type === 'chat') {
 					// Internal state messages are not displayed as chat by clients.
 					// All human-written messages are validated and rate limited here,
