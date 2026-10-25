@@ -247,9 +247,11 @@ function calculateBotCount(playerCount) {
 }
 
 function broadcast(room, message, excludeId = null) {
-    const data = JSON.stringify({...message, zone: room.zone});
+    const data = JSON.stringify({...message, zone: room.zone, room_id: room.id});
     for (const [id, player] of room.players.entries()) {
         if (id !== excludeId && player.ws.readyState === WebSocket.OPEN) {
+            // Drop replaceable snapshots instead of building a stale TCP backlog.
+            if (['state','roster'].includes(message.type) && player.ws.bufferedAmount > 65536) continue;
             if(message.type==='state'&&(player.background||Date.now()-player.lastUpdate>2000)){
                 if(Date.now()-(player.lastBackgroundState||0)<1000)continue;
                 player.lastBackgroundState=Date.now();
@@ -257,6 +259,23 @@ function broadcast(room, message, excludeId = null) {
             player.ws.send(data);
         }
     }
+}
+
+// One public representation for joins and recovery; never include ws, IP or
+// private expedition/admin data. Missing one join/update must be recoverable.
+function publicPlayer(p) {
+    const result = {};
+    for (const key of ['id','zone','name','role','duel_protocol','class','level','country',
+        'x','y','vx','vy','anim','flip','dead','outfit','vehicle','hat','face','shoes',
+        'accessory','weapon','gear_stats','skin']) result[key] = p[key];
+    result.role = p.role || '';
+    return result;
+}
+
+function sendRoster(room, recipient = null) {
+    const message = {type:'roster', players:[...room.players.values()].map(publicPlayer)};
+    if (recipient) recipient.ws.send(JSON.stringify({...message,zone:room.zone,room_id:room.id}));
+    else broadcast(room,message);
 }
 
 function tickRoom(room) {
@@ -292,6 +311,10 @@ function tickRoom(room) {
 
     if (stateUpdate.length > 0) {
         broadcast(room, { type: 'state', zone: room.zone, players: stateUpdate });
+    }
+    if (now - (room.lastRoster || 0) >= 2000) {
+        room.lastRoster = now;
+        sendRoster(room);
     }
 
     // Update bot count if needed
@@ -388,27 +411,7 @@ wss.on('connection', (ws, req) => {
                 const otherPlayers = [];
                 for (const [id, p] of playerRoom.players.entries()) {
                     if (id !== playerId) {
-                        otherPlayers.push({
-                            id: id,
-                            zone: p.zone,
-                            name: p.name,
-                            role: p.role || '',
-                            duel_protocol: p.duel_protocol,
-                            class: p.class,
-                            level: p.level,
-                            country: p.country,
-                            x: p.x,
-                            y: p.y,
-                            outfit: p.outfit,
-                            vehicle: p.vehicle,
-                            hat: p.hat,
-                            face: p.face,
-                            shoes: p.shoes,
-                            accessory: p.accessory,
-                            weapon: p.weapon,
-                            gear_stats: p.gear_stats,
-                            skin: p.skin
-                        });
+                        otherPlayers.push(publicPlayer(p));
                     }
                 }
 
@@ -421,6 +424,8 @@ wss.on('connection', (ws, req) => {
                     presence_protocol: 1,
                     duel_protocol: 1,
                     role: newPlayer.role,
+                    room_id: playerRoom.id,
+                    roster_protocol: 1,
                     join_revision: data.join_revision,
                     zone,
                     id: playerId,
@@ -431,34 +436,18 @@ wss.on('connection', (ws, req) => {
                 }));
 
                 // Broadcast player_joined to others
-                broadcast(playerRoom, {
-                    type: 'player_joined',
-                    id: playerId,
-                    zone,
-                    name: newPlayer.name,
-                    role: newPlayer.role,
-                    duel_protocol: newPlayer.duel_protocol,
-                    class: newPlayer.class,
-                    level: newPlayer.level,
-                    country: country,
-                    x: newPlayer.x,
-                    y: newPlayer.y,
-                    outfit: newPlayer.outfit,
-                    vehicle: newPlayer.vehicle,
-                    hat: newPlayer.hat,
-                    face: newPlayer.face,
-                    shoes: newPlayer.shoes,
-                    accessory: newPlayer.accessory,
-                    weapon: newPlayer.weapon,
-                    gear_stats: newPlayer.gear_stats,
-                    skin: newPlayer.skin
-                }, playerId);
+                broadcast(playerRoom, {type: 'player_joined', ...publicPlayer(newPlayer)}, playerId);
 
             } else if (playerRoom && playerRoom.players.has(playerId)) {
                 const p = playerRoom.players.get(playerId);
                 p.lastUpdate = now;
 
-                if (data.type === 'typing_event') {
+                if (data.type === 'roster_request') {
+                    if (now - (p.lastRosterRequest || 0) >= 1000) {
+                        p.lastRosterRequest = now;
+                        sendRoster(playerRoom,p);
+                    }
+                } else if (data.type === 'typing_event') {
                     typingEvents.action(playerRoom,p,data);
                 } else if (data.type === 'expedition') {
                     if([EXPEDITION_WORLD,EXPEDITION_RAID].includes(p.zone)) expeditions.action(p,data);
@@ -466,6 +455,7 @@ wss.on('connection', (ws, req) => {
                     presence.tick(p,typingEvents.active(playerRoom,p)||[...playerRoom.duels.values()].some(d=>d.live&&[d.first,d.second].includes(playerId)));
                     presence.policy(p,data);
                 } else if (data.type === 'pos') {
+                    if (!Number.isFinite(data.x) || !Number.isFinite(data.y)) return;
                     presence.tick(p,typingEvents.active(playerRoom,p)||[...playerRoom.duels.values()].some(d=>d.live&&[d.first,d.second].includes(playerId)));
                     const acceptsSoul=presence.position(p,data);
                     if(acceptsSoul&&now>=(p.soul_lock_until||0)&&!typingEvents.active(playerRoom,p)&&![...playerRoom.duels.values()].some(d=>d.live&&[d.first,d.second].includes(playerId)))syncSoul(p,data);
@@ -477,10 +467,10 @@ wss.on('connection', (ws, req) => {
                     }
                     p.x = data.x;
                     p.y = data.y;
-                    p.vx = data.vx;
-                    p.vy = data.vy;
-                    p.anim = data.anim;
-                    p.flip = data.flip;
+                    p.vx = Number.isFinite(data.vx) ? data.vx : 0;
+                    p.vy = Number.isFinite(data.vy) ? data.vy : 0;
+                    p.anim = typeof data.anim === 'string' ? data.anim.slice(0,64) : 'idle';
+                    p.flip = data.flip === true;
                     if (citySafe(p)) cancelPlayerDuels(playerRoom,p.id,'safe_zone');
                 } else if (data.type === 'chat') {
 					// Internal state messages are not displayed as chat by clients.
