@@ -42,8 +42,10 @@ const BLOCKED_TERMS = [
 ];
 
 const rooms = new Map();
+const {SessionActivity}=require('./session_activity');
+const activities = new SessionActivity(zone=>WORLD_ZONES.has(zone));
 const keyFile = process.env.ADMIN_PUBLIC_KEYS_FILE || path.join(__dirname,'admin_public_keys.json');
-const admin = new AdminService({rooms,wss,keys:fs.existsSync(keyFile)?JSON.parse(fs.readFileSync(keyFile,'utf8')).keys:[],playerDetails:p=>{
+const admin = new AdminService({rooms,wss,activityPlayers:activities.players,keys:fs.existsSync(keyFile)?JSON.parse(fs.readFileSync(keyFile,'utf8')).keys:[],playerDetails:p=>{
     if(![EXPEDITION_WORLD,EXPEDITION_RAID].includes(p.zone))return {};
     const a=expeditions.account(p.id),s=expeditions.state(p);
     return {soul:Math.round(a.hp),max_soul:100,carried_shards:a.carried,combat_target:a.target,raid_stage:p.zone===EXPEDITION_RAID?(s?.stage??0):null,pending_rewards:a.receipts.length};
@@ -79,6 +81,8 @@ function updatePlayerInfo(room, player, data) {
     data.class = player.class;
     for (const field of Object.keys(Equipment.fields)) data[field] = player[field];
     data.gear_stats = player.gear_stats;
+    player.info_revision = (player.info_revision || 0) + 1;
+    data.info_revision = player.info_revision;
     cancelPlayerDuels(room, player.id, 'street_group_changed', true);
 }
 
@@ -267,7 +271,7 @@ function publicPlayer(p) {
     const result = {};
     for (const key of ['id','zone','name','role','duel_protocol','class','level','country',
         'x','y','vx','vy','anim','flip','dead','outfit','vehicle','hat','face','shoes',
-        'accessory','weapon','gear_stats','skin']) result[key] = p[key];
+        'accessory','weapon','gear_stats','skin','info_revision']) result[key] = p[key];
     result.role = p.role || '';
     return result;
 }
@@ -275,7 +279,16 @@ function publicPlayer(p) {
 function sendRoster(room, recipient = null) {
     const message = {type:'roster', players:[...room.players.values()].map(publicPlayer)};
     if (recipient) recipient.ws.send(JSON.stringify({...message,zone:room.zone,room_id:room.id}));
-    else broadcast(room,message);
+    else {
+        const index = JSON.stringify({type:'roster_index',zone:room.zone,room_id:room.id,
+            players:[...room.players.values()].map(p=>({id:p.id,info_revision:p.info_revision||1}))});
+        let full;
+        for (const p of room.players.values()) {
+            if (p.ws.readyState!==WebSocket.OPEN || p.ws.bufferedAmount>65536) continue;
+            if (p.roster_index) p.ws.send(index);
+            else {full ||= JSON.stringify({...message,zone:room.zone,room_id:room.id});p.ws.send(full);}
+        }
+    }
 }
 
 function tickRoom(room) {
@@ -312,7 +325,7 @@ function tickRoom(room) {
     if (stateUpdate.length > 0) {
         broadcast(room, { type: 'state', zone: room.zone, players: stateUpdate });
     }
-    if (now - (room.lastRoster || 0) >= 2000) {
+    if (now - (room.lastRoster || 0) >= 5000) {
         room.lastRoster = now;
         sendRoster(room);
     }
@@ -363,6 +376,17 @@ wss.on('connection', (ws, req) => {
             if(admin.handle(ws,data,playerId,ip)) return;
             if(admin.isAdminSocket(ws)) return;
 
+            if(data.type==='session_activity') {
+                const updated=activities.update(ws,playerId,data,{country,connectedAt,name:safeUsername(data.name)});
+                if(updated?.first)ws.send(JSON.stringify({type:'activity_ready',id:playerId,country,role:ws.developerRole?'Developer':'',activity_protocol:1}));
+                return;
+            }
+            if(data.type==='leave_room') {
+                if(playerRoom)handleDisconnect(playerRoom,playerId);
+                playerRoom=null;
+                return;
+            }
+
             if (data.type === 'join') {
                 const zone = data.zone === undefined ? 'city' : data.zone;
                 if (!WORLD_ZONES.has(zone)) { ws.send(JSON.stringify({type:'join_error',reason:'unknown_zone'})); return; }
@@ -374,6 +398,8 @@ wss.on('connection', (ws, req) => {
                     ws: ws,
                     id: playerId,
                     role: ws.developerRole ? 'Developer' : '',
+                    info_revision: 1,
+                    roster_index: data.roster_index === 1,
                     duel_protocol: data.duel_protocol === 1 ? 1 : 0,
                     connectedAt,
                     zone,
@@ -424,6 +450,7 @@ wss.on('connection', (ws, req) => {
                     presence_protocol: 1,
                     duel_protocol: 1,
                     typing_input_protocol: 2,
+                    activity_protocol: 1,
                     role: newPlayer.role,
                     room_id: playerRoom.id,
                     roster_protocol: 1,
@@ -535,6 +562,7 @@ wss.on('connection', (ws, req) => {
     });
 
     ws.on('close', () => {
+        activities.close(playerId);
         admin.close(playerId);
         if (playerRoom) {
             handleDisconnect(playerRoom, playerId, true);

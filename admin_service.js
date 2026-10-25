@@ -2,9 +2,10 @@
 const crypto = require('node:crypto');
 
 class AdminService {
-    constructor({rooms, wss, keys = [], version = '0.6.8', playerDetails=()=>({})}) {
+    constructor({rooms, wss, keys = [], version = '0.6.8', playerDetails=()=>({}),activityPlayers=new Map()}) {
         this.rooms = rooms; this.wss = wss; this.version = version;
         this.playerDetails=playerDetails;
+        this.activityPlayers=activityPlayers;
         this.keys = keys.map(k => crypto.createPublicKey({key:Buffer.from(k,'base64'),format:'der',type:'spki'}));
         this.sessions = new WeakMap(); this.pairs = new Map(); this.attempts = new Map();
         this.lag = 0; this.cpu = 0;
@@ -21,6 +22,7 @@ class AdminService {
     send(ws,data) { if(ws.readyState===1) ws.send(JSON.stringify(data)); }
     player(id) {
         for(const room of this.rooms.values()) if(room.players.has(id)) return {room,player:room.players.get(id)};
+        if(this.activityPlayers.has(id))return {room:null,player:this.activityPlayers.get(id)};
         return null;
     }
     setRole(id,role) {
@@ -28,8 +30,13 @@ class AdminService {
         if(!found) return false;
         found.player.role = role;
         found.player.ws.developerRole = role === 'Developer';
-        const message = {type:'role_update',zone:found.room.zone,id,role};
-        for(const player of found.room.players.values()) this.send(player.ws,message);
+        const activity=this.activityPlayers.get(id);
+        if(activity)activity.role=role;
+        found.player.info_revision=(found.player.info_revision||1)+1;
+        const message = {type:'role_update',id,role,info_revision:found.player.info_revision};
+        if(found.room)message.zone=found.room.zone;
+        this.send(found.player.ws,message);
+        if(found.room)for(const player of found.room.players.values())if(player.id!==id)this.send(player.ws,message);
         return true;
     }
     limited(ip) {
@@ -103,11 +110,21 @@ class AdminService {
     close(id) {for(const [code,pair] of this.pairs) if(pair.id===id) this.pairs.delete(code);}
     snapshot() {
         const now=Date.now(), players=[], rooms=[];
+        const joined=new Set();
         for(const room of this.rooms.values()) {
             rooms.push({id:room.id,zone:room.zone,players:room.players.size,capacity:room.zone==='forest_raid'?4:30,bots:room.botCount,private:room.zone==='forest_raid'});
-            for(const p of room.players.values()) players.push({id:p.id,name:p.name,class:p.class,level:p.level,role:p.role||'',zone:p.zone,room:room.id,x:Math.round(p.x||0),y:Math.round(p.y||0),dead:p.dead,country:p.country,connected_seconds:Math.round((now-(p.connectedAt||now))/1000),last_seen_seconds:Math.max(0,Math.round((now-p.lastUpdate)/1000)),presence:p.background?'background':now-p.lastUpdate>2000?'idle':'active',rtt_ms:Number.isFinite(p.ws.transportRtt)?Math.round(p.ws.transportRtt):null,soul:Math.round(p.soul||0),max_soul:Math.round(p.max_soul||100),...this.playerDetails(p)});
+            for(const p of room.players.values()) {
+                joined.add(p.id);
+                const context=this.activityPlayers.get(p.id);
+                players.push({id:p.id,name:p.name,class:p.class,level:p.level,role:p.role||'',zone:p.zone,room:room.id,x:Math.round(p.x||0),y:Math.round(p.y||0),dead:p.dead,country:p.country,connected_seconds:Math.round((now-(p.connectedAt||now))/1000),last_seen_seconds:Math.max(0,Math.round((now-p.lastUpdate)/1000)),presence:p.background?'background':now-p.lastUpdate>2000?'idle':'active',rtt_ms:Number.isFinite(p.ws.transportRtt)?Math.round(p.ws.transportRtt):null,soul:Math.round(p.soul||0),max_soul:Math.round(p.max_soul||100),mode:'online',activity:context?.zone===p.zone?context.activity:'playing',stage:context?.zone===p.zone?context.stage:0,detail:context?.zone===p.zone?context.detail:'',client_fps:context?.client_fps??null,client_frame_ms:context?.client_frame_ms??null,build:context?.build||'',context_age_seconds:context?Math.max(0,Math.round((now-context.lastActivity)/1000)):null,client_reported:false,...this.playerDetails(p)});
+            }
         }
-        return {at:now,version:this.version,uptime_seconds:Math.floor(process.uptime()),memory_mb:Math.round(process.memoryUsage().rss/1048576),cpu_percent:Math.round(this.cpu*10)/10,event_loop_lag_ms:Math.round(this.lag),connections:this.wss.clients.size,players,rooms};
+        for(const p of this.activityPlayers.values()) {
+            if(joined.has(p.id)||p.ws.readyState!==1)continue;
+            const age=Math.max(0,Math.round((now-p.lastActivity)/1000));
+            players.push({id:p.id,name:p.name,class:p.class,level:p.level,role:p.ws.developerRole?'Developer':'',zone:p.zone,room:'',x:p.x,y:p.y,dead:p.activity==='dead',country:p.country,connected_seconds:Math.round((now-p.connectedAt)/1000),last_seen_seconds:age,presence:p.background?'background':age>30?'idle':'active',rtt_ms:Number.isFinite(p.ws.transportRtt)?Math.round(p.ws.transportRtt):null,soul:p.soul,max_soul:p.max_soul,mode:p.mode==='online'?'connecting':p.mode,activity:p.activity,stage:p.stage,area:p.area,detail:p.detail,client_fps:p.client_fps,client_frame_ms:p.client_frame_ms,build:p.build,context_age_seconds:age,client_reported:true});
+        }
+        return {at:now,version:this.version,activity_protocol:1,uptime_seconds:Math.floor(process.uptime()),memory_mb:Math.round(process.memoryUsage().rss/1048576),cpu_percent:Math.round(this.cpu*10)/10,event_loop_lag_ms:Math.round(this.lag),connections:this.wss.clients.size,players,rooms};
     }
 }
 module.exports={AdminService};
