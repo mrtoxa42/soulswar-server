@@ -1,4 +1,5 @@
 'use strict';
+const {normalizeLetter}=require('./typing_input');
 const crypto = require('crypto');
 const rules = require('./forest_expedition.json');
 const {allied} = require('./duel_rules');
@@ -137,7 +138,7 @@ class Expeditions {
       if(rival){if(allied(p,rival)||!inPvp(p)||!inPvp(rival)||rival.expeditionRoom!==p.expeditionRoom||distance(p,[rival.x,rival.y])>600){a.target='';return false;}}
       else if(!e||e.hp<=0||distance(p,e.at)>850){a.target='';return false;}
       if(e&&distance(p,e.at)>(e.boss?420:240))return false;
-      if(m.letter.toUpperCase()!==rules.words[a.word%rules.words.length][a.typed]){this.damage(p,2);return false;}
+      if(normalizeLetter(m.letter)!==normalizeLetter(rules.words[a.word%rules.words.length][a.typed])){this.damage(p,2);return false;}
       a.typed++;if(a.typed<rules.words[a.word%rules.words.length].length)return true;
       a.typed=0;a.word=(a.word+1)%rules.words.length;a.hp=Math.min(100,a.hp+rules.word_heal);
       if(rival){this.damage(rival,17);if(this.account(rival.id).target==='')a.target='';return true;}

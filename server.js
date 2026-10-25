@@ -423,6 +423,7 @@ wss.on('connection', (ws, req) => {
                     typing_event_soul: 1,
                     presence_protocol: 1,
                     duel_protocol: 1,
+                    typing_input_protocol: 2,
                     role: newPlayer.role,
                     room_id: playerRoom.id,
                     roster_protocol: 1,

@@ -1,5 +1,6 @@
 'use strict';
 const crypto=require('node:crypto'),data=require('./typing_events.json');
+const {sameI,normalizeLetter}=require('./typing_input');
 const distance=(p,d)=>Number.isFinite(p.x)&&Number.isFinite(p.y)?Math.hypot(p.x-d.at[0],p.y-d.at[1]):Infinity;
 class TypingEvents {
  constructor(){this.pending=new Map();}
@@ -55,14 +56,14 @@ class TypingEvents {
   let correct=false;
   if(msg.target==='story'){
    const text=s.def.chapters[s.chapter].text;
-   if(msg.key===text[r.index]){
+   if(msg.key===text[r.index] || sameI(msg.key,text[r.index])){
     r.index++;correct=true;
     if(msg.key===' '&&/[.!?]/.test(text[r.index-2]||''))r.checkpoint=r.index;
     if(r.index===text.length){r.completed=true;r.index=0;r.checkpoint=0;}
    }
   }else{
    const threat=r.threats.find(t=>t.id===msg.target);
-   if(threat&&msg.key.toUpperCase()===threat.word[threat.index]){
+   if(threat&&normalizeLetter(msg.key)===normalizeLetter(threat.word[threat.index])){
     threat.index++;correct=true;
     if(threat.index===threat.word.length){r.threats=r.threats.filter(t=>t!==threat);s.progress+=12;r.contribution+=12;}
    }
