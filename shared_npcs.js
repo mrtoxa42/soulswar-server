@@ -1,0 +1,70 @@
+'use strict';
+const Equipment=require('./equipment_rules'),catalog=require('./equipment.json'),groups=require('./street_groups.json');
+const {syncSoul,Balance}=require('./live_duel');
+const CLASSES=['Banker','Vampire','Speedster','Politician'];
+// Four fixed identities per level bracket; movement stays in clear street lanes.
+const LANES=[[9800,7500,11100,7500],[11900,7500,13400,7500],[14400,7500,16300,7500],[8500,4300,8500,6200],[8500,1300,8500,3300],[4400,7500,7100,7500],[1000,7500,3400,7500],[8500,9000,8500,12500]];
+class SharedNpcs {
+    ensure(room,now=Date.now()){
+        if(room.npcs)return room.npcs;
+        room.npcs=new Map();if(room.zone!=='city')return room.npcs;
+        for(let tier=0;tier<groups.length;tier++)for(let cls=0;cls<4;cls++){
+            const p={id:`npc:${tier+1}:${cls}`,npc:true,name:['Ledger','Nightshade','Quickstep','Councillor'][cls]+' '+(tier+1),class:CLASSES[cls],level:Math.min(groups[tier].spawn_max,groups[tier].min+cls),zone:'city',duel_protocol:1,country:'UN',skin:'classic',vehicle:'none',weapon:'none',hat:'none',face:'none',shoes:'none',accessory:'none',outfit:'none',ws:{readyState:0},born:now-cls*5000,lane:LANES[tier],dead:false,busy:false,vx:0,vy:0,anim:'idle',flip:false};
+            p.outfit=catalog.classes[p.class].outfits.find(id=>id!=='none'&&Equipment.valid('outfits',id,p.class,p.level))||'none';
+            Equipment.normalize(p);syncSoul(p,{});this.move(p,now);room.npcs.set(p.id,p);
+        }
+        return room.npcs;
+    }
+    move(p,now){
+        const [ax,ay,bx,by]=p.lane,length=Math.hypot(bx-ax,by-ay),phase=((now-p.born)*.075/length)%2,t=phase<1?phase:2-phase,sign=phase<1?1:-1;
+        p.x=ax+(bx-ax)*t;p.y=ay+(by-ay)*t;p.vx=(bx-ax)/length*75*sign;p.vy=(by-ay)/length*75*sign;p.flip=p.vx<0;p.anim='walk_side';
+    }
+    resume(p,now){if(p.pauseAt!==undefined){p.born+=now-p.pauseAt;delete p.pauseAt;}this.move(p,now);}
+    roster(room){return [...this.ensure(room).values()].map(p=>this.public(p,true));}
+    public(p,full=false){
+        const result={id:p.id,x:Math.round(p.x),y:Math.round(p.y),vx:Math.round(p.vx),vy:Math.round(p.vy),anim:p.anim,flip:p.flip,dead:!!(p.dead||p.retired),busy:p.busy};
+        if(full)for(const key of ['npc','name','class','level','country','duel_protocol','outfit','skin','vehicle','weapon','hat','face','shoes','accessory'])result[key]=p[key];
+        return result;
+    }
+    finish(room,duel,winner,loser,now=Date.now()){
+        for(const p of [winner,loser])if(p.npc){p.busy=false;p.retired=p===loser;p.resumeAt=now+(p.retired?30000:6000);p.vx=p.vy=0;p.anim='idle';}
+    }
+    tick(room,duels,now=Date.now()){
+        for(const p of this.ensure(room,now).values()){
+            const duel=[...room.duels.values()].find(d=>[d.first,d.second].includes(p.id));
+            if(duel?.reservedUntil&&now>duel.reservedUntil){
+                for(const [key,value] of room.duels)if(value===duel)room.duels.delete(key);
+                const human=room.players.get(duel.first);
+                if(human?.ws.readyState===1)human.ws.send(JSON.stringify({type:'duel_rejected',reason:'challenge_expired'}));
+                p.busy=false;this.resume(p,now);continue;
+            }
+            p.busy=!!duel;
+            if(!duel){
+                if(now<(p.resumeAt||0))continue;
+                if(p.dead||p.retired){p.dead=false;p.retired=false;p.soul=p.max_soul;}
+                this.resume(p,now);continue;
+            }
+            if(p.pauseAt===undefined)p.pauseAt=now;
+            p.vx=p.vy=0;p.anim='idle';
+            if(!duel.live||now<(duel.npcNext||0))continue;
+            duel.npcNext=now+(p.level<6?650:400);
+            const human=room.players.get(duel.first===p.id?duel.second:duel.first),state=duel.inputs.get(p.id);
+            if(!human||!state)continue;
+            const level=Math.max(p.level,human.level),tier=level>=120?5:level>=80?4:level>=40?3:level>=15?2:1;
+            const word=state.word||Balance.words[tier][Math.floor((now/1000))%Balance.words[tier].length];
+            duels.input(room,duel,p,human,{duel_id:duel.id,seq:state.seq+1,word,letter:word[state.index]});
+        }
+    }
+    sendStates(room,now=Date.now()){
+        if(now-(room.lastNpcs||0)<500)return;
+        room.lastNpcs=now;
+        for(const player of room.players.values()){
+            if(!player.shared_npcs||player.ws.readyState!==1||player.ws.bufferedAmount>65536)continue;
+            if(player.background&&now-(player.lastNpcState||0)<2000)continue;
+            player.lastNpcState=now;
+            const npcs=[...room.npcs.values()].filter(p=>Math.hypot(p.x-player.x,p.y-player.y)<2600||[...room.duels.values()].some(d=>[d.first,d.second].includes(player.id)&&[d.first,d.second].includes(p.id))).map(p=>this.public(p));
+            if(npcs.length)player.ws.send(JSON.stringify({type:'npc_state',zone:room.zone,room_id:room.id,npcs}));
+        }
+    }
+}
+module.exports={SharedNpcs,LANES};

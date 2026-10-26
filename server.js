@@ -5,7 +5,15 @@ const fs = require('node:fs');
 const path = require('node:path');
 const {AdminService} = require('./admin_service');
 const {LiveDuel,syncSoul} = require('./live_duel');
-const liveDuels = new LiveDuel();
+const {Seasons}=require('./seasons');
+const {SharedNpcs}=require('./shared_npcs');
+if(process.env.RENDER&&!process.env.SEASON_STATE_FILE)throw Error('Set SEASON_STATE_FILE inside persistent storage before deploying shared seasons on Render.');
+const seasons=new Seasons(process.env.SEASON_STATE_FILE||path.join(__dirname,'.state','seasons.json'));
+const sharedNpcs=new SharedNpcs();
+const liveDuels = new LiveDuel(result=>{
+    seasons.record(result);
+    sharedNpcs.finish(result.room,result.duel,result.winner,result.loser);
+});
 const {TypingEvents} = require('./typing_events');
 const typingEvents = new TypingEvents();
 const {Presence}=require('./presence');
@@ -60,8 +68,8 @@ function rejectDuel(player, reason) {
 function cancelPlayerDuels(room, playerId, reason, onlyIncompatible = false) {
     for (const [key, duel] of room.duels) {
         if (duel.first !== playerId && duel.second !== playerId) continue;
-        const first = room.players.get(duel.first);
-        const second = room.players.get(duel.second);
+        const first = liveDuels.actor(room,duel.first);
+        const second = liveDuels.actor(room,duel.second);
         if (onlyIncompatible && first && second && canDuel(first.level, second.level)) continue;
         room.duels.delete(key);
         rejectDuel(first, reason);
@@ -99,7 +107,7 @@ function validateSystemEvent(room, player, payload) {
     if (!String(payload.ev).startsWith('pvp_')) return true;
 	if (!Regions.pvpAllowed(player.zone) && player.zone !== EXPEDITION_RAID) {rejectDuel(player,'class_region_is_pve');return false;}
     if ([EXPEDITION_WORLD,EXPEDITION_RAID].includes(player.zone)) {rejectDuel(player,'use_expedition_combat');return false;}
-    const rival = room.players.get(payload.target_id);
+    const rival = liveDuels.actor(room,payload.target_id);
     if (!rival || rival.id === player.id) {
         rejectDuel(player, 'opponent_unavailable');
         return false;
@@ -120,14 +128,31 @@ function validateSystemEvent(room, player, payload) {
         rejectDuel(player, 'opponent_unavailable');
         return false;
     }
+    if(payload.ev==='pvp_reserve'){
+        if(!rival.npc||!player.shared_npcs)return false;
+        const busy=[...room.duels.values()].some(d=>[d.first,d.second].includes(player.id)||[d.first,d.second].includes(rival.id));
+        if(busy){rejectDuel(player,'opponent_in_combat');return false;}
+        if(Math.hypot(player.x-rival.x,player.y-rival.y)>350||Date.now()<(rival.resumeAt||0)){rejectDuel(player,'opponent_unavailable');return false;}
+        room.duels.set(key,{first:player.id,second:rival.id,phase:'reserved',ratio:.5,reservedUntil:Date.now()+10000});
+        rival.busy=true;rival.vx=rival.vy=0;rival.anim='idle';
+        return false;
+    }
     if (payload.ev === 'pvp_incoming') {
-        const busy = [...room.duels.values()].some(d => [d.first, d.second].includes(player.id) || [d.first, d.second].includes(rival.id));
+        if(rival.npc&&(!player.shared_npcs||Math.hypot(player.x-rival.x,player.y-rival.y)>350||Date.now()<(rival.resumeAt||0))){rejectDuel(player,'opponent_unavailable');return false;}
+        const reserved=room.duels.get(key);
+        const ownReservation=reserved?.phase==='reserved'&&reserved.first===player.id&&rival.npc;
+        const busy = [...room.duels.values()].some(d => !(ownReservation&&d===reserved)&&([d.first, d.second].includes(player.id) || [d.first, d.second].includes(rival.id)));
         if (busy) {
             rejectDuel(player, 'opponent_in_combat');
             return false;
         }
         room.duels.set(key, { first: player.id, second: rival.id, phase: 'pending', ratio: 0.5 });
         typingEvents.leave(room,player,'pvp_challenge');
+        if(rival.npc){
+            const duel=room.duels.get(key);duel.phase='active';duel.npcNext=Date.now()+1200;rival.busy=true;
+            liveDuels.start(room,duel);
+            return false;
+        }
         typingEvents.leave(room,rival,'pvp_challenge');
         return true;
     }
@@ -225,6 +250,7 @@ function getOrCreateRoom(zone = 'city', instance = '') {
         interval: null
     };
     rooms.set(newRoomId, newRoom);
+    sharedNpcs.ensure(newRoom);
     
     // Start tick loop for this room
     newRoom.interval = setInterval(() => tickRoom(newRoom), TICK_RATE);
@@ -294,6 +320,8 @@ function sendRoster(room, recipient = null) {
 function tickRoom(room) {
     const now = Date.now();
     typingEvents.tick(room,now);
+    sharedNpcs.tick(room,liveDuels,now);
+    sharedNpcs.sendStates(room,now);
     const stateUpdate = [];
     const staleIds = [];
     for(const duel of room.duels.values())if(duel.phase==='active')liveDuels.tick(room,duel);
@@ -358,6 +386,13 @@ function handleDisconnect(room, playerId, disconnect = false) {
 
 const presenceTimer=setInterval(()=>{for(const ws of wss.clients)presence.probe(ws);},15000);
 presenceTimer.unref();
+const seasonTimer=setInterval(()=>{
+    try{
+        seasons.tick();
+        for(const room of rooms.values())for(const p of room.players.values())if(p.seasonKey&&p.ws.readyState===1&&p.ws.bufferedAmount<65536)p.ws.send(JSON.stringify(seasons.snapshot(p)));
+    }catch(error){console.error('Season state unavailable:',error.message);}
+},2000);
+seasonTimer.unref();
 
 wss.on('connection', (ws, req) => {
     presence.attach(ws);
@@ -428,6 +463,8 @@ wss.on('connection', (ws, req) => {
 
                 Equipment.normalize(newPlayer);
                 syncSoul(newPlayer,data);
+                newPlayer.shared_npcs=data.shared_npcs===1&&zone==='city';
+                const seasonToken=data.season_protocol===1?seasons.attach(newPlayer,data.season_token):'';
                 presence.init(newPlayer,data);
                 playerRoom.players.set(playerId, newPlayer);
                 expeditions.join(newPlayer,playerRoom);
@@ -444,7 +481,12 @@ wss.on('connection', (ws, req) => {
                 ws.send(JSON.stringify({
                     type: 'welcome',
                     protocol: 2,
-                    server_version: '0.6.8',
+                    server_version: '0.6.17',
+                    season_protocol: 1,
+                    season_token: seasonToken,
+                    season: seasons.snapshot(newPlayer),
+                    shared_npcs: newPlayer.shared_npcs?1:0,
+                    npcs: newPlayer.shared_npcs?sharedNpcs.roster(playerRoom):[],
                     typing_events: 1,
                     typing_event_soul: 1,
                     presence_protocol: 1,
@@ -460,7 +502,7 @@ wss.on('connection', (ws, req) => {
                     country: country,
                     players: otherPlayers,
                     serverTime: Date.now(),
-                    botCount: playerRoom.botCount
+                    botCount: newPlayer.shared_npcs?0:playerRoom.botCount
                 }));
 
                 // Broadcast player_joined to others
@@ -470,7 +512,11 @@ wss.on('connection', (ws, req) => {
                 const p = playerRoom.players.get(playerId);
                 p.lastUpdate = now;
 
-                if (data.type === 'roster_request') {
+                if (data.type === 'season_ack') {
+                    seasons.ack(p,data.id);
+                } else if (data.type === 'npc_roster_request') {
+                    if(p.shared_npcs&&now-(p.lastNpcRoster||0)>5000){p.lastNpcRoster=now;ws.send(JSON.stringify({type:'npc_roster',zone:p.zone,room_id:playerRoom.id,npcs:sharedNpcs.roster(playerRoom)}));}
+                } else if (data.type === 'roster_request') {
                     if (now - (p.lastRosterRequest || 0) >= 1000) {
                         p.lastRosterRequest = now;
                         sendRoster(playerRoom,p);

@@ -110,3 +110,42 @@ Admin snapshots add per-player presence, transport RTT, Soul, raid stage and car
 ## PvP protection
 
 Same-class players cannot fight each other, including in the forest's contested area. City duels check both participants against `pvp_rules.json`: the central plaza and dungeon entrances are safe. Challenges, acceptance, typing and results are validated server-side; moving into safety cancels an existing duel for both participants without a victory reward. The game owns the canonical manifest at `scripts/data/pvp_rules.json`; standalone deployments must include its server copy alongside `duel_rules.js`.
+
+
+## Shared seasons and city NPCs (next client protocol)
+
+`seasons.js` owns a global UTC-aligned 30-minute clock, faction wins, eligible
+contributors and private reward receipts. Only completed authoritative typing
+duels can score; ambient/local bot wins, client finish claims and forfeits do not.
+Ties share the winning reward; empty seasons issue no rewards. NPC victories do
+not add faction points. Rewards remain pending until the client saves its claim
+ledger and acknowledges them. The browser identity token is private and is never
+part of a roster. This is not a replacement for authenticated server inventory.
+
+Set `SEASON_STATE_FILE` to a JSON file **inside persistent storage**, for example
+`/var/data/seasons.json` with a Render disk mounted at `/var/data`. Default local
+storage is `.state/seasons.json`, which survives a process restart only when the
+underlying filesystem is retained. Render's ordinary filesystem is ephemeral;
+using the default there does NOT preserve scores/receipts across restarts/deploys.
+On Render, startup refuses to proceed without `SEASON_STATE_FILE`. Do not publish
+a durability claim until the disk/database configuration is verified.
+State writes use atomic replacement and fsync; an unreadable existing file fails
+closed instead of silently resetting scores. Back up this private state separately
+from source control. Run one server instance with this file-backed implementation;
+multiple independent instances require a transactional shared datastore.
+
+`shared_npcs.js` supplies 32 common city rivals (four factions in each of eight
+level brackets), fixed identities/cosmetics, server movement and exclusive live
+duels. A ten-second reservation freezes an NPC while its challenger types; it
+expires automatically if abandoned. Nearby states are sent at 2 Hz, background tabs at most every 2 seconds;
+clients interpolate briefly and stop predicting when packets stop. Distant NPCs
+are not simulated by client AI. Death/respawn and busy state belong to the room.
+Real player counts and room capacity exclude NPCs. Other regions, trash and
+ordinary creatures keep their existing ownership. Older clients retain the old
+local population; the new handshake explicitly opts into `shared_npcs: 1` and
+`season_protocol: 1`.
+
+Targeted checks: `node tests/shared_world_server_tests.js`,
+`node tests/shared_world_network_tests.js` and the isolated-profile Godot
+`tests/shared_world_client_tests.gd` / `tests/shared_npc_live_peer.gd` in a full
+project checkout. Never run tests against the production season state file.

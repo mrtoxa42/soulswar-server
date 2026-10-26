@@ -9,8 +9,10 @@ function syncSoul(player,data){
     player.soul=Number.isFinite(data.soul)?clamp(data.soul,0,player.max_soul):clamp(player.soul??player.max_soul,0,player.max_soul);
 }
 class LiveDuel {
+    constructor(onFinish=()=>{}){this.onFinish=onFinish;}
+    actor(room,id){return room.players.get(id)||room.npcs?.get(id);}
     start(room,duel){
-        const a=room.players.get(duel.first),b=room.players.get(duel.second);
+        const a=this.actor(room,duel.first),b=this.actor(room,duel.second);
         if(!a||!b||a.duel_protocol!==1||b.duel_protocol!==1)return;
         duel.live=true;duel.id=crypto.randomUUID();duel.revision=0;duel.lastTick=Date.now();duel.pulse=0;
         duel.inputs=new Map([a,b].map(p=>[p.id,{seq:0,word:'',index:0,tokens:8,lastToken:Date.now(),lastTyped:0}]));
@@ -19,10 +21,10 @@ class LiveDuel {
     send(room,duel,extra={}){
         duel.revision++;
         for(const id of [duel.first,duel.second]){
-            const p=room.players.get(id),r=room.players.get(id===duel.first?duel.second:duel.first);
+            const p=this.actor(room,id),r=this.actor(room,id===duel.first?duel.second:duel.first);
             if(!p||!r||p.ws.readyState!==1)continue;
             const input=duel.inputs.get(id);
-            p.ws.send(JSON.stringify({type:'duel_state',zone:room.zone,duel_id:duel.id,revision:duel.revision,other_id:r.id,ratio:id===duel.first?duel.ratio:1-duel.ratio,self_soul:p.soul,self_max:p.max_soul,rival_soul:r.soul,rival_max:r.max_soul,ack_seq:input.seq,input_word:input.word,input_index:input.index,pulse:duel.pulse,...extra}));
+            p.ws.send(JSON.stringify({type:'duel_state',zone:room.zone,room_id:room.id,duel_id:duel.id,revision:duel.revision,other_id:r.id,ratio:id===duel.first?duel.ratio:1-duel.ratio,self_soul:p.soul,self_max:p.max_soul,rival_soul:r.soul,rival_max:r.max_soul,ack_seq:input.seq,input_word:input.word,input_index:input.index,pulse:duel.pulse,...extra}));
         }
     }
     transfer(winner,loser,amount){
@@ -33,6 +35,7 @@ class LiveDuel {
         return drained;
     }
     input(room,duel,player,rival,payload){
+        if(duel.pendingResult){this.send(room,duel,{input_rejected:player.id,settlement_pending:true});return;}
         const state=duel.inputs.get(player.id),now=Date.now();
         state.tokens=Math.min(8,state.tokens+(now-state.lastToken)*.030);state.lastToken=now;
         const word=payload.word,letter=payload.letter;
@@ -57,16 +60,27 @@ class LiveDuel {
     }
     tick(room,duel){
         if(!duel.live)return;
+        if(duel.pendingResult){
+            if(Date.now()>=(duel.retryAt||0))this.finish(room,duel,duel.pendingResult.winnerId,duel.pendingResult.reason);
+            return;
+        }
         const now=Date.now(),delta=Math.min(.2,(now-duel.lastTick)/1000);duel.lastTick=now;
         const lead=duel.ratio>.5?duel.first:duel.second;
         if(Math.abs(duel.ratio-.5)<.04||now-duel.inputs.get(lead).lastTyped>900)return;
-        const winner=room.players.get(lead),loser=room.players.get(lead===duel.first?duel.second:duel.first);
+        const winner=this.actor(room,lead),loser=this.actor(room,lead===duel.first?duel.second:duel.first);
         if(winner&&loser&&this.transfer(winner,loser,Math.min(winner.max_soul,loser.max_soul)*Balance.lead_soul_per_second*Math.abs(duel.ratio-.5)*2*delta)>0)this.send(room,duel);
     }
     finish(room,duel,winnerId,reason){
         if(!duel.live||duel.finished)return;
-        const winner=room.players.get(winnerId),loser=room.players.get(winnerId===duel.first?duel.second:duel.first);
+        const winner=this.actor(room,winnerId),loser=this.actor(room,winnerId===duel.first?duel.second:duel.first);
         if(!winner||!loser)return;
+        try{this.onFinish({room,duel,winner,loser,reason});}
+        catch(error){
+            duel.pendingResult={winnerId,reason};duel.retryAt=Date.now()+1000;
+            console.error('Season settlement failed; result will retry:',error.message);
+            this.send(room,duel,{settlement_pending:true});return;
+        }
+        delete duel.pendingResult;
         winner.soul=Math.min(winner.max_soul,winner.soul+winner.max_soul*Balance.victory_refill);
         loser.soul=Math.max(0,loser.soul-loser.max_soul*Balance.defeat_loss);
         loser.dead=loser.soul<=0;
