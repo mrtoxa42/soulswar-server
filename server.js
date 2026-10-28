@@ -13,6 +13,7 @@ if(process.env.RENDER&&seasonStorage==='file'&&!process.env.SEASON_STATE_FILE)th
 const seasons=new Seasons(seasonStorage==='memory'?null:(process.env.SEASON_STATE_FILE||path.join(__dirname,'.state','seasons.json')));
 if(seasonStorage==='memory')console.warn('Session-only season storage: restart clears scores, identities and undelivered season/raid receipts.');
 const sharedNpcs=new SharedNpcs();
+const clientRelease=require('./client_release').releaseInfo(require('./client_release.json'));
 const liveDuels = new LiveDuel(result=>{
     seasons.record(result);
     sharedNpcs.finish(result.room,result.duel,result.winner,result.loser);
@@ -426,6 +427,14 @@ wss.on('connection', (ws, req) => {
             const now = Date.now();
             if(admin.handle(ws,data,playerId,ip)) return;
             if(admin.isAdminSocket(ws)) return;
+
+            if(data.type==='client_release_check') {
+                if(!ws.releaseCheckAt || now-ws.releaseCheckAt>=10000) {
+                    ws.releaseCheckAt=now;
+                    ws.send(JSON.stringify(clientRelease));
+                }
+                return;
+            }
 
             if(data.type==='session_activity') {
                 const updated=activities.update(ws,playerId,data,{country,connectedAt,name:safeUsername(data.name)});

@@ -211,3 +211,13 @@ queries never replay a grant. All requests still require the server-authorized
 Developer role; recipient clients save and deduplicate before acknowledging.
 Signed-admin/two-Godot-client tests click the real F6 buttons and validate the
 recipient's saved coins, increased/decreased level, XP and unchanged role.
+
+## İstemci sürüm bildirimi
+`client_release.json` yalnız public sürüm numarası ve HTTPS yönlendirme linkini tutar.
+Yeni ZIP yüklenip link doğrulandıktan sonra `enabled: true`, `version` ve `url`
+alanları bu ayrı sunucu reposunda güncellenip yayımlanır. Link gelene kadar
+`enabled: false` kalır. `client_release_check` WebSocket isteği oda/hesap girişi
+istemeden cevaplanır; bağlantı başına 10 saniye sınırı vardır. v0.6.20+ istemci
+bağlandıktan sonra ve 60 saniyede bir kontrol eder. Eski sürüm için kapatılabilir
+defter uyarısı çıkar; düğme güncel linki yeni sekmede açar. Eski istemciler bu
+özelliği içermiyorsa onlara geriye dönük uyarı eklenemez. Neon migration gerekmez.
