@@ -4,11 +4,13 @@
   "description": "WebSocket server for SoulsWarAI",
   "main": "server.js",
   "scripts": {
-    "prestart": "node sync_street_rules.js",
-    "start": "node server.js"
+    "prestart": "node sync_street_rules.js && node migrate_accounts.js",
+    "start": "node server.js",
+    "migrate": "node migrate_accounts.js"
   },
   "dependencies": {
-    "ws": "^8.16.0",
-    "geoip-lite": "^1.4.9"
+    "geoip-lite": "^1.4.9",
+    "pg": "^8.23.1",
+    "ws": "^8.16.0"
   }
 }

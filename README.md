@@ -179,3 +179,25 @@ Memory mode is not an account/password or cross-device save implementation.
 Street raids permit solo entry, recommend 3–4 players, and retain team-sized base
 HP. Up to 5 participants; late helpers can join an active fight. No minimum-three
 quorum remains. Deployment was not performed by this source change.
+
+
+## Independent guest and username/password accounts
+Account data lives in PostgreSQL configured by the Render secret DATABASE_URL.
+No database credential is shipped to the game. Optional HTTP endpoints share the
+existing server port: /accounts/register, login, resume, save, logout and recover.
+Names are case-insensitive ASCII letters/digits/underscore (3–18); passwords are
+case-sensitive (10–128 UTF-16 units), salted scrypt, never plaintext. Sessions and
+recovery codes are hashed. Recovery revokes sessions and rotates the code.
+The game preserves guest and account saves separately; revision conflicts cannot
+silently overwrite newer progress. This cloud-save transport does not make the
+existing client-owned game economy server-authoritative.
+
+npm prestart runs pending migrations from migrations/ in one transaction under
+an advisory lock. A missing DATABASE_URL leaves guest gameplay available and the
+account API unavailable; a configured but failing migration prevents new startup.
+ACCOUNT_ALLOWED_ORIGINS is a comma-separated origin allowlist. Explicit * enables
+the public bearer API for multiple game distribution hosts; no cookies are set.
+SEASON_STORAGE=memory remains separate and disposable for season/raid runtime.
+Do not run account tests against production. The game checkout contains real
+Neon accounts-dev tests with two isolated Godot profiles. The Docker image uses
+Node 24 LTS and a lockfile-based production install.

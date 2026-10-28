@@ -32,7 +32,13 @@ const expeditionTimer = setInterval(()=>expeditions.tick(),100);
 expeditionTimer.unref();
 
 const PORT = process.env.PORT || 8080;
-const wss = new WebSocket.Server({ port: PORT, maxPayload: 16384 });
+const accounts = require('./accounts').createAccounts();
+const httpServer = require('node:http').createServer((req,res)=>{
+    if(req.url.startsWith('/accounts/')){accounts.handle(req,res).catch(()=>{if(!res.headersSent)res.writeHead(503);res.end();});return;}
+    res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end('{"status":"ok"}');
+});
+const wss = new WebSocket.Server({ server:httpServer, maxPayload: 16384 });
+httpServer.listen(PORT);
 
 console.log(`WebSocket server starting on port ${PORT}`);
 
