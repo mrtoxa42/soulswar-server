@@ -8,7 +8,7 @@ class DeveloperSupport {
  handle(ws,data,id){
   const a=this.admin,found=a.player(id);
   if(!found||found.player.ws!==ws)return true;
-  if(data.type==='developer_support_ready'){ws.supportProtocol=data.protocol===1?1:0;return true;}
+  if(data.type==='developer_support_ready'){ws.supportProtocol=[1,2].includes(data.protocol)?data.protocol:0;a.send(ws,{type:'developer_support_ready_ack',protocol:2});return true;}
   if(data.type==='developer_support_ack'){
    const c=this.commands.get(data.command_id);
    if(!c||c.targetWs!==ws||c.targetId!==id||c.status!=='pending')return true;
@@ -20,9 +20,10 @@ class DeveloperSupport {
   if(!ws.developerRole){this.result(ws,{status:'rejected',message:'Server-authorized Developer access required.'});return true;}
   if(data.type==='developer_support_list'){
    const last=this.last.get(ws)||{};if(Date.now()-(last.list||0)<1000)return true;last.list=Date.now();this.last.set(ws,last);
-   const players=a.snapshot().players.filter(p=>p.id!==id).map(p=>({id:p.id,name:p.name,class:p.class,level:p.level,zone:p.zone,supported:a.player(p.id)?.player.ws.supportProtocol===1}));
+   const players=a.snapshot().players.map(p=>{const protocol=a.player(p.id)?.player.ws.supportProtocol||0;return {id:p.id,name:p.name,class:p.class,level:p.level,zone:p.zone,build:String(p.build||a.activityPlayers.get(p.id)?.build||'unknown'),supported:protocol>=1,support_protocol:protocol,xp_supported:protocol>=2};});
    a.send(ws,{type:'developer_support_players',players});return true;
   }
+  if(data.type==='developer_support_status'){const command=this.commands.get(this.requests.get(id+':'+String(data.request_id||'')));if(command)this.result(ws,this.view(command));return true;}
   if(data.type!=='developer_support_request')return true;
   const requestId=typeof data.request_id==='string'?data.request_id:'';
   if(!/^[a-f0-9]{32}$/.test(requestId)){this.result(ws,{status:'rejected',message:'Invalid request ID.'});return true;}
@@ -31,8 +32,8 @@ class DeveloperSupport {
   const last=this.last.get(ws)||{};
   if(Date.now()-(last.action||0)<500){this.result(ws,{request_id:requestId,status:'rejected',message:'Please wait before another command.'});return true;}
   const target=typeof data.target_id==='string'?a.player(data.target_id):null;
-  const max=data.action==='coins'?1000000:data.action==='level'?100000:0;
-  if(!max||!Number.isSafeInteger(data.value)||data.value<1||data.value>max||!target||target.player.ws.readyState!==1||target.player.id===id||target.player.is_shared_npc||target.player.ws.supportProtocol!==1){this.result(ws,{request_id:requestId,status:'rejected',message:'Invalid value, disconnected player, or target client needs an update.'});return true;}
+  const max=['coins','xp'].includes(data.action)?1000000:data.action==='level'?100000:0;
+  if(!max||!Number.isSafeInteger(data.value)||data.value<1||data.value>max||!target||target.player.ws.readyState!==1||target.player.is_shared_npc||!(target.player.ws.supportProtocol>=1)||(data.action==='xp'&&target.player.ws.supportProtocol<2)){this.result(ws,{request_id:requestId,status:'rejected',message:'Invalid value, disconnected player, or target client needs an update.'});return true;}
   if(this.commands.size>=256){this.result(ws,{request_id:requestId,status:'rejected',message:'Command queue full. Retry later.'});return true;}
   last.action=Date.now();this.last.set(ws,last);
   const c={id:crypto.randomUUID(),requestId,requestKey:key,senderWs:ws,targetWs:target.player.ws,targetId:data.target_id,senderId:id,action:data.action,value:data.value,status:'pending',at:Date.now()};

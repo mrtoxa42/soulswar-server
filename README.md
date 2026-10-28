@@ -201,3 +201,13 @@ SEASON_STORAGE=memory remains separate and disposable for season/raid runtime.
 Do not run account tests against production. The game checkout contains real
 Neon accounts-dev tests with two isolated Godot profiles. The Docker image uses
 Node 24 LTS and a lockfile-based production install.
+
+
+### F6 support protocol 2
+Developer player support supports coins, exact level and added XP. Protocol 1
+clients still receive coins/level; XP requires protocol 2. Readiness is acknowledged,
+player lists retain explicit connection IDs and include the operator, and status
+queries never replay a grant. All requests still require the server-authorized
+Developer role; recipient clients save and deduplicate before acknowledging.
+Signed-admin/two-Godot-client tests click the real F6 buttons and validate the
+recipient's saved coins, increased/decreased level, XP and unchanged role.

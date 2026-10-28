@@ -429,7 +429,7 @@ wss.on('connection', (ws, req) => {
 
             if(data.type==='session_activity') {
                 const updated=activities.update(ws,playerId,data,{country,connectedAt,name:safeUsername(data.name)});
-                if(updated?.first)ws.send(JSON.stringify({type:'activity_ready',id:playerId,country,role:ws.developerRole?'Developer':'',activity_protocol:1}));
+                if(updated?.first)ws.send(JSON.stringify({type:'activity_ready',id:playerId,country,role:ws.developerRole?'Developer':'',activity_protocol:1,developer_support_protocol:2}));
                 return;
             }
             if(data.type==='leave_room') {
@@ -500,6 +500,7 @@ wss.on('connection', (ws, req) => {
                     protocol: 2,
                     server_version: '0.6.17',
                     season_protocol: 1,
+                    developer_support_protocol: 2,
                     season_token: seasonToken,
                     season: seasons.snapshot(newPlayer),
                     shared_npcs: newPlayer.shared_npcs?1:0,
