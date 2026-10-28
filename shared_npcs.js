@@ -1,10 +1,29 @@
 'use strict';
 const Equipment=require('./equipment_rules'),catalog=require('./equipment.json'),groups=require('./street_groups.json');
 const {syncSoul,Balance}=require('./live_duel');
+const {canDuel,pairKey,protectionReason}=require('./duel_rules');
 const CLASSES=['Banker','Vampire','Speedster','Politician'];
 // Four fixed identities per level bracket; movement stays in clear street lanes.
 const LANES=[[9800,7500,11100,7500],[11900,7500,13400,7500],[14400,7500,16300,7500],[8500,4300,8500,6200],[8500,1300,8500,3300],[4400,7500,7100,7500],[1000,7500,3400,7500],[8500,9000,8500,12500]];
 class SharedNpcs {
+    constructor({now=Date.now()}={}){this.nextAmbientAt=now+20000;this.ambientCursor=0;}
+    startAmbient(room,duels,now){
+        // One start per 20 seconds across rooms, never simulate points per client.
+        if(room.zone!=='city'||!room.players.size||now<this.nextAmbientAt||[...room.duels.values()].some(d=>d.ambient))return;
+        const candidates=[...room.npcs.values()];
+        const offset=this.ambientCursor%candidates.length;
+        const free=candidates.slice(offset).concat(candidates.slice(0,offset)).filter(p=>!p.busy&&!p.dead&&!p.retired&&now>=(p.resumeAt||0)&&![...room.duels.values()].some(d=>[d.first,d.second].includes(p.id)));
+        for(let i=0;i<free.length;i++)for(let j=i+1;j<free.length;j++){
+            const a=free[i],b=free[j];
+            if(protectionReason(a,b)||!canDuel(a.level,b.level)||a.id.split(':')[1]!==b.id.split(':')[1]||Math.hypot(a.x-b.x,a.y-b.y)>260)continue;
+            const duel={first:a.id,second:b.id,phase:'active',ratio:.5,ambient:true};
+            room.duels.set(pairKey(a.id,b.id),duel);
+            a.busy=b.busy=true;a.pauseAt=b.pauseAt=now;
+            a.vx=a.vy=b.vx=b.vy=0;a.anim=b.anim='idle';
+            duels.start(room,duel);this.nextAmbientAt=now+20000;this.ambientCursor+=5;
+            return;
+        }
+    }
     ensure(room,now=Date.now()){
         if(room.npcs)return room.npcs;
         room.npcs=new Map();if(room.zone!=='city')return room.npcs;
@@ -30,7 +49,9 @@ class SharedNpcs {
         for(const p of [winner,loser])if(p.npc){p.busy=false;p.retired=p===loser;p.resumeAt=now+(p.retired?30000:6000);p.vx=p.vy=0;p.anim='idle';}
     }
     tick(room,duels,now=Date.now()){
-        for(const p of this.ensure(room,now).values()){
+        this.ensure(room,now);
+        this.startAmbient(room,duels,now);
+        for(const p of room.npcs.values()){
             const duel=[...room.duels.values()].find(d=>[d.first,d.second].includes(p.id));
             if(duel?.reservedUntil&&now>duel.reservedUntil){
                 for(const [key,value] of room.duels)if(value===duel)room.duels.delete(key);
@@ -46,9 +67,12 @@ class SharedNpcs {
             }
             if(p.pauseAt===undefined)p.pauseAt=now;
             p.vx=p.vy=0;p.anim='idle';
-            if(!duel.live||now<(duel.npcNext||0))continue;
-            duel.npcNext=now+(p.level<6?650:400);
-            const human=room.players.get(duel.first===p.id?duel.second:duel.first),state=duel.inputs.get(p.id);
+            if(!duel.live||duel.pendingResult)continue;
+            duel.npcNextById ||= {};
+            if(now<(duel.npcNextById[p.id]??duel.npcNext??0))continue;
+            duel.npcNextById[p.id]=now+(duel.ambient?450+Math.floor(Math.random()*300):(p.level<6?650:400));
+            const otherId=duel.first===p.id?duel.second:duel.first;
+            const human=room.players.get(otherId)||room.npcs.get(otherId),state=duel.inputs.get(p.id);
             if(!human||!state)continue;
             const level=Math.max(p.level,human.level),tier=level>=120?5:level>=80?4:level>=40?3:level>=15?2:1;
             const word=state.word||Balance.words[tier][Math.floor((now/1000))%Balance.words[tier].length];

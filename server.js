@@ -7,8 +7,11 @@ const {AdminService} = require('./admin_service');
 const {LiveDuel,syncSoul} = require('./live_duel');
 const {Seasons}=require('./seasons');
 const {SharedNpcs}=require('./shared_npcs');
-if(process.env.RENDER&&!process.env.SEASON_STATE_FILE)throw Error('Set SEASON_STATE_FILE inside persistent storage before deploying shared seasons on Render.');
-const seasons=new Seasons(process.env.SEASON_STATE_FILE||path.join(__dirname,'.state','seasons.json'));
+const seasonStorage=process.env.SEASON_STORAGE||'file';
+if(!['file','memory'].includes(seasonStorage))throw Error('SEASON_STORAGE must be file or memory.');
+if(process.env.RENDER&&seasonStorage==='file'&&!process.env.SEASON_STATE_FILE)throw Error('Set SEASON_STATE_FILE inside persistent storage, or explicitly choose SEASON_STORAGE=memory for reset-on-restart testing.');
+const seasons=new Seasons(seasonStorage==='memory'?null:(process.env.SEASON_STATE_FILE||path.join(__dirname,'.state','seasons.json')));
+if(seasonStorage==='memory')console.warn('Session-only season storage: restart clears scores, identities and undelivered season/raid receipts.');
 const sharedNpcs=new SharedNpcs();
 const liveDuels = new LiveDuel(result=>{
     seasons.record(result);
@@ -16,6 +19,8 @@ const liveDuels = new LiveDuel(result=>{
 });
 const {TypingEvents} = require('./typing_events');
 const typingEvents = new TypingEvents();
+const {CityRaids}=require('./city_raids');
+const cityRaids=new CityRaids(seasons,{busy:(room,p)=>typingEvents.active(room,p)||[...room.duels.values()].some(d=>[d.first,d.second].includes(p.id))});
 const {Presence}=require('./presence');
 const presence=new Presence();
 const { canDuel, pairKey, protectionReason, citySafe } = require('./duel_rules');
@@ -38,7 +43,7 @@ const MIN_BOTS = 5;
 // Open background sockets are checked with protocol ping/pong, never position age.
 const TICK_RATE = 100; // 10Hz
 const MAX_USERNAME_LENGTH = 18;
-const MAX_CHAT_LENGTH = 64;
+const MAX_CHAT_LENGTH = 256;
 const CHAT_WINDOW_MS = 10000;
 const MAX_CHAT_MESSAGES_PER_WINDOW = 4;
 const INTERNAL_MESSAGE_PREFIX = '__SYS__:';
@@ -95,11 +100,13 @@ function updatePlayerInfo(room, player, data) {
 }
 
 function validateSystemEvent(room, player, payload) {
+    if(player.cityRaidActive && ['pvp_incoming','pvp_reserve'].includes(payload?.ev)){rejectDuel(player,'raid_active');return false;}
     if (!payload || typeof payload !== 'object' || Array.isArray(payload)) return false;
     payload.role = player.role || '';
     if (payload.ev === 'update_info') updatePlayerInfo(room, player, payload);
     if (payload.ev === 'player_dead') {
         player.dead = true;
+        cityRaids.leave(room,player);
         typingEvents.leave(room,player,'soul_empty');
         cancelPlayerDuels(room, player.id, 'opponent_died');
     }
@@ -118,6 +125,7 @@ function validateSystemEvent(room, player, payload) {
         rejectDuel(player, 'different_street_group');
         return false;
     }
+    if(rival.cityRaidActive){rejectDuel(player,'opponent_in_combat');return false;}
     const protection = protectionReason(player,rival);
     if (protection) {
         cancelPlayerDuels(room,player.id,protection);
@@ -195,11 +203,11 @@ function validateSystemEvent(room, player, payload) {
 
 function cleanText(value, maxLength) {
     if (typeof value !== 'string') return '';
-    return value
+    return Array.from(value
         .replace(/[\x00-\x1F\x7F]/g, '')
         .replace(/[\[\]]/g, '')
-        .trim()
-        .slice(0, maxLength);
+        .trim())
+        .slice(0, maxLength).join('');
 }
 
 function normalizeForModeration(value) {
@@ -320,6 +328,7 @@ function sendRoster(room, recipient = null) {
 function tickRoom(room) {
     const now = Date.now();
     typingEvents.tick(room,now);
+    cityRaids.tick(room);
     sharedNpcs.tick(room,liveDuels,now);
     sharedNpcs.sendStates(room,now);
     const stateUpdate = [];
@@ -327,7 +336,7 @@ function tickRoom(room) {
     for(const duel of room.duels.values())if(duel.phase==='active')liveDuels.tick(room,duel);
 
     for (const [id, player] of room.players.entries()) {
-        presence.tick(player,typingEvents.active(room,player)||[...room.duels.values()].some(d=>d.live&&[d.first,d.second].includes(id)));
+        presence.tick(player,cityRaids.active(room,player)||typingEvents.active(room,player)||[...room.duels.values()].some(d=>d.live&&[d.first,d.second].includes(id)));
         if (player.ws.readyState !== WebSocket.OPEN) {
             staleIds.push(id);
         } else {
@@ -376,6 +385,7 @@ function tickRoom(room) {
 function handleDisconnect(room, playerId, disconnect = false) {
     if (room.players.has(playerId)) {
         cancelPlayerDuels(room, playerId, 'opponent_disconnected');
+        cityRaids.leave(room,room.players.get(playerId));
         expeditions.leave(room.players.get(playerId),disconnect);
         typingEvents.leave(room,room.players.get(playerId),'left_region',disconnect);
         room.players.delete(playerId);
@@ -434,6 +444,7 @@ wss.on('connection', (ws, req) => {
                     id: playerId,
                     role: ws.developerRole ? 'Developer' : '',
                     info_revision: 1,
+                    city_raid_protocol: data.city_raid_protocol===1?1:0,
                     roster_index: data.roster_index === 1,
                     duel_protocol: data.duel_protocol === 1 ? 1 : 0,
                     connectedAt,
@@ -487,6 +498,7 @@ wss.on('connection', (ws, req) => {
                     season: seasons.snapshot(newPlayer),
                     shared_npcs: newPlayer.shared_npcs?1:0,
                     npcs: newPlayer.shared_npcs?sharedNpcs.roster(playerRoom):[],
+                    city_raids: 1,
                     typing_events: 1,
                     typing_event_soul: 1,
                     presence_protocol: 1,
@@ -521,18 +533,20 @@ wss.on('connection', (ws, req) => {
                         p.lastRosterRequest = now;
                         sendRoster(playerRoom,p);
                     }
+                } else if (data.type === 'city_raid') {
+                    if(p.city_raid_protocol===1)cityRaids.action(playerRoom,p,data);
                 } else if (data.type === 'typing_event') {
-                    typingEvents.action(playerRoom,p,data);
+                    if(!p.cityRaidActive)typingEvents.action(playerRoom,p,data);
                 } else if (data.type === 'expedition') {
                     if([EXPEDITION_WORLD,EXPEDITION_RAID].includes(p.zone)) expeditions.action(p,data);
                 } else if (data.type === 'presence') {
-                    presence.tick(p,typingEvents.active(playerRoom,p)||[...playerRoom.duels.values()].some(d=>d.live&&[d.first,d.second].includes(playerId)));
+                    presence.tick(p,cityRaids.active(playerRoom,p)||typingEvents.active(playerRoom,p)||[...playerRoom.duels.values()].some(d=>d.live&&[d.first,d.second].includes(playerId)));
                     presence.policy(p,data);
                 } else if (data.type === 'pos') {
                     if (!Number.isFinite(data.x) || !Number.isFinite(data.y)) return;
-                    presence.tick(p,typingEvents.active(playerRoom,p)||[...playerRoom.duels.values()].some(d=>d.live&&[d.first,d.second].includes(playerId)));
+                    presence.tick(p,cityRaids.active(playerRoom,p)||typingEvents.active(playerRoom,p)||[...playerRoom.duels.values()].some(d=>d.live&&[d.first,d.second].includes(playerId)));
                     const acceptsSoul=presence.position(p,data);
-                    if(acceptsSoul&&now>=(p.soul_lock_until||0)&&!typingEvents.active(playerRoom,p)&&![...playerRoom.duels.values()].some(d=>d.live&&[d.first,d.second].includes(playerId)))syncSoul(p,data);
+                    if(acceptsSoul&&now>=(p.soul_lock_until||0)&&!cityRaids.active(playerRoom,p)&&!typingEvents.active(playerRoom,p)&&![...playerRoom.duels.values()].some(d=>d.live&&[d.first,d.second].includes(playerId)))syncSoul(p,data);
                     if([EXPEDITION_WORLD,EXPEDITION_RAID].includes(p.zone)) {
                         const width=p.zone===EXPEDITION_RAID?5800:6000,height=p.zone===EXPEDITION_RAID?2200:4800;
                         if(!Number.isFinite(data.x)||!Number.isFinite(data.y)||data.x<150||data.y<200||data.x>width-100||data.y>height-100) return;

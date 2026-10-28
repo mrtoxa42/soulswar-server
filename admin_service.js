@@ -1,5 +1,6 @@
 'use strict';
 const crypto = require('node:crypto');
+const {DeveloperSupport}=require('./developer_support');
 
 class AdminService {
     constructor({rooms, wss, keys = [], version = '0.6.8', playerDetails=()=>({}),activityPlayers=new Map()}) {
@@ -8,6 +9,7 @@ class AdminService {
         this.activityPlayers=activityPlayers;
         this.keys = keys.map(k => crypto.createPublicKey({key:Buffer.from(k,'base64'),format:'der',type:'spki'}));
         this.sessions = new WeakMap(); this.pairs = new Map(); this.attempts = new Map();
+        this.support=new DeveloperSupport(this);
         this.lag = 0; this.cpu = 0;
         let previousTime = process.hrtime.bigint(), previousCpu = process.cpuUsage();
         this.timer = setInterval(() => {
@@ -16,6 +18,7 @@ class AdminService {
             this.lag = Math.max(0,elapsed-1000); this.cpu = (usage.user+usage.system)/(elapsed*10);
             previousTime = now; previousCpu = process.cpuUsage();
             for (const [ip,attempt] of this.attempts) if(attempt.until<Date.now()) this.attempts.delete(ip);
+            this.support.tick();
         },1000);
         this.timer.unref();
     }
@@ -49,6 +52,7 @@ class AdminService {
     }
     handle(ws,data,id,ip) {
         if(!data || typeof data.type!=='string') return false;
+        if(data.type.startsWith('developer_support_'))return this.support.handle(ws,data,id);
         if(data.type==='developer_pair') {
             const found=this.player(id);
             if(!found) return true;
@@ -107,7 +111,7 @@ class AdminService {
         return true;
     }
     isAdminSocket(ws) { return this.sessions.has(ws); }
-    close(id) {for(const [code,pair] of this.pairs) if(pair.id===id) this.pairs.delete(code);}
+    close(id) {this.support.close(id);for(const [code,pair] of this.pairs) if(pair.id===id) this.pairs.delete(code);}
     snapshot() {
         const now=Date.now(), players=[], rooms=[];
         const joined=new Set();

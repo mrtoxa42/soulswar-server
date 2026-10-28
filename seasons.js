@@ -6,11 +6,13 @@ const hash=token=>crypto.createHash('sha256').update(token).digest('hex');
 class Seasons {
     constructor(file,{now=()=>Date.now(),duration=DURATION}={}) {
         this.file=file;this.now=now;this.duration=duration;
-        this.state=fs.existsSync(file)?JSON.parse(fs.readFileSync(file,'utf8')):{version:1,round:Math.floor(now()/duration),scores:scores(),participants:{},seen:{},accounts:{}};
+        this.persistent=typeof file==='string'&&file.length>0;
+        this.state=this.persistent&&fs.existsSync(file)?JSON.parse(fs.readFileSync(file,'utf8')):{version:1,round:Math.floor(now()/duration),scores:scores(),participants:{},seen:{},accounts:{}};
         if(this.state.version!==1||!this.state.accounts||!this.state.scores)throw Error('Invalid season state; refusing to reset it');
         this.tick();
     }
     persist(){
+        if(!this.persistent)return; // Explicit session-only mode; restart resets pending state.
         fs.mkdirSync(path.dirname(this.file),{recursive:true});
         const temp=this.file+'.tmp',fd=fs.openSync(temp,'w',0o600);
         try{fs.writeFileSync(fd,JSON.stringify(this.state));fs.fsyncSync(fd);}finally{fs.closeSync(fd);}
@@ -48,12 +50,13 @@ class Seasons {
     }
     record({duel,winner,loser,reason}){
         this.tick();
-        // No ambient bot wins, legacy client claims, forfeits or duplicate results.
+        // Only server-resolved duels count; ambient NPC fights grant no player participation.
         const participants=[winner,loser].filter(p=>!p.npc&&p.seasonKey&&duel.inputs?.get(p.id)?.seq>0);
-        if(reason!=='overpowered'||!participants.length||!CLASSES.includes(winner.class)||this.state.seen[duel.id])return false;
+        const ambient=duel.live===true&&duel.ambient===true&&winner.npc&&loser.npc&&duel.inputs?.get(winner.id)?.seq>0&&duel.inputs?.get(loser.id)?.seq>0;
+        if(reason!=='overpowered'||(!participants.length&&!ambient)||!CLASSES.includes(winner.class)||!CLASSES.includes(loser.class)||typeof duel.id!=='string'||!duel.id||winner.class===loser.class||this.state.seen[duel.id])return false;
         return this.transaction(()=>{
             this.state.seen[duel.id]=true;
-            if(!winner.npc&&winner.seasonKey&&duel.inputs.get(winner.id)?.seq>0)this.state.scores[winner.class]++;
+            this.state.scores[winner.class]++;
             for(const p of participants) {
                 this.state.participants[p.seasonKey] ||= {class:p.class};
                 this.state.accounts[p.seasonKey].lastSeen=this.now();

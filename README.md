@@ -116,9 +116,10 @@ Same-class players cannot fight each other, including in the forest's contested 
 
 `seasons.js` owns a global UTC-aligned 30-minute clock, faction wins, eligible
 contributors and private reward receipts. Only completed authoritative typing
-duels can score; ambient/local bot wins, client finish claims and forfeits do not.
-Ties share the winning reward; empty seasons issue no rewards. NPC victories do
-not add faction points. Rewards remain pending until the client saves its claim
+duels can score, including server-started NPC-versus-NPC fights and NPC victories
+over active humans. Local bot claims, client finish claims and forfeits do not.
+Ties share the winning reward; empty seasons issue no rewards. Ambient NPC
+observers receive no participation credit. Rewards remain pending until the client saves its claim
 ledger and acknowledges them. The browser identity token is private and is never
 part of a roster. This is not a replacement for authenticated server inventory.
 
@@ -127,7 +128,7 @@ Set `SEASON_STATE_FILE` to a JSON file **inside persistent storage**, for exampl
 storage is `.state/seasons.json`, which survives a process restart only when the
 underlying filesystem is retained. Render's ordinary filesystem is ephemeral;
 using the default there does NOT preserve scores/receipts across restarts/deploys.
-On Render, startup refuses to proceed without `SEASON_STATE_FILE`. Do not publish
+On Render, file-mode startup refuses to proceed without `SEASON_STATE_FILE`. Do not publish
 a durability claim until the disk/database configuration is verified.
 State writes use atomic replacement and fsync; an unreadable existing file fails
 closed instead of silently resetting scores. Back up this private state separately
@@ -149,3 +150,32 @@ Targeted checks: `node tests/shared_world_server_tests.js`,
 `node tests/shared_world_network_tests.js` and the isolated-profile Godot
 `tests/shared_world_client_tests.gd` / `tests/shared_npc_live_peer.gd` in a full
 project checkout. Never run tests against the production season state file.
+
+
+### Ambient NPC faction scoring (28 October 2026)
+Server-started NPC-versus-NPC live duels now award one faction point to the
+winner. NPC victories over active human opponents count too. Local client claims,
+forfeits and duplicate results do not count. Ambient-only observers never become
+eligible for season rewards. SharedNpcs starts at most one ambient encounter per
+20 seconds across rooms, with one concurrent ambient duel per room and normal
+class, street, proximity, safety, reservation and respawn restrictions.
+Run `node tests/ambient_npc_season_tests.js` from the game checkout for the targeted
+simulation; existing shared_world server/network/client tests cover persistence,
+rewards, synchronized scores and client clock activation.
+The live server probed on 28 October still lacked season capabilities. Deploy
+this prepared server checkout with persistent storage and SEASON_STATE_FILE;
+updating the game ZIP alone cannot activate shared seasons. No deployment was
+performed as part of the source fix.
+
+
+### Render Free without persistent disk
+For explicitly disposable test sessions, set **SEASON_STORAGE=memory** in Render
+Environment. Do not set SEASON_STATE_FILE to a temporary path and call it durable.
+This mode needs no external database and works without a disk. A restart clears
+server scores, identity mappings and undelivered season/raid receipts. UTC-aligned
+season deadlines continue; browser-saved character profiles are separate.
+Default `SEASON_STORAGE=file` retains the existing persistent-file guard.
+Memory mode is not an account/password or cross-device save implementation.
+Street raids permit solo entry, recommend 3–4 players, and retain team-sized base
+HP. Up to 5 participants; late helpers can join an active fight. No minimum-three
+quorum remains. Deployment was not performed by this source change.

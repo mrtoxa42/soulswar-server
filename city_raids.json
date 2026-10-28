@@ -1,0 +1,73 @@
+{
+  "protocol": 1,
+  "period_seconds": 1800,
+  "window_seconds": 480,
+  "fight_seconds": 300,
+  "ready_seconds": 15,
+  "quorum_grace_seconds": 15,
+  "minimum_players": 1,
+  "maximum_players": 5,
+  "radius": 440,
+  "letter_damage": 12,
+  "word_damage": 25,
+  "bosses": [
+    {
+      "id": "valkyr",
+      "level": 30,
+      "hp": 36000,
+      "offset_seconds": 0,
+      "xp": 240,
+      "coins": 60,
+      "words": [
+        "OVERDRIVE",
+        "VANGUARD",
+        "THUNDER",
+        "CYBERNETIC",
+        "TEAMWORK"
+      ],
+      "at": [
+        8500,
+        5100
+      ]
+    },
+    {
+      "id": "nosferatu",
+      "level": 70,
+      "hp": 43000,
+      "offset_seconds": 600,
+      "xp": 340,
+      "coins": 90,
+      "words": [
+        "CRIMSON",
+        "ARISTOCRAT",
+        "NIGHTFALL",
+        "BLOODLINE",
+        "COOPERATION"
+      ],
+      "at": [
+        4300,
+        7500
+      ]
+    },
+    {
+      "id": "omega",
+      "level": 120,
+      "hp": 50000,
+      "offset_seconds": 1200,
+      "xp": 450,
+      "coins": 120,
+      "words": [
+        "CELESTIAL",
+        "SUPERNOVA",
+        "ARCHON",
+        "TRANSCEND",
+        "CONSTELLATION"
+      ],
+      "at": [
+        8500,
+        10800
+      ]
+    }
+  ],
+  "recommended_players": 4
+}
