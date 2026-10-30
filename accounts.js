@@ -23,12 +23,25 @@ class PgAccounts {
  constructor(pool){this.pool=pool;}
  async transaction(fn){const db=await this.pool.connect();try{await db.query('BEGIN');const result=await fn(db);await db.query('COMMIT');return result;}catch(e){await db.query('ROLLBACK');throw e;}finally{db.release();}}
  async find(name){return (await this.pool.query('SELECT id,username,display_name,password_hash,recovery_hash,disabled FROM sw_accounts WHERE username=$1',[name])).rows[0];}
+ async external(subject,display,data,create=true){return this.transaction(async db=>{
+  await db.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))',['poki:'+subject]);
+  const existing=(await db.query("SELECT a.* FROM sw_external_identities i JOIN sw_accounts a ON a.id=i.account_id WHERE i.provider='poki' AND i.subject=$1",[subject])).rows[0];
+  if(existing){if(existing.disabled)throw new AccountError('invalid_poki_token',401);return existing;}
+  if(!create)throw new AccountError('poki_account_missing',404);
+  const suffix=crypto.randomBytes(7).toString('hex'),name='pk_'+suffix;
+  const label=(typeof display==='string'?display.replace(/[^A-Za-z0-9_]/g,'').slice(0,18):'');
+  const publicName=label.length>=3?label:'Poki_'+suffix.slice(0,8);
+  const account=(await db.query('INSERT INTO sw_accounts(username,display_name,password_hash) VALUES($1,$2,$3) RETURNING id,username,display_name',[name,publicName,'external:poki:'+crypto.randomBytes(32).toString('hex')])).rows[0];
+  await db.query('INSERT INTO sw_profiles(account_id,profile) VALUES($1,$2::jsonb)',[account.id,JSON.stringify(accountProfile(data,publicName))]);
+  await db.query("INSERT INTO sw_external_identities(provider,subject,account_id) VALUES('poki',$1,$2)",[subject,account.id]);
+  return account;
+ });}
  async create(name,display,hash,recovery,data){return this.transaction(async db=>{
   let account;try{account=(await db.query('INSERT INTO sw_accounts(username,display_name,password_hash,recovery_hash) VALUES($1,$2,$3,$4) RETURNING id,username,display_name',[name,display,hash,recovery])).rows[0];}catch(e){if(e.code==='23505')throw new AccountError('username_taken',409);throw e;}
   await db.query('INSERT INTO sw_profiles(account_id,profile) VALUES($1,$2::jsonb)',[account.id,JSON.stringify(data)]);return account;
  });}
  async session(account,token){await this.pool.query('INSERT INTO sw_sessions(token_hash,account_id,expires_at) VALUES($1,$2,$3)',[digest(token),account.id,new Date(Date.now()+SESSION_MS)]);await this.pool.query('UPDATE sw_accounts SET last_login_at=now() WHERE id=$1',[account.id]);}
- async load(token){return (await this.pool.query('SELECT a.id,a.username,a.display_name,p.profile,p.revision,p.schema_version FROM sw_sessions s JOIN sw_accounts a ON a.id=s.account_id JOIN sw_profiles p ON p.account_id=a.id WHERE s.token_hash=$1 AND s.revoked_at IS NULL AND s.expires_at>now() AND NOT a.disabled',[digest(token)])).rows[0];}
+ async load(token){return (await this.pool.query('SELECT a.id,a.username,a.display_name,p.profile,p.revision,p.schema_version,i.provider FROM sw_sessions s JOIN sw_accounts a ON a.id=s.account_id JOIN sw_profiles p ON p.account_id=a.id LEFT JOIN sw_external_identities i ON i.account_id=a.id WHERE s.token_hash=$1 AND s.revoked_at IS NULL AND s.expires_at>now() AND NOT a.disabled',[digest(token)])).rows[0];}
  async save(token,revision,data){return this.transaction(async db=>{
   const row=(await db.query('SELECT p.account_id,p.revision,a.display_name FROM sw_sessions s JOIN sw_accounts a ON a.id=s.account_id JOIN sw_profiles p ON p.account_id=a.id WHERE s.token_hash=$1 AND s.revoked_at IS NULL AND s.expires_at>now() AND NOT a.disabled FOR UPDATE OF p,s',[digest(token)])).rows[0];
   if(!row)throw new AccountError('session_expired',401);if(Number(row.revision)!==revision)throw new AccountError('save_conflict',409);
@@ -38,11 +51,22 @@ class PgAccounts {
  async recover(account,hash,recovery){await this.transaction(async db=>{const result=await db.query('UPDATE sw_accounts SET password_hash=$1,recovery_hash=$4,updated_at=now() WHERE id=$2 AND recovery_hash=$3 AND NOT disabled RETURNING id',[hash,account.id,account.recovery_hash,recovery]);if(!result.rows.length)throw new AccountError('invalid_credentials',401);await db.query('UPDATE sw_sessions SET revoked_at=now() WHERE account_id=$1 AND revoked_at IS NULL',[account.id]);});}
 }
 class Accounts {
- constructor(store,{now=()=>Date.now(),origins=[]}={}){this.store=store;this.now=now;this.origins=new Set(origins);this.rates=new Map();this.hashing=0;this.dummy=makeHash(crypto.randomBytes(32).toString('hex'));}
+ constructor(store,{now=()=>Date.now(),origins=[],verifyPoki=null}={}){this.store=store;this.now=now;this.origins=new Set(origins);this.rates=new Map();this.hashing=0;this.verifyPoki=verifyPoki;this.dummy=makeHash(crypto.randomBytes(32).toString('hex'));}
  rate(key,limit){const now=this.now();let r=this.rates.get(key);if(!r||now>=r.until){if(this.rates.size>=5000){for(const [k,v]of this.rates)if(now>=v.until)this.rates.delete(k);if(this.rates.size>=5000)throw new AccountError('busy',429);}r={count:0,until:now+60000};this.rates.set(key,r);}if(++r.count>limit)throw new AccountError('too_many_attempts',429);}
  async kdf(fn){if(this.hashing>=2)throw new AccountError('busy',429);this.hashing++;try{return await fn();}finally{this.hashing--;}}
  async action(action,input,token,ip='local'){
   this.rate('ip:'+ip,60);if(!this.store)throw new AccountError('accounts_unavailable',503);
+  if(action==='poki_login'){
+   this.rate('poki:'+ip,10);
+   if(!this.verifyPoki)throw new AccountError('poki_not_configured',503);
+   if(!profile(input.profile))throw new AccountError('invalid_profile');
+   if((this.verifyingPoki||0)>=4)throw new AccountError('busy',429);
+   this.verifyingPoki=(this.verifyingPoki||0)+1;
+   let subject;try{subject=await this.verifyPoki(input.poki_token);}finally{this.verifyingPoki--;}
+   const account=await this.store.external(subject,input.display_name,input.profile,input.create_account===true);
+   const session=crypto.randomBytes(32).toString('hex');await this.store.session(account,session);
+   return {...this.public(await this.store.load(session)),token:session};
+  }
   if(['register','login','recover'].includes(action)){
    const name=username(input.username);if(!name||!password(input.password))throw new AccountError('invalid_credentials_format');
    this.rate('user:'+name,10);
@@ -72,7 +96,7 @@ class Accounts {
   if(action==='logout'){await this.store.revoke(token);return {logged_out:true};}
   throw new AccountError('invalid_action');
  }
- public(row){if(!row)throw new AccountError('session_expired',401);return {account:{id:row.id,username:row.display_name},profile:accountProfile(row.profile,row.display_name),revision:Number(row.revision),schema_version:row.schema_version};}
+ public(row){if(!row)throw new AccountError('session_expired',401);return {account:{id:row.id,username:row.display_name,provider:row.provider||'password'},profile:accountProfile(row.profile,row.display_name),revision:Number(row.revision),schema_version:row.schema_version};}
  async handle(req,res){
   const origin=req.headers.origin||'';const headers={'Content-Type':'application/json','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'};
   if(origin&&!this.origins.has(origin)&&!this.origins.has('*')){res.writeHead(403,headers);res.end('{"error":"origin_not_allowed"}');req.resume();return;}
@@ -92,6 +116,6 @@ class Accounts {
 function createAccounts(){
  if(!process.env.DATABASE_URL)return new Accounts(null);
  const {Pool}=require('pg');const pool=new Pool({connectionString:require('./database_connection').connectionString(process.env.DATABASE_URL),max:3,idleTimeoutMillis:10000,connectionTimeoutMillis:10000});pool.on('error',()=>console.error('Account database connection unavailable.'));
- return new Accounts(new PgAccounts(pool),{origins:(process.env.ACCOUNT_ALLOWED_ORIGINS||'').split(',').map(s=>s.trim()).filter(Boolean)});
+ return new Accounts(new PgAccounts(pool),{origins:(process.env.ACCOUNT_ALLOWED_ORIGINS||'').split(',').map(s=>s.trim()).filter(Boolean),verifyPoki:require('./poki_identity').verifier()});
 }
 module.exports={Accounts,PgAccounts,AccountError,createAccounts,makeHash,verifyHash,profile,username,password,MAX_PROFILE};

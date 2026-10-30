@@ -38,7 +38,8 @@ const httpServer = require('node:http').createServer((req,res)=>{
     if(req.url.startsWith('/accounts/')){accounts.handle(req,res).catch(()=>{if(!res.headersSent)res.writeHead(503);res.end();});return;}
     res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end('{"status":"ok"}');
 });
-const wss = new WebSocket.Server({ server:httpServer, maxPayload: 16384 });
+const wss = new WebSocket.Server({ noServer:true, maxPayload: 16384 });
+require('./account_socket').attachAccountSocket(httpServer,wss,accounts,getClientIp);
 httpServer.listen(PORT);
 
 console.log(`WebSocket server starting on port ${PORT}`);
