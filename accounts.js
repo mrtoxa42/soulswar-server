@@ -1,14 +1,24 @@
 'use strict';
 const crypto=require('node:crypto'),{promisify}=require('node:util');
 const scrypt=promisify(crypto.scrypt),digest=value=>crypto.createHash('sha256').update(value).digest('hex');
-const MAX_PROFILE=131072,SESSION_MS=30*86400000;
+const MAX_PROFILE=655360,SESSION_MS=30*86400000;
 class AccountError extends Error {constructor(code,status=400){super(code);this.code=code;this.status=status;}}
 function username(value){return typeof value==='string'&&/^[A-Za-z0-9_]{3,18}$/.test(value)?value.toLowerCase():null;}
 function password(value){return typeof value==='string'&&value.length>=10&&value.length<=128;}
-function profile(value){
+function profile(value,nested=false){
  if(!value||typeof value!=='object'||Array.isArray(value)||Buffer.byteLength(JSON.stringify(value))>MAX_PROFILE)return false;
- const allowed=['character','progress','coins','growth','owned','equipped','presets','consumables','hotbar_order','tutorial','city_intro','pending_death','last_death','dungeon','world','sanctuary','quests','outing'];
+ const allowed=['character','progress','coins','growth','owned','equipped','presets','consumables','hotbar_order','tutorial','city_intro','pending_death','last_death','dungeon','world','sanctuary','quests','outing','roster'];
  if(Object.keys(value).some(k=>!allowed.includes(k)))return false;
+ if('roster' in value){
+  const r=value.roster;
+  if(nested||!r||r.version!==1||!r.classes||typeof r.classes!=='object'||Array.isArray(r.classes)||Object.keys(r.classes).length>4||!r.account||typeof r.account!=='object'||Array.isArray(r.account))return false;
+  if(!r.classes[value.character?.class]||Object.keys(r.account).some(k=>!['tutorial','season_claims','city_raid_receipts','frontier_receipts'].includes(k)))return false;
+  if(Object.entries(r.classes).some(([cls,p])=>!['Banker','Vampire','Speedster','Politician'].includes(cls)||!profile(p,true)||p.character.class!==cls))return false;
+  if('tutorial' in r.account&&typeof r.account.tutorial!=='boolean')return false;
+  for(const key of ['season_claims','city_raid_receipts','frontier_receipts'])if(key in r.account&&(!Array.isArray(r.account[key])||r.account[key].length>512||r.account[key].some(id=>typeof id!=='string'||id.length>128)))return false;
+ }
+ const active={...value};delete active.roster;
+ if(Buffer.byteLength(JSON.stringify(active))>131072)return false;
  for(const k of ['character','progress','owned','equipped','quests'])if(!value[k]||typeof value[k]!=='object'||Array.isArray(value[k]))return false;
  const finite=(n,min,max)=>typeof n==='number'&&Number.isFinite(n)&&n>=min&&n<=max;
  return typeof value.character.name==='string'&&value.character.name.length<=100&&['Banker','Vampire','Speedster','Politician'].includes(value.character.class)&&Number.isInteger(value.progress.level)&&finite(value.progress.level,1,100000)&&finite(value.progress.xp,0,1e12)&&finite(value.coins,0,1e12);
@@ -18,7 +28,8 @@ async function verifyHash(value,stored){
  const parts=String(stored).split(':');if(parts.length!==3||parts[0]!=='scrypt1'||!/^[a-f0-9]{32}$/.test(parts[1])||!/^[a-f0-9]{128}$/.test(parts[2]))return false;
  const actual=await scrypt(value,parts[1],64,{N:32768,r:8,p:3,maxmem:48*1024*1024});return crypto.timingSafeEqual(actual,Buffer.from(parts[2],'hex'));
 }
-function accountProfile(data,name){return {...data,character:{...data.character,name}};}
+function accountProfile(data,name){const result={...data,character:{...data.character,name}};if(data.roster){result.roster=structuredClone(data.roster);for(const p of Object.values(result.roster.classes))p.character.name=name;}return result;}
+function splitProfile(data){const active={...data};delete active.roster;return [JSON.stringify(active),data.roster?JSON.stringify(data.roster):null,data.roster?5:4];}
 class PgAccounts {
  constructor(pool){this.pool=pool;}
  async transaction(fn){const db=await this.pool.connect();try{await db.query('BEGIN');const result=await fn(db);await db.query('COMMIT');return result;}catch(e){await db.query('ROLLBACK');throw e;}finally{db.release();}}
@@ -32,20 +43,23 @@ class PgAccounts {
   const label=(typeof display==='string'?display.replace(/[^A-Za-z0-9_]/g,'').slice(0,18):'');
   const publicName=label.length>=3?label:'Poki_'+suffix.slice(0,8);
   const account=(await db.query('INSERT INTO sw_accounts(username,display_name,password_hash) VALUES($1,$2,$3) RETURNING id,username,display_name',[name,publicName,'external:poki:'+crypto.randomBytes(32).toString('hex')])).rows[0];
-  await db.query('INSERT INTO sw_profiles(account_id,profile) VALUES($1,$2::jsonb)',[account.id,JSON.stringify(accountProfile(data,publicName))]);
+  await db.query('INSERT INTO sw_profiles(account_id,profile,class_roster,schema_version) VALUES($1,$2::jsonb,$3::jsonb,$4)',[account.id,...splitProfile(accountProfile(data,publicName))]);
   await db.query("INSERT INTO sw_external_identities(provider,subject,account_id) VALUES('poki',$1,$2)",[subject,account.id]);
   return account;
  });}
  async create(name,display,hash,recovery,data){return this.transaction(async db=>{
   let account;try{account=(await db.query('INSERT INTO sw_accounts(username,display_name,password_hash,recovery_hash) VALUES($1,$2,$3,$4) RETURNING id,username,display_name',[name,display,hash,recovery])).rows[0];}catch(e){if(e.code==='23505')throw new AccountError('username_taken',409);throw e;}
-  await db.query('INSERT INTO sw_profiles(account_id,profile) VALUES($1,$2::jsonb)',[account.id,JSON.stringify(data)]);return account;
+  await db.query('INSERT INTO sw_profiles(account_id,profile,class_roster,schema_version) VALUES($1,$2::jsonb,$3::jsonb,$4)',[account.id,...splitProfile(accountProfile(data,display))]);return account;
  });}
  async session(account,token){await this.pool.query('INSERT INTO sw_sessions(token_hash,account_id,expires_at) VALUES($1,$2,$3)',[digest(token),account.id,new Date(Date.now()+SESSION_MS)]);await this.pool.query('UPDATE sw_accounts SET last_login_at=now() WHERE id=$1',[account.id]);}
- async load(token){return (await this.pool.query('SELECT a.id,a.username,a.display_name,p.profile,p.revision,p.schema_version,i.provider FROM sw_sessions s JOIN sw_accounts a ON a.id=s.account_id JOIN sw_profiles p ON p.account_id=a.id LEFT JOIN sw_external_identities i ON i.account_id=a.id WHERE s.token_hash=$1 AND s.revoked_at IS NULL AND s.expires_at>now() AND NOT a.disabled',[digest(token)])).rows[0];}
+ async load(token){return (await this.pool.query("SELECT a.id,a.username,a.display_name,CASE WHEN p.class_roster IS NULL THEN p.profile ELSE p.profile || jsonb_build_object('roster',p.class_roster) END AS profile,p.revision,p.schema_version,i.provider FROM sw_sessions s JOIN sw_accounts a ON a.id=s.account_id JOIN sw_profiles p ON p.account_id=a.id LEFT JOIN sw_external_identities i ON i.account_id=a.id WHERE s.token_hash=$1 AND s.revoked_at IS NULL AND s.expires_at>now() AND NOT a.disabled",[digest(token)])).rows[0];}
  async save(token,revision,data){return this.transaction(async db=>{
-  const row=(await db.query('SELECT p.account_id,p.revision,a.display_name FROM sw_sessions s JOIN sw_accounts a ON a.id=s.account_id JOIN sw_profiles p ON p.account_id=a.id WHERE s.token_hash=$1 AND s.revoked_at IS NULL AND s.expires_at>now() AND NOT a.disabled FOR UPDATE OF p,s',[digest(token)])).rows[0];
+  const row=(await db.query('SELECT p.account_id,p.revision,p.class_roster,a.display_name FROM sw_sessions s JOIN sw_accounts a ON a.id=s.account_id JOIN sw_profiles p ON p.account_id=a.id WHERE s.token_hash=$1 AND s.revoked_at IS NULL AND s.expires_at>now() AND NOT a.disabled FOR UPDATE OF p,s',[digest(token)])).rows[0];
   if(!row)throw new AccountError('session_expired',401);if(Number(row.revision)!==revision)throw new AccountError('save_conflict',409);
-  return (await db.query('UPDATE sw_profiles SET profile=$1::jsonb,revision=revision+1,updated_at=now() WHERE account_id=$2 RETURNING revision',[JSON.stringify(accountProfile(data,row.display_name)),row.account_id])).rows[0];
+  if(row.class_roster&&!data.roster)throw new AccountError('client_update_required',409);
+  if(row.class_roster&&Object.keys(row.class_roster.classes).some(cls=>!data.roster.classes[cls]))throw new AccountError('invalid_profile');
+  const [active,roster,version]=splitProfile(accountProfile(data,row.display_name));
+  return (await db.query('UPDATE sw_profiles SET profile=$1::jsonb,class_roster=$3::jsonb,schema_version=$4,revision=revision+1,updated_at=now() WHERE account_id=$2 RETURNING revision',[active,row.account_id,roster,version])).rows[0];
  });}
  async revoke(token){await this.pool.query('UPDATE sw_sessions SET revoked_at=now() WHERE token_hash=$1 AND revoked_at IS NULL',[digest(token)]);}
  async recover(account,hash,recovery){await this.transaction(async db=>{const result=await db.query('UPDATE sw_accounts SET password_hash=$1,recovery_hash=$4,updated_at=now() WHERE id=$2 AND recovery_hash=$3 AND NOT disabled RETURNING id',[hash,account.id,account.recovery_hash,recovery]);if(!result.rows.length)throw new AccountError('invalid_credentials',401);await db.query('UPDATE sw_sessions SET revoked_at=now() WHERE account_id=$1 AND revoked_at IS NULL',[account.id]);});}
@@ -96,7 +110,7 @@ class Accounts {
   if(action==='logout'){await this.store.revoke(token);return {logged_out:true};}
   throw new AccountError('invalid_action');
  }
- public(row){if(!row)throw new AccountError('session_expired',401);return {account:{id:row.id,username:row.display_name,provider:row.provider||'password'},profile:accountProfile(row.profile,row.display_name),revision:Number(row.revision),schema_version:row.schema_version};}
+ public(row){if(!row)throw new AccountError('session_expired',401);return {account:{id:row.id,username:row.display_name,provider:row.provider||'password'},profile:accountProfile(row.profile,row.display_name),revision:Number(row.revision),schema_version:row.profile.roster?5:row.schema_version};}
  async handle(req,res){
   const origin=req.headers.origin||'';const headers={'Content-Type':'application/json','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'};
   if(origin&&!this.origins.has(origin)&&!this.origins.has('*')){res.writeHead(403,headers);res.end('{"error":"origin_not_allowed"}');req.resume();return;}
