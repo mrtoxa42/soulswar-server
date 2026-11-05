@@ -36,6 +36,7 @@ class NotebookRacing{
  }
  start(r){if(r.phase!=='queued')return;
   while(r.racers.size<RULES.capacity){const i=r.racers.size,id='racebot:'+crypto.randomUUID();const colors=RULES.catalog.color;r.racers.set(id,{id,p:null,npc:true,name:['Pip','Sprig','Nora','Fenn','Lumi','Ash','Moss','Echo'][i]+' • AI',class:['Banker','Vampire','Speedster','Politician'][i%4],look:{body:RULES.catalog.body[i%4].id,color:colors[i%colors.length].id,wheels:RULES.catalog.wheels[i%4].id,decal:RULES.catalog.decal[i%4].id,spoiler:RULES.catalog.spoiler[i%3].id},lane:i,distance:0,speed:0,seq:0,lastKey:0,buffer:'',wordIndex:0,correct:0,chars:0,errors:0,strokes:0,events:[],penaltyUntil:0,finishAt:0,place:0,left:false,rewarded:false,aiAt:0,aiMistake:false,aiInterval:150+this.random()*190});}
+  let lane=0;for(const m of r.racers.values())m.lane=lane++;
   for(let i=0;i<600;i++)r.words.push(RULES.words[Math.floor(this.random()*RULES.words.length)]);
   r.phase='countdown';r.startedAt=this.now()+RULES.countdownSeconds*1000;this.publish(r);
  }
