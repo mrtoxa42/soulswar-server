@@ -24,6 +24,9 @@ const {CityRaids}=require('./city_raids');
 const cityRaids=new CityRaids(seasons,{busy:(room,p)=>typingEvents.active(room,p)||[...room.duels.values()].some(d=>[d.first,d.second].includes(p.id))});
 const {Presence}=require('./presence');
 const presence=new Presence();
+const {TowerDefense}=require('./tower_defense');
+const towerDefense=new TowerDefense((p,data)=>{if(p.ws.readyState===1&&p.ws.bufferedAmount<131072)p.ws.send(JSON.stringify(data));});
+const tdTimer=setInterval(()=>towerDefense.tick(),50);tdTimer.unref();
 const { canDuel, pairKey, protectionReason, citySafe } = require('./duel_rules');
 const Equipment = require('./equipment_rules');
 const Regions = require('./region_rules');
@@ -246,6 +249,7 @@ function sendChatError(ws, reason) {
 }
 
 const WORLD_ZONES = new Set(['city','ink_forest','simulation','medieval','dustlands','orbit','underworld','archive','forest_hut']);
+WORLD_ZONES.add('minigame_hub');
 WORLD_ZONES.add(EXPEDITION_WORLD); WORLD_ZONES.add(EXPEDITION_RAID);
 for (const zone of Object.keys(Regions.classes)) WORLD_ZONES.add(zone);
 
@@ -392,6 +396,7 @@ function tickRoom(room) {
 
 function handleDisconnect(room, playerId, disconnect = false) {
     if (room.players.has(playerId)) {
+        towerDefense.leave(room.players.get(playerId));
         cancelPlayerDuels(room, playerId, 'opponent_disconnected');
         cityRaids.leave(room,room.players.get(playerId));
         expeditions.leave(room.players.get(playerId),disconnect);
@@ -516,6 +521,7 @@ wss.on('connection', (ws, req) => {
                     shared_npcs: newPlayer.shared_npcs?1:0,
                     npcs: newPlayer.shared_npcs?sharedNpcs.roster(playerRoom):[],
                     city_raids: 1,
+                    tower_defense: 1,
                     typing_events: 1,
                     typing_event_soul: 1,
                     presence_protocol: 1,
@@ -552,6 +558,10 @@ wss.on('connection', (ws, req) => {
                     }
                 } else if (data.type === 'city_raid') {
                     if(p.city_raid_protocol===1)cityRaids.action(playerRoom,p,data);
+                } else if (data.type === 'tower_defense') {
+                    if(data.action==='previews'&&p.zone==='minigame_hub'){
+                        if(now-(p.tdPreviewAt||0)>900){p.tdPreviewAt=now;towerDefense.previews(p);}
+                    }else towerDefense.action(p,data);
                 } else if (data.type === 'typing_event') {
                     if(!p.cityRaidActive)typingEvents.action(playerRoom,p,data);
                 } else if (data.type === 'expedition') {

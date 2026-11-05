@@ -9,5 +9,5 @@ const outside = {vampire_castle:'vampire_island',banker_vault:'banker_borough',c
 const family = zone => outside[zone] || zone;
 const allowed = (zone,cls) => !classes[zone] || classes[zone] === cls;
 const hears = (channel,from,to) => channel === 'global' || (channel === 'region' && family(from) === family(to));
-const pvpAllowed = zone => !classes[zone] && zone !== 'forest_raid';
+const pvpAllowed = zone => !classes[zone] && !['forest_raid','minigame_hub'].includes(zone);
 module.exports = {classes,family,allowed,hears,pvpAllowed};

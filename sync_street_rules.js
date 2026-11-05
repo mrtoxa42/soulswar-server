@@ -22,3 +22,6 @@ if(!fs.existsSync(path.join(__dirname,'duel_balance.json')))throw new Error('Mis
 const typingSource=path.join(__dirname,'../scripts/data/typing_events.json');
 if(fs.existsSync(typingSource))fs.copyFileSync(typingSource,path.join(__dirname,'typing_events.json'));
 if(!fs.existsSync(path.join(__dirname,'typing_events.json')))throw new Error('Missing typing_events.json deployment copy');
+const towerSource=path.join(__dirname,'../scripts/data/tower_defense.json');
+if(fs.existsSync(towerSource))fs.copyFileSync(towerSource,path.join(__dirname,'tower_defense.json'));
+if(!fs.existsSync(path.join(__dirname,'tower_defense.json')))throw new Error('Missing tower_defense.json deployment copy');

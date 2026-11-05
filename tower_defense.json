@@ -1,0 +1,12 @@
+{
+  "version":1,
+  "maps":[
+    {"name":"Clover Crossing","ground":"a9cc88","pathColor":"edcf98","path":[[20,200],[320,200],[320,420],[770,420],[770,200],[1160,200]],"boss":"Receipt Golem"},
+    {"name":"Moonlit Garden","ground":"a1b6bd","pathColor":"ddd4b0","path":[[20,430],[220,430],[220,170],[570,170],[570,430],[960,430],[960,230],[1160,230]],"boss":"Moon Count"},
+    {"name":"Ember Courtyard","ground":"c4a38a","pathColor":"f2d2aa","path":[[20,190],[180,190],[180,440],[490,440],[490,190],[810,190],[810,440],[1160,440]],"boss":"Ember King"}
+  ],
+  "words":[["INK","BAT","GEM","SUN","MAP","HAT","CUP","BEE","KEY","OWL","RED","BOX","FOX","JAM","SKY","ICE","BAG","CAR","LOG","WEB"],["SOUL","WAVE","MOON","COIN","CAPE","DASH","GATE","BELL","FROG","LEAF","RACE","HERO","BLUE","GLOW","STAR","GOLD","PATH","MINT","FIRE","WIND"],["TOWER","SHIELD","CASTLE","GARDEN","BATTLE","PORTAL","CLOVER","KNIGHT","DRAGON","VICTORY","DEFEND","SPIRIT","THUNDER","CRYSTAL","FLAME","CROWN","SPELL","FOREST","SILVER","EMBER"]],
+  "columns":14,"rows":6,"gridOrigin":[70,120],"cell":80,"range":440,
+  "chaptersPerMap":5,"wavesPerChapter":5,"baseHealth":30,
+  "rewards":{"coins":750,"xp":600,"tokens":30,"badge":"Tower Champion"}
+}

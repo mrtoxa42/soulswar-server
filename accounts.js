@@ -12,10 +12,10 @@ function profile(value,nested=false){
  if('roster' in value){
   const r=value.roster;
   if(nested||!r||r.version!==1||!r.classes||typeof r.classes!=='object'||Array.isArray(r.classes)||Object.keys(r.classes).length>4||!r.account||typeof r.account!=='object'||Array.isArray(r.account))return false;
-  if(!r.classes[value.character?.class]||Object.keys(r.account).some(k=>!['tutorial','season_claims','city_raid_receipts','frontier_receipts'].includes(k)))return false;
+  if(!r.classes[value.character?.class]||Object.keys(r.account).some(k=>!['tutorial','season_claims','city_raid_receipts','frontier_receipts','minigame_receipts'].includes(k)))return false;
   if(Object.entries(r.classes).some(([cls,p])=>!['Banker','Vampire','Speedster','Politician'].includes(cls)||!profile(p,true)||p.character.class!==cls))return false;
   if('tutorial' in r.account&&typeof r.account.tutorial!=='boolean')return false;
-  for(const key of ['season_claims','city_raid_receipts','frontier_receipts'])if(key in r.account&&(!Array.isArray(r.account[key])||r.account[key].length>512||r.account[key].some(id=>typeof id!=='string'||id.length>128)))return false;
+  for(const key of ['season_claims','city_raid_receipts','frontier_receipts','minigame_receipts'])if(key in r.account&&(!Array.isArray(r.account[key])||r.account[key].length>512||r.account[key].some(id=>typeof id!=='string'||id.length>128)))return false;
  }
  const active={...value};delete active.roster;
  if(Buffer.byteLength(JSON.stringify(active))>131072)return false;

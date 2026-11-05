@@ -22,7 +22,7 @@ class Presence {
  status(p){return p.background?'background':this.now()-p.lastUpdate>IDLE_AFTER?'idle':'active';}
  send(p){if(p.ws.readyState===1)p.ws.send(JSON.stringify({type:'presence_soul',zone:p.zone,soul:p.soul,max_soul:p.max_soul,revision:p.awayRevision,dead:p.soul<=0,immune_remaining:Math.max(0,((p.awayImmuneUntil||0)-this.now())/1000)}));p.awaySentAt=this.now();}
  tick(p,locked=false){
-  const now=this.now();if(!p.presenceProtocol||['forest_raid','unsealed_forest'].includes(p.zone)||p.dead)return;
+  const now=this.now();if(!p.presenceProtocol||['forest_raid','unsealed_forest','minigame_hub'].includes(p.zone)||p.dead)return;
   if(locked||(p.awayAd&&now<p.awayAdUntil)){p.awayAppliedAt=now;return;}
   if(!p.background&&now-p.lastPositionAt<IDLE_AFTER)return;
   const start=p.awayAppliedAt,seconds=Math.max(0,(now-start)/1000);p.awayAppliedAt=now;
