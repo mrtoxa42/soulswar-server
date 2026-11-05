@@ -1,0 +1,13 @@
+{
+ "version":1,"capacity":8,"queueSeconds":12,"countdownSeconds":3,"length":1400,"maxSeconds":120,"maxSpeed":72,"keyInterval":25,
+ "words":["INK","SOUL","GEAR","ROAD","DASH","RACE","TIRE","ZOOM","COIN","CAPE","MOON","PAPER","SPEED","DRIVE","TURBO","TRACK","CLOVER","PENCIL","MOTOR","RIBBON","WHEEL","PAGE","STAR","BELL","GOLD","MAP","SUN","BLUE","WIND","FLAG"],
+ "defaultLook":{"body":"doodle","color":"teal","wheels":"stock","decal":"none","spoiler":"none"},
+ "catalog":{
+  "body":[{"id":"doodle","name":"Doodle Compact","medals":0,"races":0,"wins":0},{"id":"buggy","name":"Margin Buggy","medals":1,"races":0,"wins":0},{"id":"van","name":"Paper Delivery","medals":0,"races":5,"wins":0},{"id":"rocket","name":"Pencil Rocket","medals":0,"races":0,"wins":3}],
+  "color":[{"id":"teal","name":"Teal Ink","hex":"46b8b7","medals":0},{"id":"red","name":"Cherry Ink","hex":"ee737b","medals":0},{"id":"blue","name":"Blue Ink","hex":"6daed6","medals":0},{"id":"green","name":"Mint Ink","hex":"83bd8b","medals":0},{"id":"purple","name":"Violet Ink","hex":"ae8fcf","medals":2},{"id":"gold","name":"Gold Ink","hex":"e9bc55","medals":6}],
+  "wheels":[{"id":"stock","name":"Pencil Wheels","medals":0},{"id":"spokes","name":"Sketch Spokes","medals":2},{"id":"rings","name":"Whitewall Rings","medals":4},{"id":"stars","name":"Star Rims","medals":8}],
+  "decal":[{"id":"none","name":"Clean Page","medals":0},{"id":"stripes","name":"Racing Stripes","medals":1},{"id":"bolt","name":"Lightning Doodle","medals":3},{"id":"dots","name":"Confetti Dots","medals":5}],
+  "spoiler":[{"id":"none","name":"No Spoiler","medals":0},{"id":"ducktail","name":"Little Wing","medals":2},{"id":"tall","name":"Notebook Wing","medals":6}]
+ },
+ "podium":[{"xp":90,"medals":3},{"xp":60,"medals":2},{"xp":35,"medals":1}]
+}
