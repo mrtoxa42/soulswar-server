@@ -25,3 +25,6 @@ if(!fs.existsSync(path.join(__dirname,'typing_events.json')))throw new Error('Mi
 const towerSource=path.join(__dirname,'../scripts/data/tower_defense.json');
 if(fs.existsSync(towerSource))fs.copyFileSync(towerSource,path.join(__dirname,'tower_defense.json'));
 if(!fs.existsSync(path.join(__dirname,'tower_defense.json')))throw new Error('Missing tower_defense.json deployment copy');
+const royaleSource=path.join(__dirname,'../scripts/data/battle_royale.json');
+if(fs.existsSync(royaleSource))fs.copyFileSync(royaleSource,path.join(__dirname,'battle_royale.json'));
+if(!fs.existsSync(path.join(__dirname,'battle_royale.json')))throw new Error('Missing battle_royale.json deployment copy');

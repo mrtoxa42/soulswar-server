@@ -25,8 +25,11 @@ const cityRaids=new CityRaids(seasons,{busy:(room,p)=>typingEvents.active(room,p
 const {Presence}=require('./presence');
 const presence=new Presence();
 const {TowerDefense}=require('./tower_defense');
-const towerDefense=new TowerDefense((p,data)=>{if(p.ws.readyState===1&&p.ws.bufferedAmount<131072)p.ws.send(JSON.stringify(data));});
+const towerDefense=new TowerDefense((p,data)=>{if(p.ws.readyState===1&&p.ws.bufferedAmount<131072)p.ws.send(JSON.stringify(data));},{busy:p=>battleRoyale.busy(p)});
+const {BattleRoyale}=require('./battle_royale');
+const battleRoyale=new BattleRoyale((p,data)=>{if(p.ws.readyState===1&&p.ws.bufferedAmount<131072)p.ws.send(JSON.stringify(data));},{busy:p=>!!towerDefense.room(p)});
 const tdTimer=setInterval(()=>towerDefense.tick(),50);tdTimer.unref();
+const brTimer=setInterval(()=>battleRoyale.tick(),50);brTimer.unref();
 const { canDuel, pairKey, protectionReason, citySafe } = require('./duel_rules');
 const Equipment = require('./equipment_rules');
 const Regions = require('./region_rules');
@@ -397,6 +400,7 @@ function tickRoom(room) {
 function handleDisconnect(room, playerId, disconnect = false) {
     if (room.players.has(playerId)) {
         towerDefense.leave(room.players.get(playerId));
+        battleRoyale.leave(room.players.get(playerId));
         cancelPlayerDuels(room, playerId, 'opponent_disconnected');
         cityRaids.leave(room,room.players.get(playerId));
         expeditions.leave(room.players.get(playerId),disconnect);
@@ -522,6 +526,7 @@ wss.on('connection', (ws, req) => {
                     npcs: newPlayer.shared_npcs?sharedNpcs.roster(playerRoom):[],
                     city_raids: 1,
                     tower_defense: 1,
+                    battle_royale: 1,
                     typing_events: 1,
                     typing_event_soul: 1,
                     presence_protocol: 1,
@@ -562,6 +567,10 @@ wss.on('connection', (ws, req) => {
                     if(data.action==='previews'&&p.zone==='minigame_hub'){
                         if(now-(p.tdPreviewAt||0)>900){p.tdPreviewAt=now;towerDefense.previews(p);}
                     }else towerDefense.action(p,data);
+                } else if (data.type === 'battle_royale') {
+                    if(data.action==='previews'&&p.zone==='minigame_hub'){
+                        if(now-(p.brPreviewAt||0)>900){p.brPreviewAt=now;battleRoyale.previews(p);}
+                    }else battleRoyale.action(p,data);
                 } else if (data.type === 'typing_event') {
                     if(!p.cityRaidActive)typingEvents.action(playerRoom,p,data);
                 } else if (data.type === 'expedition') {
