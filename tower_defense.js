@@ -49,7 +49,9 @@ class TowerDefense {
  key(r,m,d,now){
   if(!Number.isInteger(d.seq)||d.seq!==m.seq+1||typeof d.key!=='string'||!/^[A-Z]$/.test(d.key))return;
   m.seq=d.seq; // Consume even rejected keys; retransmission cannot duplicate damage.
-  if(now-m.lastKey<30)return;m.lastKey=now;
+  // Preserve legitimate letters coalesced into one TCP packet; cap sustained input.
+  m.inputBudget=Math.min(12,(m.inputBudget??12)+Math.max(0,now-(m.budgetAt??now))/30);m.budgetAt=now;
+  if(m.inputBudget<1)return;m.inputBudget--;m.lastKey=now;
   const e=r.enemies.find(e=>e.id===d.target);if(!e||m.cell<0||distance(cellAt(m.cell),[e.x,e.y])>RULES.range){m.typed='';m.target=0;return;}
   if(m.target!==e.id){m.target=e.id;m.typed='';}
   if(d.key!==e.word[m.typed.length]){m.typed='';return;}
