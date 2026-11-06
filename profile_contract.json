@@ -1,0 +1,446 @@
+{
+  "version": 1,
+  "type": "object",
+  "required": [
+    "character",
+    "progress",
+    "coins",
+    "owned",
+    "equipped",
+    "quests"
+  ],
+  "properties": {
+    "character": {
+      "type": "object",
+      "required": [
+        "name",
+        "class"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "class": {
+          "enum": [
+            "Banker",
+            "Vampire",
+            "Speedster",
+            "Politician"
+          ]
+        },
+        "choose_class": {
+          "type": "boolean"
+        }
+      }
+    },
+    "progress": {
+      "type": "object",
+      "required": [
+        "level",
+        "xp"
+      ],
+      "properties": {
+        "level": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100000
+        },
+        "xp": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1000000000000
+        },
+        "rewarded_level": {
+          "type": "number",
+          "minimum": 0
+        },
+        "old_next": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "coins": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1000000000000
+    },
+    "owned": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "vehicles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "skins": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "equipped": {
+      "type": "object",
+      "values": {
+        "type": "string"
+      }
+    },
+    "presets": {
+      "type": "object",
+      "values": {
+        "type": "object",
+        "values": {
+          "type": "string"
+        }
+      }
+    },
+    "consumables": {
+      "type": "array",
+      "items": {
+        "type": "number",
+        "minimum": 0
+      }
+    },
+    "hotbar_order": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tutorial": {
+      "type": "boolean"
+    },
+    "city_intro": {
+      "type": "boolean"
+    },
+    "growth": {
+      "type": "object"
+    },
+    "world": {
+      "type": "object"
+    },
+    "dungeon": {
+      "type": "object"
+    },
+    "pending_death": {
+      "type": "object"
+    },
+    "last_death": {
+      "type": "object"
+    },
+    "sanctuary": {
+      "type": "object"
+    },
+    "outing": {
+      "type": "object"
+    },
+    "quests": {
+      "type": "object",
+      "properties": {
+        "minigames": {
+          "type": "object",
+          "maxProperties": 4,
+          "properties": {
+            "tokens": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100000000
+            },
+            "wins": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100000000
+            },
+            "br_wins": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100000000
+            }
+          }
+        },
+        "minigame_receipts": {
+          "type": "array",
+          "maxItems": 512,
+          "items": {
+            "type": "string",
+            "pattern": "^(td|br|rc):.{36}$"
+          }
+        },
+        "class_origin": {
+          "type": "object",
+          "properties": {
+            "stage": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 3
+            }
+          },
+          "required": [
+            "stage"
+          ]
+        },
+        "racing": {
+          "type": "object",
+          "required": [
+            "version",
+            "medals",
+            "races",
+            "wins",
+            "podiums",
+            "look"
+          ],
+          "maxProperties": 6,
+          "properties": {
+            "version": {
+              "enum": [
+                1
+              ]
+            },
+            "medals": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100000000
+            },
+            "races": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100000000
+            },
+            "wins": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100000000
+            },
+            "podiums": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100000000
+            },
+            "look": {
+              "type": "object",
+              "required": [
+                "body",
+                "color",
+                "wheels",
+                "decal",
+                "spoiler"
+              ],
+              "maxProperties": 5,
+              "values": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "typing_records": {
+          "type": "object",
+          "maxProperties": 3,
+          "values": {
+            "type": "object",
+            "required": [
+              "last_match",
+              "runs",
+              "best_wpm",
+              "best_accuracy"
+            ],
+            "properties": {
+              "last_match": {
+                "type": "string",
+                "maxLength": 64
+              },
+              "runs": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100000000
+              },
+              "best_wpm": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 10000
+              },
+              "best_accuracy": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100
+              }
+            }
+          }
+        },
+        "class_jobs": {
+          "type": "object"
+        },
+        "vampire_jobs": {
+          "type": "object"
+        },
+        "frontier_ledger": {
+          "type": "object"
+        },
+        "city_guide": {
+          "type": "object"
+        },
+        "world_journey": {
+          "type": "object"
+        },
+        "simulation_opening": {
+          "type": "object"
+        },
+        "world_landmarks": {
+          "type": "object"
+        },
+        "class_realms": {
+          "type": "object"
+        },
+        "world_jobs": {
+          "type": "object"
+        },
+        "world_rest": {
+          "type": "object"
+        },
+        "street_ready": {
+          "type": "object"
+        },
+        "street_species": {
+          "type": "object"
+        },
+        "dungeon_records": {
+          "type": "object"
+        },
+        "dungeon_live": {
+          "type": "object"
+        },
+        "parking_started": {
+          "type": "boolean"
+        },
+        "parking_seal": {
+          "type": "boolean"
+        },
+        "parking_return_pending": {
+          "type": "boolean"
+        },
+        "parking_scooter_crafted": {
+          "type": "boolean"
+        },
+        "street_bag": {
+          "type": "boolean"
+        },
+        "street_bike": {
+          "type": "boolean"
+        },
+        "street_quest_courier": {
+          "type": "boolean"
+        },
+        "street_quest_ecology": {
+          "type": "boolean"
+        },
+        "street_quest_elite": {
+          "type": "boolean"
+        },
+        "parking_parts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "parking_completions": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "street_scrap": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "vampire_tracking": {
+          "type": "string"
+        },
+        "world_tracking": {
+          "enum": [
+            "expedition",
+            "training"
+          ]
+        },
+        "city_raid_receipts": {
+          "type": "array",
+          "maxItems": 512,
+          "items": {
+            "type": "string",
+            "maxLength": 128
+          }
+        }
+      }
+    },
+    "roster": {
+      "type": "object",
+      "required": [
+        "version",
+        "classes",
+        "account"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "type": "integer",
+          "enum": [
+            1
+          ]
+        },
+        "classes": {
+          "type": "object",
+          "maxProperties": 4,
+          "values": {
+            "type": "object"
+          }
+        },
+        "account": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "tutorial": {
+              "type": "boolean"
+            },
+            "season_claims": {
+              "type": "array",
+              "maxItems": 512,
+              "items": {
+                "type": "string",
+                "maxLength": 128
+              }
+            },
+            "city_raid_receipts": {
+              "type": "array",
+              "maxItems": 512,
+              "items": {
+                "type": "string",
+                "maxLength": 128
+              }
+            },
+            "frontier_receipts": {
+              "type": "array",
+              "maxItems": 512,
+              "items": {
+                "type": "string",
+                "maxLength": 128
+              }
+            },
+            "minigame_receipts": {
+              "type": "array",
+              "maxItems": 512,
+              "items": {
+                "type": "string",
+                "maxLength": 128
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

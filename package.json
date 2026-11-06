@@ -6,11 +6,16 @@
   "scripts": {
     "prestart": "node sync_street_rules.js && node migrate_accounts.js",
     "start": "node server.js",
-    "migrate": "node migrate_accounts.js"
+    "migrate": "node migrate_accounts.js",
+    "format": "prettier --write accounts.js server.js battle_royale.js notebook_racing.js tower_defense.js clans.js clan_siege.js client_ip.js profile_contract.js durable_rewards.js game_identity.js minigame_reconnect.js typing_stats.js economy.js competitive_power.js match_metrics.js live_duel.js",
+    "format:check": "prettier --check accounts.js server.js battle_royale.js notebook_racing.js tower_defense.js clans.js clan_siege.js client_ip.js profile_contract.js durable_rewards.js game_identity.js minigame_reconnect.js typing_stats.js economy.js competitive_power.js match_metrics.js live_duel.js"
   },
   "dependencies": {
     "geoip-lite": "^1.4.9",
     "pg": "^8.23.1",
     "ws": "^8.16.0"
+  },
+  "devDependencies": {
+    "prettier": "3.9.10"
   }
 }

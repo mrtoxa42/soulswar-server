@@ -1,135 +1,617 @@
 'use strict';
-const crypto=require('node:crypto'),{promisify}=require('node:util');
-const scrypt=promisify(crypto.scrypt),digest=value=>crypto.createHash('sha256').update(value).digest('hex');
-const MAX_PROFILE=655360,SESSION_MS=30*86400000;
-class AccountError extends Error {constructor(code,status=400){super(code);this.code=code;this.status=status;}}
-function username(value){return typeof value==='string'&&/^[A-Za-z0-9_]{3,18}$/.test(value)?value.toLowerCase():null;}
-function password(value){return typeof value==='string'&&value.length>=10&&value.length<=128;}
-function profile(value,nested=false){
- if(!value||typeof value!=='object'||Array.isArray(value)||Buffer.byteLength(JSON.stringify(value))>MAX_PROFILE)return false;
- const allowed=['character','progress','coins','growth','owned','equipped','presets','consumables','hotbar_order','tutorial','city_intro','pending_death','last_death','dungeon','world','sanctuary','quests','outing','roster'];
- if(Object.keys(value).some(k=>!allowed.includes(k)))return false;
- if('roster' in value){
-  const r=value.roster;
-  if(nested||!r||r.version!==1||!r.classes||typeof r.classes!=='object'||Array.isArray(r.classes)||Object.keys(r.classes).length>4||!r.account||typeof r.account!=='object'||Array.isArray(r.account))return false;
-  if(!r.classes[value.character?.class]||Object.keys(r.account).some(k=>!['tutorial','season_claims','city_raid_receipts','frontier_receipts','minigame_receipts'].includes(k)))return false;
-  if(Object.entries(r.classes).some(([cls,p])=>!['Banker','Vampire','Speedster','Politician'].includes(cls)||!profile(p,true)||p.character.class!==cls))return false;
-  if('tutorial' in r.account&&typeof r.account.tutorial!=='boolean')return false;
-  for(const key of ['season_claims','city_raid_receipts','frontier_receipts','minigame_receipts'])if(key in r.account&&(!Array.isArray(r.account[key])||r.account[key].length>512||r.account[key].some(id=>typeof id!=='string'||id.length>128)))return false;
- }
- const active={...value};delete active.roster;
- if(Buffer.byteLength(JSON.stringify(active))>131072)return false;
- for(const k of ['character','progress','owned','equipped','quests'])if(!value[k]||typeof value[k]!=='object'||Array.isArray(value[k]))return false;
- const finite=(n,min,max)=>typeof n==='number'&&Number.isFinite(n)&&n>=min&&n<=max;
- return typeof value.character.name==='string'&&value.character.name.length<=100&&['Banker','Vampire','Speedster','Politician'].includes(value.character.class)&&Number.isInteger(value.progress.level)&&finite(value.progress.level,1,100000)&&finite(value.progress.xp,0,1e12)&&finite(value.coins,0,1e12);
+const crypto = require('node:crypto'),
+  { promisify } = require('node:util');
+const scrypt = promisify(crypto.scrypt),
+  digest = (value) => crypto.createHash('sha256').update(value).digest('hex');
+const MAX_PROFILE = 655360,
+  SESSION_MS = 30 * 86400000;
+class AccountError extends Error {
+  constructor(code, status = 400) {
+    super(code);
+    this.code = code;
+    this.status = status;
+  }
 }
-async function makeHash(value){const salt=crypto.randomBytes(16).toString('hex');const key=await scrypt(value,salt,64,{N:32768,r:8,p:3,maxmem:48*1024*1024});return `scrypt1:${salt}:${key.toString('hex')}`;}
-async function verifyHash(value,stored){
- const parts=String(stored).split(':');if(parts.length!==3||parts[0]!=='scrypt1'||!/^[a-f0-9]{32}$/.test(parts[1])||!/^[a-f0-9]{128}$/.test(parts[2]))return false;
- const actual=await scrypt(value,parts[1],64,{N:32768,r:8,p:3,maxmem:48*1024*1024});return crypto.timingSafeEqual(actual,Buffer.from(parts[2],'hex'));
+function username(value) {
+  return typeof value === 'string' && /^[A-Za-z0-9_]{3,18}$/.test(value)
+    ? value.toLowerCase()
+    : null;
 }
-function accountProfile(data,name){const result={...data,character:{...data.character,name}};if(data.roster){result.roster=structuredClone(data.roster);for(const p of Object.values(result.roster.classes))p.character.name=name;}return result;}
-function splitProfile(data){const active={...data};delete active.roster;return [JSON.stringify(active),data.roster?JSON.stringify(data.roster):null,data.roster?5:4];}
+function password(value) {
+  return typeof value === 'string' && value.length >= 10 && value.length <= 128;
+}
+function profile(value, nested = false) {
+  if (!require('./profile_contract').valid(value)) return false;
+  if (
+    !value ||
+    typeof value !== 'object' ||
+    Array.isArray(value) ||
+    Buffer.byteLength(JSON.stringify(value)) > MAX_PROFILE
+  )
+    return false;
+  const allowed = [
+    'character',
+    'progress',
+    'coins',
+    'growth',
+    'owned',
+    'equipped',
+    'presets',
+    'consumables',
+    'hotbar_order',
+    'tutorial',
+    'city_intro',
+    'pending_death',
+    'last_death',
+    'dungeon',
+    'world',
+    'sanctuary',
+    'quests',
+    'outing',
+    'roster',
+  ];
+  if (Object.keys(value).some((k) => !allowed.includes(k))) return false;
+  if ('roster' in value) {
+    const r = value.roster;
+    if (
+      nested ||
+      !r ||
+      r.version !== 1 ||
+      !r.classes ||
+      typeof r.classes !== 'object' ||
+      Array.isArray(r.classes) ||
+      Object.keys(r.classes).length > 4 ||
+      !r.account ||
+      typeof r.account !== 'object' ||
+      Array.isArray(r.account)
+    )
+      return false;
+    if (
+      !r.classes[value.character?.class] ||
+      Object.keys(r.account).some(
+        (k) =>
+          ![
+            'tutorial',
+            'season_claims',
+            'city_raid_receipts',
+            'frontier_receipts',
+            'minigame_receipts',
+          ].includes(k),
+      )
+    )
+      return false;
+    if (
+      Object.entries(r.classes).some(
+        ([cls, p]) =>
+          !['Banker', 'Vampire', 'Speedster', 'Politician'].includes(cls) ||
+          !profile(p, true) ||
+          p.character.class !== cls,
+      )
+    )
+      return false;
+    if ('tutorial' in r.account && typeof r.account.tutorial !== 'boolean') return false;
+    for (const key of [
+      'season_claims',
+      'city_raid_receipts',
+      'frontier_receipts',
+      'minigame_receipts',
+    ])
+      if (
+        key in r.account &&
+        (!Array.isArray(r.account[key]) ||
+          r.account[key].length > 512 ||
+          r.account[key].some((id) => typeof id !== 'string' || id.length > 128))
+      )
+        return false;
+  }
+  const active = { ...value };
+  delete active.roster;
+  if (Buffer.byteLength(JSON.stringify(active)) > 131072) return false;
+  for (const k of ['character', 'progress', 'owned', 'equipped', 'quests'])
+    if (!value[k] || typeof value[k] !== 'object' || Array.isArray(value[k])) return false;
+  const finite = (n, min, max) =>
+    typeof n === 'number' && Number.isFinite(n) && n >= min && n <= max;
+  return (
+    typeof value.character.name === 'string' &&
+    value.character.name.length <= 100 &&
+    ['Banker', 'Vampire', 'Speedster', 'Politician'].includes(value.character.class) &&
+    Number.isInteger(value.progress.level) &&
+    finite(value.progress.level, 1, 100000) &&
+    finite(value.progress.xp, 0, 1e12) &&
+    finite(value.coins, 0, 1e12)
+  );
+}
+async function makeHash(value) {
+  const salt = crypto.randomBytes(16).toString('hex');
+  const key = await scrypt(value, salt, 64, { N: 32768, r: 8, p: 3, maxmem: 48 * 1024 * 1024 });
+  return `scrypt1:${salt}:${key.toString('hex')}`;
+}
+async function verifyHash(value, stored) {
+  const parts = String(stored).split(':');
+  if (
+    parts.length !== 3 ||
+    parts[0] !== 'scrypt1' ||
+    !/^[a-f0-9]{32}$/.test(parts[1]) ||
+    !/^[a-f0-9]{128}$/.test(parts[2])
+  )
+    return false;
+  const actual = await scrypt(value, parts[1], 64, {
+    N: 32768,
+    r: 8,
+    p: 3,
+    maxmem: 48 * 1024 * 1024,
+  });
+  return crypto.timingSafeEqual(actual, Buffer.from(parts[2], 'hex'));
+}
+function accountProfile(data, name) {
+  const result = { ...data, character: { ...data.character, name } };
+  if (data.roster) {
+    result.roster = structuredClone(data.roster);
+    for (const p of Object.values(result.roster.classes)) p.character.name = name;
+  }
+  return result;
+}
+function splitProfile(data) {
+  const active = { ...data };
+  delete active.roster;
+  return [
+    JSON.stringify(active),
+    data.roster ? JSON.stringify(data.roster) : null,
+    data.roster ? 5 : 4,
+  ];
+}
 class PgAccounts {
- constructor(pool){this.pool=pool;}
- async transaction(fn){const db=await this.pool.connect();try{await db.query('BEGIN');const result=await fn(db);await db.query('COMMIT');return result;}catch(e){await db.query('ROLLBACK');throw e;}finally{db.release();}}
- async find(name){return (await this.pool.query('SELECT id,username,display_name,password_hash,recovery_hash,disabled FROM sw_accounts WHERE username=$1',[name])).rows[0];}
- async external(subject,display,data,create=true){return this.transaction(async db=>{
-  await db.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))',['poki:'+subject]);
-  const existing=(await db.query("SELECT a.* FROM sw_external_identities i JOIN sw_accounts a ON a.id=i.account_id WHERE i.provider='poki' AND i.subject=$1",[subject])).rows[0];
-  if(existing){if(existing.disabled)throw new AccountError('invalid_poki_token',401);return existing;}
-  if(!create)throw new AccountError('poki_account_missing',404);
-  const suffix=crypto.randomBytes(7).toString('hex'),name='pk_'+suffix;
-  const label=(typeof display==='string'?display.replace(/[^A-Za-z0-9_]/g,'').slice(0,18):'');
-  const publicName=label.length>=3?label:'Poki_'+suffix.slice(0,8);
-  const account=(await db.query('INSERT INTO sw_accounts(username,display_name,password_hash) VALUES($1,$2,$3) RETURNING id,username,display_name',[name,publicName,'external:poki:'+crypto.randomBytes(32).toString('hex')])).rows[0];
-  await db.query('INSERT INTO sw_profiles(account_id,profile,class_roster,schema_version) VALUES($1,$2::jsonb,$3::jsonb,$4)',[account.id,...splitProfile(accountProfile(data,publicName))]);
-  await db.query("INSERT INTO sw_external_identities(provider,subject,account_id) VALUES('poki',$1,$2)",[subject,account.id]);
-  return account;
- });}
- async create(name,display,hash,recovery,data){return this.transaction(async db=>{
-  let account;try{account=(await db.query('INSERT INTO sw_accounts(username,display_name,password_hash,recovery_hash) VALUES($1,$2,$3,$4) RETURNING id,username,display_name',[name,display,hash,recovery])).rows[0];}catch(e){if(e.code==='23505')throw new AccountError('username_taken',409);throw e;}
-  await db.query('INSERT INTO sw_profiles(account_id,profile,class_roster,schema_version) VALUES($1,$2::jsonb,$3::jsonb,$4)',[account.id,...splitProfile(accountProfile(data,display))]);return account;
- });}
- async session(account,token){await this.pool.query('INSERT INTO sw_sessions(token_hash,account_id,expires_at) VALUES($1,$2,$3)',[digest(token),account.id,new Date(Date.now()+SESSION_MS)]);await this.pool.query('UPDATE sw_accounts SET last_login_at=now() WHERE id=$1',[account.id]);}
- async load(token){return (await this.pool.query("SELECT a.id,a.username,a.display_name,CASE WHEN p.class_roster IS NULL THEN p.profile ELSE p.profile || jsonb_build_object('roster',p.class_roster) END AS profile,p.revision,p.schema_version,i.provider FROM sw_sessions s JOIN sw_accounts a ON a.id=s.account_id JOIN sw_profiles p ON p.account_id=a.id LEFT JOIN sw_external_identities i ON i.account_id=a.id WHERE s.token_hash=$1 AND s.revoked_at IS NULL AND s.expires_at>now() AND NOT a.disabled",[digest(token)])).rows[0];}
- async save(token,revision,data){return this.transaction(async db=>{
-  const row=(await db.query('SELECT p.account_id,p.revision,p.class_roster,a.display_name FROM sw_sessions s JOIN sw_accounts a ON a.id=s.account_id JOIN sw_profiles p ON p.account_id=a.id WHERE s.token_hash=$1 AND s.revoked_at IS NULL AND s.expires_at>now() AND NOT a.disabled FOR UPDATE OF p,s',[digest(token)])).rows[0];
-  if(!row)throw new AccountError('session_expired',401);if(Number(row.revision)!==revision)throw new AccountError('save_conflict',409);
-  if(row.class_roster&&!data.roster)throw new AccountError('client_update_required',409);
-  if(row.class_roster&&Object.keys(row.class_roster.classes).some(cls=>!data.roster.classes[cls]))throw new AccountError('invalid_profile');
-  const [active,roster,version]=splitProfile(accountProfile(data,row.display_name));
-  return (await db.query('UPDATE sw_profiles SET profile=$1::jsonb,class_roster=$3::jsonb,schema_version=$4,revision=revision+1,updated_at=now() WHERE account_id=$2 RETURNING revision',[active,row.account_id,roster,version])).rows[0];
- });}
- async revoke(token){await this.pool.query('UPDATE sw_sessions SET revoked_at=now() WHERE token_hash=$1 AND revoked_at IS NULL',[digest(token)]);}
- async recover(account,hash,recovery){await this.transaction(async db=>{const result=await db.query('UPDATE sw_accounts SET password_hash=$1,recovery_hash=$4,updated_at=now() WHERE id=$2 AND recovery_hash=$3 AND NOT disabled RETURNING id',[hash,account.id,account.recovery_hash,recovery]);if(!result.rows.length)throw new AccountError('invalid_credentials',401);await db.query('UPDATE sw_sessions SET revoked_at=now() WHERE account_id=$1 AND revoked_at IS NULL',[account.id]);});}
+  constructor(pool) {
+    this.pool = pool;
+  }
+  async transaction(fn) {
+    const db = await this.pool.connect();
+    try {
+      await db.query('BEGIN');
+      const result = await fn(db);
+      await db.query('COMMIT');
+      return result;
+    } catch (e) {
+      await db.query('ROLLBACK');
+      throw e;
+    } finally {
+      db.release();
+    }
+  }
+  async find(name) {
+    return (
+      await this.pool.query(
+        'SELECT id,username,display_name,password_hash,recovery_hash,disabled FROM sw_accounts WHERE username=$1',
+        [name],
+      )
+    ).rows[0];
+  }
+  async external(subject, display, data, create = true) {
+    return this.transaction(async (db) => {
+      await db.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))', ['poki:' + subject]);
+      const existing = (
+        await db.query(
+          "SELECT a.* FROM sw_external_identities i JOIN sw_accounts a ON a.id=i.account_id WHERE i.provider='poki' AND i.subject=$1",
+          [subject],
+        )
+      ).rows[0];
+      if (existing) {
+        if (existing.disabled) throw new AccountError('invalid_poki_token', 401);
+        return existing;
+      }
+      if (!create) throw new AccountError('poki_account_missing', 404);
+      const suffix = crypto.randomBytes(7).toString('hex'),
+        name = 'pk_' + suffix;
+      const label =
+        typeof display === 'string' ? display.replace(/[^A-Za-z0-9_]/g, '').slice(0, 18) : '';
+      const publicName = label.length >= 3 ? label : 'Poki_' + suffix.slice(0, 8);
+      const account = (
+        await db.query(
+          'INSERT INTO sw_accounts(username,display_name,password_hash) VALUES($1,$2,$3) RETURNING id,username,display_name',
+          [name, publicName, 'external:poki:' + crypto.randomBytes(32).toString('hex')],
+        )
+      ).rows[0];
+      await db.query(
+        'INSERT INTO sw_profiles(account_id,profile,class_roster,schema_version) VALUES($1,$2::jsonb,$3::jsonb,$4)',
+        [account.id, ...splitProfile(accountProfile(data, publicName))],
+      );
+      await db.query(
+        "INSERT INTO sw_external_identities(provider,subject,account_id) VALUES('poki',$1,$2)",
+        [subject, account.id],
+      );
+      return account;
+    });
+  }
+  async create(name, display, hash, recovery, data) {
+    return this.transaction(async (db) => {
+      let account;
+      try {
+        account = (
+          await db.query(
+            'INSERT INTO sw_accounts(username,display_name,password_hash,recovery_hash) VALUES($1,$2,$3,$4) RETURNING id,username,display_name',
+            [name, display, hash, recovery],
+          )
+        ).rows[0];
+      } catch (e) {
+        if (e.code === '23505') throw new AccountError('username_taken', 409);
+        throw e;
+      }
+      await db.query(
+        'INSERT INTO sw_profiles(account_id,profile,class_roster,schema_version) VALUES($1,$2::jsonb,$3::jsonb,$4)',
+        [account.id, ...splitProfile(accountProfile(data, display))],
+      );
+      return account;
+    });
+  }
+  async session(account, token) {
+    await this.pool.query(
+      'INSERT INTO sw_sessions(token_hash,account_id,expires_at) VALUES($1,$2,$3)',
+      [digest(token), account.id, new Date(Date.now() + SESSION_MS)],
+    );
+    await this.pool.query('UPDATE sw_accounts SET last_login_at=now() WHERE id=$1', [account.id]);
+  }
+  async load(token) {
+    return (
+      await this.pool.query(
+        "SELECT a.id,a.username,a.display_name,CASE WHEN p.class_roster IS NULL THEN p.profile ELSE p.profile || jsonb_build_object('roster',p.class_roster) END AS profile,p.revision,p.schema_version,i.provider FROM sw_sessions s JOIN sw_accounts a ON a.id=s.account_id JOIN sw_profiles p ON p.account_id=a.id LEFT JOIN sw_external_identities i ON i.account_id=a.id WHERE s.token_hash=$1 AND s.revoked_at IS NULL AND s.expires_at>now() AND NOT a.disabled",
+        [digest(token)],
+      )
+    ).rows[0];
+  }
+  async save(token, revision, data) {
+    return this.transaction(async (db) => {
+      const row = (
+        await db.query(
+          'SELECT p.account_id,p.revision,p.profile,p.class_roster,a.display_name FROM sw_sessions s JOIN sw_accounts a ON a.id=s.account_id JOIN sw_profiles p ON p.account_id=a.id WHERE s.token_hash=$1 AND s.revoked_at IS NULL AND s.expires_at>now() AND NOT a.disabled FOR UPDATE OF p,s',
+          [digest(token)],
+        )
+      ).rows[0];
+      if (!row) throw new AccountError('session_expired', 401);
+      if (Number(row.revision) !== revision) throw new AccountError('save_conflict', 409);
+      if (row.class_roster && !data.roster) throw new AccountError('client_update_required', 409);
+      if (
+        row.class_roster &&
+        Object.keys(row.class_roster.classes).some((cls) => !data.roster.classes[cls])
+      )
+        throw new AccountError('invalid_profile');
+      const previousClasses = row.class_roster?.classes || {
+        [row.profile.character.class]: row.profile,
+      };
+      const nextClasses = data.roster?.classes || { [data.character.class]: data };
+      for (const [cls, next] of Object.entries(nextClasses))
+        if (!require('./economy').validOwnershipTransition(previousClasses[cls], next))
+          throw new AccountError('server_purchase_required', 409);
+      const [active, roster, version] = splitProfile(accountProfile(data, row.display_name));
+      const saved = (
+        await db.query(
+          'UPDATE sw_profiles SET profile=$1::jsonb,class_roster=$3::jsonb,schema_version=$4,revision=revision+1,updated_at=now() WHERE account_id=$2 RETURNING revision',
+          [active, row.account_id, roster, version],
+        )
+      ).rows[0];
+      const receipts =
+        data.roster?.account?.minigame_receipts || data.quests?.minigame_receipts || [];
+      if (receipts.length)
+        await db.query(
+          'UPDATE sw_reward_receipts SET confirmed_at=now() WHERE account_id=$1 AND id=ANY($2::text[]) AND confirmed_at IS NULL',
+          [row.account_id, receipts],
+        );
+      return saved;
+    });
+  }
+  async economy(token, input) {
+    return this.transaction(async (db) => {
+      const row = (
+        await db.query(
+          'SELECT p.account_id,p.revision,p.profile,p.class_roster,a.display_name FROM sw_sessions s JOIN sw_accounts a ON a.id=s.account_id JOIN sw_profiles p ON p.account_id=a.id WHERE s.token_hash=$1 AND s.revoked_at IS NULL AND s.expires_at>now() AND NOT a.disabled FOR UPDATE OF p,s',
+          [digest(token)],
+        )
+      ).rows[0];
+      if (!row) throw new AccountError('session_expired', 401);
+      const economy = require('./economy'),
+        signature = economy.fingerprint(input);
+      const previous = (
+        await db.query(
+          'SELECT fingerprint,result FROM sw_economy_operations WHERE account_id=$1 AND id=$2',
+          [row.account_id, input.id],
+        )
+      ).rows[0];
+      if (previous) {
+        if (previous.fingerprint !== signature) throw new AccountError('operation_id_reused', 409);
+        return previous.result;
+      }
+      if (Number(row.revision) !== input.revision) throw new AccountError('save_conflict', 409);
+      const data = { ...row.profile, ...(row.class_roster ? { roster: row.class_roster } : {}) };
+      let result;
+      try {
+        result = economy.purchase(data, input);
+      } catch (e) {
+        throw new AccountError(e.economyReason || 'invalid_purchase');
+      }
+      const [active, roster, version] = splitProfile(
+        accountProfile(result.profile, row.display_name),
+      );
+      await db.query(
+        'UPDATE sw_profiles SET profile=$1::jsonb,class_roster=$3::jsonb,schema_version=$4,revision=revision+1,updated_at=now() WHERE account_id=$2',
+        [active, row.account_id, roster, version],
+      );
+      const receipt = { cost: result.cost, id: input.id, revision: Number(row.revision) + 1 };
+      await db.query(
+        'INSERT INTO sw_economy_operations(account_id,id,fingerprint,result) VALUES($1,$2,$3,$4::jsonb)',
+        [row.account_id, input.id, signature, JSON.stringify(receipt)],
+      );
+      return receipt;
+    });
+  }
+  async revoke(token) {
+    await this.pool.query(
+      'UPDATE sw_sessions SET revoked_at=now() WHERE token_hash=$1 AND revoked_at IS NULL',
+      [digest(token)],
+    );
+  }
+  async recover(account, hash, recovery) {
+    await this.transaction(async (db) => {
+      const result = await db.query(
+        'UPDATE sw_accounts SET password_hash=$1,recovery_hash=$4,updated_at=now() WHERE id=$2 AND recovery_hash=$3 AND NOT disabled RETURNING id',
+        [hash, account.id, account.recovery_hash, recovery],
+      );
+      if (!result.rows.length) throw new AccountError('invalid_credentials', 401);
+      await db.query(
+        'UPDATE sw_sessions SET revoked_at=now() WHERE account_id=$1 AND revoked_at IS NULL',
+        [account.id],
+      );
+    });
+  }
 }
 class Accounts {
- constructor(store,{now=()=>Date.now(),origins=[],verifyPoki=null}={}){this.store=store;this.now=now;this.origins=new Set(origins);this.rates=new Map();this.hashing=0;this.verifyPoki=verifyPoki;this.dummy=makeHash(crypto.randomBytes(32).toString('hex'));}
- rate(key,limit){const now=this.now();let r=this.rates.get(key);if(!r||now>=r.until){if(this.rates.size>=5000){for(const [k,v]of this.rates)if(now>=v.until)this.rates.delete(k);if(this.rates.size>=5000)throw new AccountError('busy',429);}r={count:0,until:now+60000};this.rates.set(key,r);}if(++r.count>limit)throw new AccountError('too_many_attempts',429);}
- async kdf(fn){if(this.hashing>=2)throw new AccountError('busy',429);this.hashing++;try{return await fn();}finally{this.hashing--;}}
- async action(action,input,token,ip='local'){
-  this.rate('ip:'+ip,60);if(!this.store)throw new AccountError('accounts_unavailable',503);
-  if(action==='poki_login'){
-   this.rate('poki:'+ip,10);
-   if(!this.verifyPoki)throw new AccountError('poki_not_configured',503);
-   if(!profile(input.profile))throw new AccountError('invalid_profile');
-   if((this.verifyingPoki||0)>=4)throw new AccountError('busy',429);
-   this.verifyingPoki=(this.verifyingPoki||0)+1;
-   let subject;try{subject=await this.verifyPoki(input.poki_token);}finally{this.verifyingPoki--;}
-   const account=await this.store.external(subject,input.display_name,input.profile,input.create_account===true);
-   const session=crypto.randomBytes(32).toString('hex');await this.store.session(account,session);
-   return {...this.public(await this.store.load(session)),token:session};
+  constructor(store, { now = () => Date.now(), origins = [], verifyPoki = null } = {}) {
+    this.store = store;
+    this.now = now;
+    this.origins = new Set(origins);
+    this.rates = new Map();
+    this.hashing = 0;
+    this.verifyPoki = verifyPoki;
+    this.dummy = makeHash(crypto.randomBytes(32).toString('hex'));
   }
-  if(['register','login','recover'].includes(action)){
-   const name=username(input.username);if(!name||!password(input.password))throw new AccountError('invalid_credentials_format');
-   this.rate('user:'+name,10);
-   if(action==='register'){
-    if(!profile(input.profile))throw new AccountError('invalid_profile');
-    const recovery=crypto.randomBytes(24).toString('hex');const hash=await this.kdf(()=>makeHash(input.password));
-    const account=await this.store.create(name,input.username,hash,digest(recovery),input.profile);
-    const session=crypto.randomBytes(32).toString('hex');await this.store.session(account,session);return {...this.public(await this.store.load(session)),token:session,recovery_code:recovery};
-   }
-   const account=await this.store.find(name);
-   if(action==='recover'){
-    const code=typeof input.recovery_code==='string'?input.recovery_code.trim():'';
-    if(!account||account.disabled||!account.recovery_hash||!/^[a-f0-9]{48}$/.test(code)||!crypto.timingSafeEqual(Buffer.from(digest(code)),Buffer.from(account.recovery_hash)))throw new AccountError('invalid_credentials',401);
-    const recovery=crypto.randomBytes(24).toString('hex');
-    await this.store.recover(account,await this.kdf(()=>makeHash(input.password)),digest(recovery));return {recovered:true,recovery_code:recovery};
-   }
-   const valid=await this.kdf(async()=>verifyHash(input.password,account?.password_hash||await this.dummy));
-   if(!valid||!account||account.disabled)throw new AccountError('invalid_credentials',401);
-   const session=crypto.randomBytes(32).toString('hex');await this.store.session(account,session);return {...this.public(await this.store.load(session)),token:session};
+  rate(key, limit) {
+    const now = this.now();
+    let r = this.rates.get(key);
+    if (!r || now >= r.until) {
+      if (this.rates.size >= 5000) {
+        for (const [k, v] of this.rates) if (now >= v.until) this.rates.delete(k);
+        if (this.rates.size >= 5000) throw new AccountError('busy', 429);
+      }
+      r = { count: 0, until: now + 60000 };
+      this.rates.set(key, r);
+    }
+    if (++r.count > limit) throw new AccountError('too_many_attempts', 429);
   }
-  if(!/^[a-f0-9]{64}$/.test(token||''))throw new AccountError('session_expired',401);
-  if(action==='resume'){const data=await this.store.load(token);if(!data)throw new AccountError('session_expired',401);return this.public(data);}
-  if(action==='save'){
-   if(!Number.isSafeInteger(input.revision)||input.revision<1||!profile(input.profile))throw new AccountError('invalid_profile');
-   const saved=await this.store.save(token,input.revision,input.profile);return {revision:Number(saved.revision)};
+  async kdf(fn) {
+    if (this.hashing >= 2) throw new AccountError('busy', 429);
+    this.hashing++;
+    try {
+      return await fn();
+    } finally {
+      this.hashing--;
+    }
   }
-  if(action==='logout'){await this.store.revoke(token);return {logged_out:true};}
-  throw new AccountError('invalid_action');
- }
- public(row){if(!row)throw new AccountError('session_expired',401);return {account:{id:row.id,username:row.display_name,provider:row.provider||'password'},profile:accountProfile(row.profile,row.display_name),revision:Number(row.revision),schema_version:row.profile.roster?5:row.schema_version};}
- async handle(req,res){
-  const origin=req.headers.origin||'';const headers={'Content-Type':'application/json','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'};
-  if(origin&&!this.origins.has(origin)&&!this.origins.has('*')){res.writeHead(403,headers);res.end('{"error":"origin_not_allowed"}');req.resume();return;}
-  if(origin){headers['Access-Control-Allow-Origin']=this.origins.has('*')?'*':origin;headers.Vary='Origin';headers['Access-Control-Allow-Headers']='Content-Type, Authorization';headers['Access-Control-Allow-Methods']='POST, OPTIONS';}
-  if(req.method==='OPTIONS'){res.writeHead(204,headers);res.end();return;}
-  if(req.method!=='POST'){res.writeHead(405,headers);res.end('{"error":"method_not_allowed"}');req.resume();return;}
-  let size=0,parts=[];
-  try{
-   if(!String(req.headers['content-type']||'').startsWith('application/json'))throw new AccountError('invalid_content_type',415);
-   for await(const chunk of req){size+=chunk.length;if(size>MAX_PROFILE+16384)throw new AccountError('request_too_large',413);parts.push(chunk);}
-   const input=JSON.parse(Buffer.concat(parts).toString('utf8'));if(!input||typeof input!=='object'||Array.isArray(input))throw new AccountError('invalid_request');
-   const action=req.url.split('?')[0].slice('/accounts/'.length),token=String(req.headers.authorization||'').replace(/^Bearer /,'');
-   const result=await this.action(action,input,token,req.socket.remoteAddress||'unknown');res.writeHead(200,headers);res.end(JSON.stringify(result));
-  }catch(e){const status=e instanceof AccountError?e.status:e instanceof SyntaxError?400:503;res.writeHead(status,headers);res.end(JSON.stringify({error:e instanceof AccountError?e.code:status===400?'invalid_request':'accounts_unavailable'}));}
- }
+  async action(action, input, token, ip = 'local') {
+    this.rate(
+      (['register', 'login', 'recover', 'poki_login'].includes(action)
+        ? 'auth-ip:'
+        : 'session-ip:') + ip,
+      ['register', 'login', 'recover', 'poki_login'].includes(action) ? 60 : 600,
+    );
+    if (!this.store) throw new AccountError('accounts_unavailable', 503);
+    if (action === 'poki_login') {
+      this.rate('poki:' + ip, 10);
+      if (!this.verifyPoki) throw new AccountError('poki_not_configured', 503);
+      if (!profile(input.profile)) throw new AccountError('invalid_profile');
+      if ((this.verifyingPoki || 0) >= 4) throw new AccountError('busy', 429);
+      this.verifyingPoki = (this.verifyingPoki || 0) + 1;
+      let subject;
+      try {
+        subject = await this.verifyPoki(input.poki_token);
+      } finally {
+        this.verifyingPoki--;
+      }
+      const account = await this.store.external(
+        subject,
+        input.display_name,
+        input.profile,
+        input.create_account === true,
+      );
+      const session = crypto.randomBytes(32).toString('hex');
+      await this.store.session(account, session);
+      return { ...this.public(await this.store.load(session)), token: session };
+    }
+    if (['register', 'login', 'recover'].includes(action)) {
+      const name = username(input.username);
+      if (!name || !password(input.password)) throw new AccountError('invalid_credentials_format');
+      this.rate('user:' + name, 10);
+      if (action === 'register') {
+        if (!profile(input.profile)) throw new AccountError('invalid_profile');
+        const recovery = crypto.randomBytes(24).toString('hex');
+        const hash = await this.kdf(() => makeHash(input.password));
+        const account = await this.store.create(
+          name,
+          input.username,
+          hash,
+          digest(recovery),
+          input.profile,
+        );
+        const session = crypto.randomBytes(32).toString('hex');
+        await this.store.session(account, session);
+        return {
+          ...this.public(await this.store.load(session)),
+          token: session,
+          recovery_code: recovery,
+        };
+      }
+      const account = await this.store.find(name);
+      if (action === 'recover') {
+        const code = typeof input.recovery_code === 'string' ? input.recovery_code.trim() : '';
+        if (
+          !account ||
+          account.disabled ||
+          !account.recovery_hash ||
+          !/^[a-f0-9]{48}$/.test(code) ||
+          !crypto.timingSafeEqual(Buffer.from(digest(code)), Buffer.from(account.recovery_hash))
+        )
+          throw new AccountError('invalid_credentials', 401);
+        const recovery = crypto.randomBytes(24).toString('hex');
+        await this.store.recover(
+          account,
+          await this.kdf(() => makeHash(input.password)),
+          digest(recovery),
+        );
+        return { recovered: true, recovery_code: recovery };
+      }
+      const valid = await this.kdf(async () =>
+        verifyHash(input.password, account?.password_hash || (await this.dummy)),
+      );
+      if (!valid || !account || account.disabled)
+        throw new AccountError('invalid_credentials', 401);
+      const session = crypto.randomBytes(32).toString('hex');
+      await this.store.session(account, session);
+      return { ...this.public(await this.store.load(session)), token: session };
+    }
+    if (!/^[a-f0-9]{64}$/.test(token || '')) throw new AccountError('session_expired', 401);
+    const authenticated = await this.store.load(token);
+    if (!authenticated) throw new AccountError('session_expired', 401);
+    this.rate('account:' + authenticated.id, 90);
+    if (action === 'resume') {
+      const data = authenticated;
+      if (!data) throw new AccountError('session_expired', 401);
+      return this.public(data);
+    }
+    if (action === 'economy') {
+      if (
+        !this.store.economy ||
+        typeof input.id !== 'string' ||
+        !/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/.test(input.id) ||
+        !Number.isSafeInteger(input.revision) ||
+        input.revision < 1 ||
+        !['buy', 'equip', 'supply'].includes(input.action) ||
+        typeof input.item !== 'string' ||
+        input.item.length > 100 ||
+        typeof input.category !== 'string'
+      )
+        throw new AccountError('invalid_purchase');
+      const receipt = await this.store.economy(token, input);
+      return { ...this.public(await this.store.load(token)), operation: receipt };
+    }
+    if (action === 'save') {
+      if (!Number.isSafeInteger(input.revision) || input.revision < 1 || !profile(input.profile))
+        throw new AccountError('invalid_profile');
+      const saved = await this.store.save(token, input.revision, input.profile);
+      return { revision: Number(saved.revision) };
+    }
+    if (action === 'logout') {
+      await this.store.revoke(token);
+      return { logged_out: true };
+    }
+    throw new AccountError('invalid_action');
+  }
+  public(row) {
+    if (!row) throw new AccountError('session_expired', 401);
+    return {
+      account: { id: row.id, username: row.display_name, provider: row.provider || 'password' },
+      profile: accountProfile(row.profile, row.display_name),
+      revision: Number(row.revision),
+      schema_version: row.profile.roster ? 5 : row.schema_version,
+    };
+  }
+  async handle(req, res) {
+    const origin = req.headers.origin || '';
+    const headers = {
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-store',
+      'X-Content-Type-Options': 'nosniff',
+    };
+    if (origin && !this.origins.has(origin) && !this.origins.has('*')) {
+      res.writeHead(403, headers);
+      res.end('{"error":"origin_not_allowed"}');
+      req.resume();
+      return;
+    }
+    if (origin) {
+      headers['Access-Control-Allow-Origin'] = this.origins.has('*') ? '*' : origin;
+      headers.Vary = 'Origin';
+      headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization';
+      headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS';
+    }
+    if (req.method === 'OPTIONS') {
+      res.writeHead(204, headers);
+      res.end();
+      return;
+    }
+    if (req.method !== 'POST') {
+      res.writeHead(405, headers);
+      res.end('{"error":"method_not_allowed"}');
+      req.resume();
+      return;
+    }
+    let size = 0,
+      parts = [];
+    try {
+      if (!String(req.headers['content-type'] || '').startsWith('application/json'))
+        throw new AccountError('invalid_content_type', 415);
+      for await (const chunk of req) {
+        size += chunk.length;
+        if (size > MAX_PROFILE + 16384) throw new AccountError('request_too_large', 413);
+        parts.push(chunk);
+      }
+      const input = JSON.parse(Buffer.concat(parts).toString('utf8'));
+      if (!input || typeof input !== 'object' || Array.isArray(input))
+        throw new AccountError('invalid_request');
+      const action = req.url.split('?')[0].slice('/accounts/'.length),
+        token = String(req.headers.authorization || '').replace(/^Bearer /, '');
+      const result = await this.action(action, input, token, require('./client_ip').clientIp(req));
+      res.writeHead(200, headers);
+      res.end(JSON.stringify(result));
+    } catch (e) {
+      const status = e instanceof AccountError ? e.status : e instanceof SyntaxError ? 400 : 503;
+      res.writeHead(status, headers);
+      res.end(
+        JSON.stringify({
+          error:
+            e instanceof AccountError
+              ? e.code
+              : status === 400
+                ? 'invalid_request'
+                : 'accounts_unavailable',
+        }),
+      );
+    }
+  }
 }
-function createAccounts(){
- if(!process.env.DATABASE_URL)return new Accounts(null);
- const {Pool}=require('pg');const pool=new Pool({connectionString:require('./database_connection').connectionString(process.env.DATABASE_URL),max:3,idleTimeoutMillis:10000,connectionTimeoutMillis:10000});pool.on('error',()=>console.error('Account database connection unavailable.'));
- return new Accounts(new PgAccounts(pool),{origins:(process.env.ACCOUNT_ALLOWED_ORIGINS||'').split(',').map(s=>s.trim()).filter(Boolean),verifyPoki:require('./poki_identity').verifier()});
+function createAccounts() {
+  if (!process.env.DATABASE_URL) return new Accounts(null);
+  const { Pool } = require('pg');
+  const pool = new Pool({
+    connectionString: require('./database_connection').connectionString(process.env.DATABASE_URL),
+    max: 3,
+    idleTimeoutMillis: 10000,
+    connectionTimeoutMillis: 10000,
+  });
+  pool.on('error', () => console.error('Account database connection unavailable.'));
+  return new Accounts(new PgAccounts(pool), {
+    origins: (process.env.ACCOUNT_ALLOWED_ORIGINS || '')
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean),
+    verifyPoki: require('./poki_identity').verifier(),
+  });
 }
-module.exports={Accounts,PgAccounts,AccountError,createAccounts,makeHash,verifyHash,profile,username,password,MAX_PROFILE};
+module.exports = {
+  Accounts,
+  PgAccounts,
+  AccountError,
+  createAccounts,
+  makeHash,
+  verifyHash,
+  profile,
+  username,
+  password,
+  MAX_PROFILE,
+};

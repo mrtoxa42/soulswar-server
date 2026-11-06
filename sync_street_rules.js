@@ -31,3 +31,11 @@ if(!fs.existsSync(path.join(__dirname,'battle_royale.json')))throw new Error('Mi
 const racingSource=path.join(__dirname,'../scripts/data/notebook_racing.json');
 if(fs.existsSync(racingSource))fs.copyFileSync(racingSource,path.join(__dirname,'notebook_racing.json'));
 if(!fs.existsSync(path.join(__dirname,'notebook_racing.json')))throw new Error('Missing notebook_racing.json deployment copy');
+
+const profileSource=path.join(__dirname,"../scripts/data/profile_contract.json");
+if(fs.existsSync(profileSource))fs.copyFileSync(profileSource,path.join(__dirname,"profile_contract.json"));
+if(!fs.existsSync(path.join(__dirname,"profile_contract.json")))throw new Error("Missing profile_contract.json deployment copy");
+
+const shopSource=path.join(__dirname,"../scripts/data/shop_catalog.json");
+if(fs.existsSync(shopSource))fs.copyFileSync(shopSource,path.join(__dirname,"shop_catalog.json"));
+if(!fs.existsSync(path.join(__dirname,"shop_catalog.json")))throw new Error("Missing shop_catalog.json deployment copy");
