@@ -4,10 +4,11 @@ const CLASSES=['Banker','Vampire','Speedster','Politician'];
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 function geometry(index){let seed=RULES.maps[index].seed;const rnd=()=>{seed=seed*16807%2147483647;return seed/2147483647;};const sites=[];
- for(let row=0;row<4;row++)for(let col=0;col<6;col++){
-  const x=Math.round(400+col*800+(rnd()-.5)*230);let y=Math.round(450+row*900+(rnd()-.5)*230);
-  if(Math.abs(y-RULES.maps[index].busY)<160)y+=220;
-  const kind=RULES.maps[index].kinds[(col+row*3)%4],w=kind==='rock'?100:120,h=kind==='rock'?64:80;
+ for(let row=0;row<10;row++)for(let col=0;col<12;col++){
+  const x=Math.round(380+col*790+(rnd()-.5)*200);let y=Math.round(380+row*700+(rnd()-.5)*180);
+  if(Math.abs(y-RULES.maps[index].busY)<200)y+=240;
+  const kind=RULES.maps[index].kinds[(col+row*3)%RULES.maps[index].kinds.length];
+  const small=['graves','rubble','fountain','fence','haunted_tree'].includes(kind),w=small?125:205,h=small?65:110;
   sites.push({x,y,w,h,kind});
  }return sites;
 }
@@ -67,11 +68,11 @@ class BattleRoyale{
   }
  }
  actor(p,team,npc,index){const gear=npc?{outfit:['suit','gothic_coat','hoodie','politician_suit'][index%4],hat:['top_hat','aristocrat_crown','cap','fedora_pres'][index%4],face:'none',shoes:'none',accessory:'none',weapon:'none',skin:'classic'}:Object.fromEntries(['outfit','hat','face','shoes','accessory','weapon','skin'].map(k=>[k,p[k]||'none']));
-  return {...gear,id:p.id,name:p.name,class:p.class,npc,p:npc?null:p,team,x:100,y:1800,hp:100,shield:0,power:0,boots:false,status:'bus',dx:0,dy:0,moveAt:0,seq:0,lastKey:0,target:'',typed:'',word:RULES.words[index%RULES.words.length],wordIndex:index,damage:0,kills:0,pickups:0,revives:0,bleed:0,fall:0,dropAt:2+this.random()*22,think:0,aiKeyAt:0,aim:null,rank:0,left:false};
+  return {...gear,id:p.id,name:p.name,class:p.class,npc,p:npc?null:p,team,x:100,y:1800,hp:100,shield:35,power:0,boots:false,status:'bus',dx:0,dy:0,moveAt:0,seq:0,lastKey:0,target:'',typed:'',word:RULES.words[index%RULES.words.length],wordIndex:index,damage:0,kills:0,pickups:0,revives:0,bleed:0,fall:0,dropAt:1+(index+.25+this.random()*.5)/RULES.capacity*(RULES.busSeconds-2),dropLane:(index%7-3)/3,think:0,aiKeyAt:0,aim:null,rank:0,left:false};
  }
  launch(parties,mode){
   const now=this.now(),index=this.nextMap++%RULES.maps.length;
-  const r={id:crypto.randomUUID(),mode,map:index,actors:new Map(),loot:[],phase:'bus',start:now,battleAt:now+RULES.busSeconds*1000,zone:{x:2400,y:1800,r:3000,fromX:2400,fromY:1800,fromR:3000,toX:2400,toY:1800,toR:2200,stage:0,start:now+RULES.busSeconds*1000,duration:RULES.zoneSeconds[0]*1000},bus:{x:100,y:RULES.maps[index].busY},events:[],winner:null,endedAt:0,parties:parties.map(p=>p.code)};
+  const r={id:crypto.randomUUID(),mode,map:index,actors:new Map(),loot:[],phase:'bus',start:now,battleAt:now+RULES.busSeconds*1000,zone:{x:RULES.width/2,y:RULES.height/2,r:RULES.zoneRadii[0],fromX:RULES.width/2,fromY:RULES.height/2,fromR:RULES.zoneRadii[0],toX:RULES.width/2,toY:RULES.height/2,toR:RULES.zoneRadii[1],stage:0,start:now+RULES.busSeconds*1000,duration:RULES.zoneSeconds[0]*1000},bus:{x:100,y:RULES.maps[index].busY},events:[],winner:null,endedAt:0,parties:parties.map(p=>p.code)};
   let n=0;const teams=[];
   const allocate=count=>{let team=mode==='solo'?-1:teams.findIndex(size=>size+count<=RULES.teamSize);if(team<0){team=teams.length;teams.push(0);}teams[team]+=count;return team;};
   // Keep invited groups intact; automatic groups fill around them without splits.
@@ -85,11 +86,17 @@ class BattleRoyale{
   }
   while(n<RULES.capacity){const team=allocate(1),id='brbot:'+crypto.randomUUID(),cls=CLASSES[n%4];const actor=this.actor({id,name:['Quill','Moss','Pip','Nora','Bram','Fenn','Lumi','Ash','Clover','Echo'][n%10]+'-'+(n+1),class:cls},team,true,n++);actor.y=r.bus.y;r.actors.set(id,actor);}
   // Loot is fixed per match, server-owned and always on reachable ground.
-  for(let i=0;i<144;i++){let x=160+(i%12)*400+(this.random()-.5)*160,y=170+Math.floor(i/12)*290+(this.random()-.5)*100;const at=this.free(r.map,x,y);r.loot.push({id:'loot:'+i,x:at.x,y:at.y,...RULES.loot[i%RULES.loot.length]});}
+  for(let i=0;i<480;i++){let x=180+(i%24)*390+(this.random()-.5)*160,y=180+Math.floor(i/24)*350+(this.random()-.5)*120;const at=this.free(r.map,x,y);r.loot.push({id:'loot:'+i,x:at.x,y:at.y,...RULES.loot[i%RULES.loot.length]});}
   this.matches.set(r.id,r);this.setZoneTarget(r);this.publish(r);
  }
- free(map,x,y){x=clamp(x,30,RULES.width-30);y=clamp(y,30,RULES.height-30);if(walkable(map,x,y))return {x,y};for(let radius=50;radius<=350;radius+=50)for(let i=0;i<8;i++){const at={x:clamp(x+Math.cos(i*Math.PI/4)*radius,30,RULES.width-30),y:clamp(y+Math.sin(i*Math.PI/4)*radius,30,RULES.height-30)};if(walkable(map,at.x,at.y))return at;}return {x:2400,y:1800};}
- jump(r,m){const at=this.free(r.map,r.bus.x+(this.random()-.5)*28,r.bus.y);m.x=at.x;m.y=at.y;m.status='falling';m.fall=1.4;m.dx=0;m.dy=0;}
+ free(map,x,y){x=clamp(x,30,RULES.width-30);y=clamp(y,30,RULES.height-30);if(walkable(map,x,y))return {x,y};for(let radius=50;radius<=350;radius+=50)for(let i=0;i<8;i++){const at={x:clamp(x+Math.cos(i*Math.PI/4)*radius,30,RULES.width-30),y:clamp(y+Math.sin(i*Math.PI/4)*radius,30,RULES.height-30)};if(walkable(map,at.x,at.y))return at;}return {x:RULES.width/2,y:RULES.height/2};}
+ jump(r,m){
+  // Stratified route positions survive a delayed tick; bots cannot pile onto the final stop.
+  const x=m.npc?100+m.dropAt/RULES.busSeconds*(RULES.width-200):r.bus.x;
+  const y=m.npc?r.bus.y+m.dropLane*RULES.height*.32:r.bus.y;
+  const at=this.free(r.map,x+(this.random()-.5)*70,y);
+  m.x=at.x;m.y=at.y;m.status='falling';m.fall=2;m.dx=0;m.dy=0;
+ }
  move(r,m,dt){
   if(!['alive','down','falling'].includes(m.status))return;
   if(this.now()-m.moveAt>400){m.dx=0;m.dy=0;}
@@ -107,7 +114,7 @@ class BattleRoyale{
     if(dist(m,other)>RULES.reviveRange||!['KILL','REVIVE'].includes(verb)||(verb==='KILL'&&other.team===m.team))return null;
     return {kind:verb,object:other,word:verb};
    }
-   if(other.team===m.team||dist(m,other)>RULES.range)return null;
+   if(other.team===m.team||dist(m,other)>RULES.range||this.now()<(other.safeUntil||0)||this.now()<(m.safeUntil||0))return null;
    return {kind:'attack',object:other,word:other.word};
   }
   const loot=r.loot.find(l=>l.id===id);
@@ -116,7 +123,9 @@ class BattleRoyale{
  }
  key(r,m,d,now){
   if(!['bus','battle'].includes(r.phase)||!Number.isInteger(d.seq)||d.seq!==m.seq+1||typeof d.key!=='string'||!/^[A-Z]$/.test(d.key))return;
-  m.seq=d.seq;if(now-m.lastKey<RULES.keyInterval)return;m.lastKey=now;
+  m.seq=d.seq;
+  m.inputBudget=Math.min(12,(m.inputBudget??12)+Math.max(0,now-(m.budgetAt??now))/RULES.keyInterval);m.budgetAt=now;
+  if(m.inputBudget<1)return;m.inputBudget--;m.lastKey=now;
   const t=this.target(r,m,d.target,d.verb);if(!t){m.target='';m.typed='';return;}
   const signature=t.object.id+':'+t.kind+':'+t.word;
   if(m.target!==signature){m.target=signature;m.typed='';}
@@ -134,7 +143,10 @@ class BattleRoyale{
    if(target.kind==='power')m.power=Math.min(RULES.maxPower,m.power+1);
    if(target.kind==='shield')m.shield=Math.min(75,m.shield+40);
    if(target.kind==='heal')m.hp=Math.min(100,m.hp+40);
-   if(target.kind==='boots')m.boots=true;
+   if(target.kind==='boots'){m.boots=true;m.shoes='boots';}
+   if(target.kind==='weapon')m.weapon=target.item;
+   if(target.kind==='outfit')m.outfit=target.item;
+   r.events.push({kind:'pickup',x:m.x,y:m.y,at:this.now(),id:crypto.randomUUID()});
    m.pickups++;r.loot=r.loot.filter(l=>l!==target);
   }else if(t.kind==='REVIVE'){
    target.status='alive';target.hp=RULES.reviveHealth;target.bleed=0;target.safeUntil=this.now()+1500;target.target='';target.typed='';m.revives++;
@@ -152,7 +164,7 @@ class BattleRoyale{
  eliminate(r,m,attacker=null){
   if(m.status==='dead')return;m.status='dead';m.hp=0;m.rank=[...r.actors.values()].filter(a=>a.status!=='dead').length+1;m.dx=m.dy=0;m.target='';m.typed='';
   const killer=attacker||r.actors.get(m.downedBy);if(killer&&killer.team!==m.team)killer.kills++;
-  if(r.loot.length<200)for(let i=0;i<2;i++){const at=this.free(r.map,m.x+(i*2-1)*26,m.y+16);r.loot.push({id:'drop:'+crypto.randomUUID(),...at,...RULES.loot[(m.wordIndex+i)%4]});}
+  if(r.loot.length<600)for(let i=0;i<2;i++){const at=this.free(r.map,m.x+(i*2-1)*26,m.y+16);r.loot.push({id:'drop:'+crypto.randomUUID(),...at,...RULES.loot[(m.wordIndex+i)%4]});}
  }
  bot(r,m,dt){
   if(m.status==='bus'){if((this.now()-r.start)/1000>=m.dropAt)this.jump(r,m);return;}
@@ -164,13 +176,13 @@ class BattleRoyale{
    let goal=null,aim=null;
    if(!outside&&m.status==='alive'){
     const down=[...r.actors.values()].filter(o=>o!==m&&o.status==='down'&&dist(m,o)<420&&sight(r.map,m,o)).sort((a,b)=>(a.team===m.team?-500:0)+dist(m,a)-((b.team===m.team?-500:0)+dist(m,b)))[0];
-    const enemy=[...r.actors.values()].filter(o=>o.status==='alive'&&o.team!==m.team&&dist(m,o)<RULES.sight&&sight(r.map,m,o)).sort((a,b)=>dist(m,a)-dist(m,b))[0];
-    const loot=r.loot.filter(l=>dist(m,l)<550&&(l.kind==='heal'?m.hp<70:l.kind==='shield'?m.shield<40:l.kind==='power'?m.power<2:!m.boots)).sort((a,b)=>dist(m,a)-dist(m,b))[0];
+    const enemy=[...r.actors.values()].filter(o=>o.status==='alive'&&now>=(o.safeUntil||0)&&now>=(m.safeUntil||0)&&o.team!==m.team&&dist(m,o)<RULES.sight&&sight(r.map,m,o)).sort((a,b)=>dist(m,a)-dist(m,b))[0];
+    const loot=r.loot.filter(l=>dist(m,l)<550&&(l.kind==='heal'?m.hp<70:l.kind==='shield'?m.shield<40:l.kind==='power'?m.power<2:l.kind==='weapon'?m.weapon!==l.item:l.kind==='outfit'?m.outfit!==l.item:!m.boots)).sort((a,b)=>dist(m,a)-dist(m,b))[0];
     if(down){goal=down;aim={target:down.id,verb:down.team===m.team?'REVIVE':'KILL'};}
     else if(enemy){goal=enemy;aim={target:enemy.id,verb:''};}
     else if(loot){goal=loot;aim={target:loot.id,verb:''};}
    }
-   if(!goal){goal=outside?{x:r.zone.x,y:r.zone.y}:{x:clamp(r.zone.toX+Math.cos(m.wordIndex*2.4+now*.0001)*Math.min(500,r.zone.r*.65),30,RULES.width-30),y:clamp(r.zone.toY+Math.sin(m.wordIndex*2.4+now*.0001)*Math.min(500,r.zone.r*.65),30,RULES.height-30)};}
+   if(!goal){goal=outside?{x:r.zone.x,y:r.zone.y}:{x:clamp(r.zone.toX+Math.cos(m.wordIndex*2.4+now*.0001)*Math.min(1800,r.zone.r*.65),30,RULES.width-30),y:clamp(r.zone.toY+Math.sin(m.wordIndex*2.4+now*.0001)*Math.min(1800,r.zone.r*.65),30,RULES.height-30)};}
    const distance=dist(m,goal),stop=aim?(r.actors.has(aim.target)?(r.actors.get(aim.target).status==='down'?75:270):70):35;
    m.dx=distance>stop?(goal.x-m.x)/distance:0;m.dy=distance>stop?(goal.y-m.y)/distance:0;m.aim=aim;
    if(m.dx||m.dy){
@@ -208,7 +220,7 @@ class BattleRoyale{
     if(m.status==='bus'){m.x=r.bus.x;m.y=r.bus.y;}
     if(m.npc)this.bot(r,m,dt);
     this.move(r,m,dt);
-    if(m.status==='falling'){m.fall-=dt;if(m.fall<=0){m.status='alive';m.safeUntil=now+1000;}}
+    if(m.status==='falling'){m.fall-=dt;if(m.fall<=0){m.status='alive';m.safeUntil=now+RULES.landingShieldSeconds*1000;}}
     if(m.status==='down'){m.bleed-=dt;if(m.bleed<=0)this.eliminate(r,m);}
     if(now>=r.battleAt&&['alive','down'].includes(m.status)&&dist(m,z)>z.r)this.hurt(r,m,(4+z.stage*2)*dt);
    }
@@ -224,7 +236,7 @@ class BattleRoyale{
    const receipts=this.pending.get(m.p.seasonKey)||[],id='br:'+r.id;if(!receipts.some(v=>v.id===id)&&receipts.length<64)receipts.push({id,...RULES.rewards});this.pending.set(m.p.seasonKey,receipts);
   }this.publish(r);
  }
- publicActor(m){return Object.fromEntries(['id','name','class','npc','team','x','y','hp','shield','power','boots','status','word','bleed','fall','outfit','hat','face','shoes','accessory','weapon','skin','kills','rank','dx','dy'].map(k=>[k,m[k]]));}
+ publicActor(m){return Object.fromEntries(['id','name','class','npc','team','x','y','hp','shield','power','boots','status','word','bleed','fall','outfit','hat','face','shoes','accessory','weapon','skin','kills','rank','dx','dy','safeUntil'].map(k=>[k,m[k]]));}
  view(r,m){
   let camera=m;
   if(m.status==='dead'){camera=[...r.actors.values()].find(a=>a.team===m.team&&a.status!=='dead')||[...r.actors.values()].find(a=>a.status==='alive')||m;}

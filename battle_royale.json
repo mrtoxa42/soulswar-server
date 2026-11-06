@@ -1,14 +1,239 @@
 {
- "version":1,"width":4800,"height":3600,"capacity":30,"teamSize":4,"queueSeconds":60,"busSeconds":26,
- "speed":240,"crawlSpeed":65,"range":420,"lootRange":115,"reviveRange":100,"sight":700,"bleedSeconds":28,"reviveHealth":45,
- "baseDamage":25,"maxPower":2,"keyInterval":35,
- "maps":[
-  {"name":"Clover Commons","ground":"b0cf90","road":"ebd3a2","accent":"4b9981","seed":417,"busY":1800,"kinds":["shop","oak","hut","rock"],"places":["Paper Market","Clover Farm","Old Orchard","Quill's Corner","Tea Stop","Moss Village"]},
-  {"name":"Moonlight Borough","ground":"9cabb9","road":"ddd4c3","accent":"9f779f","seed":941,"busY":1100,"kinds":["vampire","pine","ruin","rock"],"places":["Moon Square","Count's Garden","Lantern Court","Night Market","Echo Park","Little Haven"]},
-  {"name":"Amber Outskirts","ground":"c9b38b","road":"f1ddbc","accent":"c58055","seed":1723,"busY":2500,"kinds":["van","ruin","shop","rock"],"places":["Old Garage","Amber Depot","Sunset Market","Scrap Corner","Paper Ruins","Last Stop"]}
+ "version": 2,
+ "width": 9600,
+ "height": 7200,
+ "capacity": 30,
+ "teamSize": 4,
+ "queueSeconds": 60,
+ "busSeconds": 26,
+ "speed": 290,
+ "crawlSpeed": 65,
+ "range": 420,
+ "lootRange": 115,
+ "reviveRange": 100,
+ "sight": 950,
+ "bleedSeconds": 28,
+ "reviveHealth": 45,
+ "baseDamage": 24,
+ "maxPower": 2,
+ "keyInterval": 35,
+ "maps": [
+  {
+   "name": "The Fallen Quarter",
+   "ground": "89967d",
+   "road": "c3bda5",
+   "accent": "4b9981",
+   "seed": 417,
+   "busY": 3600,
+   "kinds": [
+    "house",
+    "cathedral",
+    "tower",
+    "wall",
+    "graves",
+    "mausoleum",
+    "arch",
+    "library",
+    "fence",
+    "rubble",
+    "fountain",
+    "wreck",
+    "haunted_tree"
+   ],
+   "places": [
+    "Paper Market",
+    "Clover Farm",
+    "Old Orchard",
+    "Quill's Corner",
+    "Tea Stop",
+    "Moss Village"
+   ]
+  },
+  {
+   "name": "Graves of Moonlight",
+   "ground": "7e8992",
+   "road": "b6b0ac",
+   "accent": "9f779f",
+   "seed": 941,
+   "busY": 2500,
+   "kinds": [
+    "house",
+    "cathedral",
+    "tower",
+    "wall",
+    "graves",
+    "mausoleum",
+    "arch",
+    "library",
+    "fence",
+    "rubble",
+    "fountain",
+    "wreck",
+    "haunted_tree"
+   ],
+   "places": [
+    "Moon Square",
+    "Count's Garden",
+    "Lantern Court",
+    "Night Market",
+    "Echo Park",
+    "Little Haven"
+   ]
+  },
+  {
+   "name": "Ashen Bastion",
+   "ground": "ad9b81",
+   "road": "d0bca2",
+   "accent": "c58055",
+   "seed": 1723,
+   "busY": 5000,
+   "kinds": [
+    "house",
+    "cathedral",
+    "tower",
+    "wall",
+    "graves",
+    "mausoleum",
+    "arch",
+    "library",
+    "fence",
+    "rubble",
+    "fountain",
+    "wreck",
+    "haunted_tree"
+   ],
+   "places": [
+    "Old Garage",
+    "Amber Depot",
+    "Sunset Market",
+    "Scrap Corner",
+    "Paper Ruins",
+    "Last Stop"
+   ]
+  }
  ],
- "words":["SOUL","CAPE","MOON","GOLD","BELL","RACE","INK","FROG","STAR","MINT","COIN","DASH","GLOW","TREE","LEAF","ROSE","GATE","FIRE","WIND","BIRD","BOOK","RAIN","SNOW","LAMP","HILL","WAVE","FISH","PEAR","BEAM","LAKE","CUP","HAT","SUN","BAT","FOX","OWL","GEM","KEY","MAP","RED","BLUE","PINK","TEAL","LIME","PLUM","WOLF","DEER","SEED","ROOT","POND"],
- "loot":[{"kind":"power","word":"POWER","color":"e8a649"},{"kind":"shield","word":"SHIELD","color":"5fbfe1"},{"kind":"heal","word":"MEDKIT","color":"e97980"},{"kind":"boots","word":"BOOTS","color":"8bb96b"}],
- "zoneRadii":[3000,2200,1550,1000,580,280,100,0],"zoneSeconds":[45,45,45,40,35,30,25],
- "rewards":{"coins":500,"xp":400,"tokens":20,"badge":"Soul Survivor"}
+ "words": [
+  "SOUL",
+  "CAPE",
+  "MOON",
+  "GOLD",
+  "BELL",
+  "RACE",
+  "INK",
+  "FROG",
+  "STAR",
+  "MINT",
+  "COIN",
+  "DASH",
+  "GLOW",
+  "TREE",
+  "LEAF",
+  "ROSE",
+  "GATE",
+  "FIRE",
+  "WIND",
+  "BIRD",
+  "BOOK",
+  "RAIN",
+  "SNOW",
+  "LAMP",
+  "HILL",
+  "WAVE",
+  "FISH",
+  "PEAR",
+  "BEAM",
+  "LAKE",
+  "CUP",
+  "HAT",
+  "SUN",
+  "BAT",
+  "FOX",
+  "OWL",
+  "GEM",
+  "KEY",
+  "MAP",
+  "RED",
+  "BLUE",
+  "PINK",
+  "TEAL",
+  "LIME",
+  "PLUM",
+  "WOLF",
+  "DEER",
+  "SEED",
+  "ROOT",
+  "POND"
+ ],
+ "loot": [
+  {
+   "kind": "power",
+   "word": "POWER",
+   "color": "e8a649"
+  },
+  {
+   "kind": "shield",
+   "word": "SHIELD",
+   "color": "5fbfe1"
+  },
+  {
+   "kind": "heal",
+   "word": "MEDKIT",
+   "color": "e97980"
+  },
+  {
+   "kind": "boots",
+   "word": "BOOTS",
+   "color": "8bb96b"
+  },
+  {
+   "kind": "outfit",
+   "word": "COAT",
+   "color": "71b9b0",
+   "item": "gothic_coat"
+  },
+  {
+   "kind": "weapon",
+   "word": "MEGAPHONE",
+   "color": "e8bb6c",
+   "item": "megafone"
+  },
+  {
+   "kind": "weapon",
+   "word": "CHALICE",
+   "color": "c680a9",
+   "item": "blood_chalice"
+  },
+  {
+   "kind": "outfit",
+   "word": "SUIT",
+   "color": "82a1c5",
+   "item": "suit"
+  }
+ ],
+ "zoneRadii": [
+  6000,
+  4400,
+  3100,
+  2000,
+  1160,
+  560,
+  200,
+  0
+ ],
+ "zoneSeconds": [
+  70,
+  65,
+  60,
+  50,
+  45,
+  35,
+  30
+ ],
+ "rewards": {
+  "coins": 500,
+  "xp": 400,
+  "tokens": 20,
+  "badge": "Soul Survivor"
+ },
+ "landingShieldSeconds": 10
 }

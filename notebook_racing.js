@@ -56,6 +56,11 @@ class NotebookRacing{
    m.buffer='';return;
   }
   if(m.buffer.length<24)m.buffer+=d.key;
+  if(m.buffer===this.word(r,m)){
+   m.correct++;m.chars+=m.buffer.length+1;m.events.push({at:now,chars:m.buffer.length+1});m.wordIndex++;m.buffer='';
+  }else if(m.buffer.length>=this.word(r,m).length){
+   m.errors++;m.speed*=.55;m.penaltyUntil=now+3000;m.buffer='';
+  }
  }
  bot(r,m){const now=this.now();if(now<m.aiAt||m.finishAt)return;
   const word=this.word(r,m),index=m.buffer.length;
