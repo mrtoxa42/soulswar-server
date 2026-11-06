@@ -23,7 +23,18 @@
         "VANGUARD",
         "THUNDER",
         "CYBERNETIC",
-        "TEAMWORK"
+        "TEAMWORK",
+        "VOLTAGE",
+        "CIRCUIT",
+        "RADIANCE",
+        "TEMPEST",
+        "CAPACITOR",
+        "LIGHTNING",
+        "MOMENTUM",
+        "RESONANCE",
+        "DISCHARGE",
+        "COORDINATE",
+        "FORMATION"
       ],
       "at": [
         8500,
@@ -42,7 +53,18 @@
         "ARISTOCRAT",
         "NIGHTFALL",
         "BLOODLINE",
-        "COOPERATION"
+        "COOPERATION",
+        "MOONLIGHT",
+        "ECLIPSE",
+        "ANCESTOR",
+        "IMMORTAL",
+        "MIDNIGHT",
+        "VEIL",
+        "DUSK",
+        "SHADOWS",
+        "COVENANT",
+        "SILHOUETTE",
+        "NIGHTSHADE"
       ],
       "at": [
         4300,
@@ -61,7 +83,18 @@
         "SUPERNOVA",
         "ARCHON",
         "TRANSCEND",
-        "CONSTELLATION"
+        "CONSTELLATION",
+        "STARLIGHT",
+        "GALACTIC",
+        "NEBULA",
+        "ORBIT",
+        "GRAVITY",
+        "ASTEROID",
+        "COSMIC",
+        "HORIZON",
+        "STARDUST",
+        "RESONANCE",
+        "FIRMAMENT"
       ],
       "at": [
         8500,

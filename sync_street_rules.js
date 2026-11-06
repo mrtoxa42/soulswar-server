@@ -39,3 +39,7 @@ if(!fs.existsSync(path.join(__dirname,"profile_contract.json")))throw new Error(
 const shopSource=path.join(__dirname,"../scripts/data/shop_catalog.json");
 if(fs.existsSync(shopSource))fs.copyFileSync(shopSource,path.join(__dirname,"shop_catalog.json"));
 if(!fs.existsSync(path.join(__dirname,"shop_catalog.json")))throw new Error("Missing shop_catalog.json deployment copy");
+
+const raidSource=path.join(__dirname,'../scripts/data/city_raids.json');
+if(fs.existsSync(raidSource))fs.copyFileSync(raidSource,path.join(__dirname,'city_raids.json'));
+if(!fs.existsSync(path.join(__dirname,'city_raids.json')))throw new Error('Missing city_raids.json deployment copy');

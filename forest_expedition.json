@@ -72,7 +72,7 @@
     {
       "id": "elder",
       "kind": 1,
-      "name": "The Sleepy Warden \u00e2\u20ac\u00a2 WORLD BOSS",
+      "name": "The Sleepy Warden â€¢ WORLD BOSS",
       "at": [
         1760,
         1300
@@ -110,7 +110,7 @@
     {
       "id": "king",
       "kind": 2,
-      "name": "His Sporeness \u00e2\u20ac\u00a2 RAID BOSS",
+      "name": "His Sporeness â€¢ RAID BOSS",
       "at": [
         4900,
         1050
@@ -167,7 +167,23 @@
     "PERMIT",
     "WARDEN",
     "GROVE",
-    "SPORES"
+    "SPORES",
+    "CANOPY",
+    "SAPLING",
+    "FERN",
+    "ACORN",
+    "BARK",
+    "LEAVES",
+    "MOSS",
+    "CLEARING",
+    "TRAIL",
+    "THICKET",
+    "SPROUT",
+    "TRUNK",
+    "PETAL",
+    "MEADOW",
+    "WILLOW",
+    "SHADE"
   ],
   "attack_damage": 35,
   "hit_damage": 10,
