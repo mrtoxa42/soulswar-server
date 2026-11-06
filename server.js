@@ -25,11 +25,11 @@ const cityRaids=new CityRaids(seasons,{busy:(room,p)=>typingEvents.active(room,p
 const {Presence}=require('./presence');
 const presence=new Presence();
 const {TowerDefense}=require('./tower_defense');
-const towerDefense=new TowerDefense((p,data)=>{if(p.ws.readyState===1&&p.ws.bufferedAmount<131072)p.ws.send(JSON.stringify(data));},{busy:p=>battleRoyale.busy(p)||notebookRacing.busy(p)});
+const towerDefense=new TowerDefense((p,data)=>{if(p.ws.readyState===1&&p.ws.bufferedAmount<131072)p.ws.send(JSON.stringify(data));},{busy:p=>battleRoyale.busy(p)||notebookRacing.busy(p)||clans.busy(p)});
 const {BattleRoyale}=require('./battle_royale');
-const battleRoyale=new BattleRoyale((p,data)=>{if(p.ws.readyState===1&&p.ws.bufferedAmount<131072)p.ws.send(JSON.stringify(data));},{busy:p=>!!towerDefense.room(p)||notebookRacing.busy(p)});
+const battleRoyale=new BattleRoyale((p,data)=>{if(p.ws.readyState===1&&p.ws.bufferedAmount<131072)p.ws.send(JSON.stringify(data));},{busy:p=>!!towerDefense.room(p)||notebookRacing.busy(p)||clans.busy(p)});
 const {NotebookRacing}=require('./notebook_racing');
-const notebookRacing=new NotebookRacing((p,data)=>{if(p.ws.readyState===1&&p.ws.bufferedAmount<131072)p.ws.send(JSON.stringify(data));},{busy:p=>!!towerDefense.room(p)||battleRoyale.busy(p)});
+const notebookRacing=new NotebookRacing((p,data)=>{if(p.ws.readyState===1&&p.ws.bufferedAmount<131072)p.ws.send(JSON.stringify(data));},{busy:p=>!!towerDefense.room(p)||battleRoyale.busy(p)||clans.busy(p)});
 const tdTimer=setInterval(()=>towerDefense.tick(),50);tdTimer.unref();
 const brTimer=setInterval(()=>battleRoyale.tick(),50);brTimer.unref();
 const raceTimer=setInterval(()=>notebookRacing.tick(),50);raceTimer.unref();
@@ -43,6 +43,9 @@ expeditionTimer.unref();
 
 const PORT = process.env.PORT || 8080;
 const accounts = require('./accounts').createAccounts();
+const {Clans}=require('./clans');
+const clans=new Clans(accounts,(p,data)=>{if(p.ws.readyState===1&&p.ws.bufferedAmount<131072)p.ws.send(JSON.stringify(data));},{safe:p=>p.zone==='minigame_hub'||citySafe(p),filter:text=>!containsBlockedTerm(text),busy:p=>!!towerDefense.room(p)||battleRoyale.busy(p)||notebookRacing.busy(p)||p.cityRaidActive||[...rooms.values()].some(r=>[...r.duels.values()].some(d=>[d.first,d.second].includes(p.id)))});
+const clanTimer=setInterval(()=>clans.tick(),50);clanTimer.unref();
 const httpServer = require('node:http').createServer((req,res)=>{
     if(req.url.startsWith('/accounts/')){accounts.handle(req,res).catch(()=>{if(!res.headersSent)res.writeHead(503);res.end();});return;}
     res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end('{"status":"ok"}');
@@ -405,6 +408,7 @@ function handleDisconnect(room, playerId, disconnect = false) {
         towerDefense.leave(room.players.get(playerId));
         battleRoyale.leave(room.players.get(playerId));
         notebookRacing.leave(room.players.get(playerId));
+        clans.leave(room.players.get(playerId));
         cancelPlayerDuels(room, playerId, 'opponent_disconnected');
         cityRaids.leave(room,room.players.get(playerId));
         expeditions.leave(room.players.get(playerId),disconnect);
@@ -532,6 +536,7 @@ wss.on('connection', (ws, req) => {
                     tower_defense: 1,
                     battle_royale: 1,
                     notebook_racing: 1,
+                    clans: 1,
                     typing_events: 1,
                     typing_event_soul: 1,
                     presence_protocol: 1,
@@ -557,7 +562,9 @@ wss.on('connection', (ws, req) => {
                 const p = playerRoom.players.get(playerId);
                 p.lastUpdate = now;
 
-                if (data.type === 'season_ack') {
+                if (data.type === 'clan') {
+                    clans.action(p,data);
+                } else if (data.type === 'season_ack') {
                     seasons.ack(p,data.id);
                 } else if (data.type === 'npc_roster_request') {
                     if(p.shared_npcs&&now-(p.lastNpcRoster||0)>5000){p.lastNpcRoster=now;ws.send(JSON.stringify({type:'npc_roster',zone:p.zone,room_id:playerRoom.id,npcs:sharedNpcs.roster(playerRoom)}));}
