@@ -45,9 +45,11 @@ class TypingEvents {
    const text=s.def.chapters[s.chapter].text;
    if(!previous&&msg.chapter===s.def.chapters[s.chapter].id&&Number.isInteger(msg.checkpoint)&&msg.checkpoint>0&&msg.checkpoint<text.length&&text[msg.checkpoint-1]===' '&&/[.!?]/.test(text[msg.checkpoint-2]))index=msg.checkpoint;
    s.records.set(p.id,{active:true,index,checkpoint:index,seq:previous?.seq||0,contribution:previous?.contribution||0,completed:previous?.completed||false,threats:[],nextThreat:Date.now()+s.def.spawn_seconds*1000,lastInput:Date.now(),lastToken:Date.now(),tokens:12});
+   // The gathering window scales the objective; it must not swallow early typing.
+   if(s.phase==='gathering')s.total=Math.max(s.total,text.length*Math.max(1,Math.min(4,[...s.records.values()].filter(r=>r.active).length)));
    s.dirty=true;this.self(s,p);return;
   }
-  const r=s.records.get(p.id);if(!r?.active||s.phase!=='active')return;
+  const r=s.records.get(p.id);if(!r?.active||!['active','gathering'].includes(s.phase))return;
   if(p.dead||distance(p,s.def)>400){this.leave(room,p,'out_of_range');return;}
   if(msg.action!=='key')return;
   const now=Date.now();r.tokens=Math.min(12,r.tokens+(now-r.lastToken)*.025);r.lastToken=now;
@@ -77,7 +79,7 @@ class TypingEvents {
   this.self(s,p,{correct});
  }
  finish(room,s){
-  if(s.phase!=='active')return;
+  if(!['active','gathering'].includes(s.phase))return;
   s.progress=s.total;s.phase='cooldown';s.until=Date.now()+data.respawn_seconds*1000;s.dirty=true;
   for(const [id,r] of s.records){
    const p=room.players.get(id);if(!p)continue;
